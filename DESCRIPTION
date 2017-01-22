@@ -1,6 +1,6 @@
 Package: gMOIP
 Type: Package
-Title: 2D plots of linear/integer programming models.
+Title: 2D plots of linear/integer programming models
 Version: 1.0
 Date: 2015-04-26
 Authors@R: person("Lars", "Relund", email = "lars@relund.dk",
