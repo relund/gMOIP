@@ -5,7 +5,7 @@
 \title{Create a plot of a polytope (bounded convex set)}
 \usage{
 plotPolytope(cPoints = NULL, points = NULL, delta = 1, showLbl = FALSE,
-  iso = NULL, crit = "max")
+  iso = NULL, crit = "max", ...)
 }
 \arguments{
 \item{cPoints}{Corner points in the polytope.}
@@ -17,6 +17,8 @@ plotPolytope(cPoints = NULL, points = NULL, delta = 1, showLbl = FALSE,
 \item{iso}{NULL or if 2D vector add the iso profit line the the solution plot.}
 
 \item{crit}{Either max or min (only used if add the iso profit line)}
+
+\item{...}{Arguments passed to \link{geom_point}.}
 
 \item{labels}{Axes labels.}
 }
@@ -60,10 +62,10 @@ head(zPoints)
 plotCriterion(zPoints)
 plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)
 # mimimize
-zPoints<-criterionPoints(iPoints, c1 = c(-1, 1), c2 = c(1, -1), crit = "min")
+zPoints<-criterionPoints(zPoints, c1 = c(-1, 1), c2 = c(1, -1), crit = "min")
 plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min")
-# identify solutions (x1,x2) corresponding to (z1,z2)
-plotPolytope(cPoints, zPoints, showLbl = TRUE)
+# identify solutions (x1,x2) corresponding to (z1,z2) (solution points is also given another shape)
+plotPolytope(cPoints, zPoints, showLbl = TRUE, shape = zPoints$nD)
 plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min", showLbl = TRUE)
 # max and min
 zPoints<-criterionPoints(iPoints, c1 = c(-2, -1), c2 = c(1, 4), crit = "max")

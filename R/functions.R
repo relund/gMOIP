@@ -320,12 +320,13 @@ criterionPoints<-function(points, c1, c2, crit) {
 #' @param iso NULL or if 2D vector add the iso profit line the the solution plot.
 #' @param crit Either max or min (only used if add the iso profit line)
 #' @param labels Axes labels.
+#' @param ... Arguments passed to \link{geom_point}.
 #'
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @example inst/examples/examples.R
-plotPolytope<-function(cPoints = NULL, points = NULL, delta=1, showLbl=FALSE, iso=NULL, crit="max")
+plotPolytope<-function(cPoints = NULL, points = NULL, delta=1, showLbl=FALSE, iso=NULL, crit="max", ...)
 {
    # Set Custom theme
    myTheme <- theme_set(theme_bw())
@@ -352,7 +353,7 @@ plotPolytope<-function(cPoints = NULL, points = NULL, delta=1, showLbl=FALSE, is
    #    geom_segment(aes(x=0, xend = 0 , y=0, yend = max(cPoints$x2)+1), size=1, arrow = arrow(length = unit(0.3,"cm")))
    # integer points
    if (!is.null(points)) {
-      p <- p + geom_point(aes(x = x1, y = x2), data=points)
+      p <- p + geom_point(aes(x = x1, y = x2), data=points, ...)
       if (showLbl & length(points$lbl)>0) {
          nudgeS=-(max(points$x1)-min(points$x1))/100
          if (anyDuplicated(cbind(points$x1,points$x2), MARGIN = 1) > 0)

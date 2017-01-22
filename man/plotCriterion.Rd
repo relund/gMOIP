@@ -59,10 +59,10 @@ head(zPoints)
 plotCriterion(zPoints)
 plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)
 # mimimize
-zPoints<-criterionPoints(iPoints, c1 = c(-1, 1), c2 = c(1, -1), crit = "min")
+zPoints<-criterionPoints(zPoints, c1 = c(-1, 1), c2 = c(1, -1), crit = "min")
 plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min")
-# identify solutions (x1,x2) corresponding to (z1,z2)
-plotPolytope(cPoints, zPoints, showLbl = TRUE)
+# identify solutions (x1,x2) corresponding to (z1,z2) (solution points is also given another shape)
+plotPolytope(cPoints, zPoints, showLbl = TRUE, shape = zPoints$nD)
 plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min", showLbl = TRUE)
 # max and min
 zPoints<-criterionPoints(iPoints, c1 = c(-2, -1), c2 = c(1, 4), crit = "max")
