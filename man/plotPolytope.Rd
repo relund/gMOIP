@@ -4,8 +4,8 @@
 \alias{plotPolytope}
 \title{Create a plot of a polytope (bounded convex set)}
 \usage{
-plotPolytope(cPoints = NULL, points = NULL, delta = 1, showLbl = FALSE,
-  iso = NULL, crit = "max", ...)
+plotPolytope(cPoints = NULL, points = NULL, showLbl = FALSE, iso = NULL,
+  crit = "max", ...)
 }
 \arguments{
 \item{cPoints}{Corner points in the polytope.}
@@ -19,8 +19,6 @@ plotPolytope(cPoints = NULL, points = NULL, delta = 1, showLbl = FALSE,
 \item{crit}{Either max or min (only used if add the iso profit line)}
 
 \item{...}{Arguments passed to \link{geom_point}.}
-
-\item{labels}{Axes labels.}
 }
 \value{
 The ggplot2 object.

@@ -25,6 +25,7 @@
 #' iPoints<-integerPoints(LP)
 #'
 #' plotPolytope(cPoints, iPoints, iso = getC(LP), crit = substr(lp.control(LP)$sense,1,3))
+#' @import lpSolveAPI
 integerPoints<-function(LP) {
    A <- getA(LP)
    b <- get.rhs(LP)
@@ -319,14 +320,14 @@ criterionPoints<-function(points, c1, c2, crit) {
 #' @param showLbl Add labels to the points (only if points have a \code{lbl} column).
 #' @param iso NULL or if 2D vector add the iso profit line the the solution plot.
 #' @param crit Either max or min (only used if add the iso profit line)
-#' @param labels Axes labels.
 #' @param ... Arguments passed to \link{geom_point}.
 #'
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @example inst/examples/examples.R
-plotPolytope<-function(cPoints = NULL, points = NULL, delta=1, showLbl=FALSE, iso=NULL, crit="max", ...)
+#' @import ggplot2
+plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, crit="max", ...)
 {
    # Set Custom theme
    myTheme <- theme_set(theme_bw())
@@ -345,7 +346,7 @@ plotPolytope<-function(cPoints = NULL, points = NULL, delta=1, showLbl=FALSE, is
    p<- ggplot() + coord_fixed(ratio = 1) + xlab("$x_1$") + ylab("$x_2$")
    #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = F) +
    if (!is.null(cPoints))
-      p <- p + geom_polygon(data = cPoints, aes(x = x1, y = x2), fill="gray90", size = 0.5,
+      p <- p + geom_polygon(data = cPoints, aes_string(x = 'x1', y = 'x2'), fill="gray90", size = 0.5,
                             linetype = 1, color="black")
    # axes
    # p <- p +
@@ -353,14 +354,14 @@ plotPolytope<-function(cPoints = NULL, points = NULL, delta=1, showLbl=FALSE, is
    #    geom_segment(aes(x=0, xend = 0 , y=0, yend = max(cPoints$x2)+1), size=1, arrow = arrow(length = unit(0.3,"cm")))
    # integer points
    if (!is.null(points)) {
-      p <- p + geom_point(aes(x = x1, y = x2), data=points, ...)
+      p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=points, ...)
       if (showLbl & length(points$lbl)>0) {
          nudgeS=-(max(points$x1)-min(points$x1))/100
          if (anyDuplicated(cbind(points$x1,points$x2), MARGIN = 1) > 0)
-            p <- p + geom_text_repel(aes(x = x1, y = x2, label = lbl), data=points, size=3,
+            p <- p + ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=points, size=3,
                                      colour = "gray50")
          if (anyDuplicated(cbind(points$x1,points$x2), MARGIN = 1) == 0)
-            p <- p + geom_text(aes(x = x1, y = x2, label = lbl), data=points, nudge_x = nudgeS,
+            p <- p + geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=points, nudge_x = nudgeS,
                                nudge_y = nudgeS, hjust=1, size=3, colour = "gray50")
       }
    # add iso profit line
@@ -375,7 +376,7 @@ plotPolytope<-function(cPoints = NULL, points = NULL, delta=1, showLbl=FALSE, is
          } else {
             p <- p + geom_vline(xintercept = points$x1[i], lty="dashed")
          }
-         p <- p + geom_label(aes(x = x1, y = x2, label = str), data = points[i,], nudge_x = 1.5)
+         p <- p + geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = points[i,], nudge_x = 1.5)
       }
    }
    return(p)
@@ -410,7 +411,7 @@ plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = T
    )
 
    # Create criterion plot
-   p <- ggplot(points, aes(x = z1, y = z2) ) +
+   p <- ggplot(points, aes_string(x = 'z1', y = 'z2') ) +
       #coord_cartesian(xlim = c(min(points$z1)-delta, max(points$z1)+delta), ylim = c(min(points$z2)-delta, max(points$z2)+delta), expand = F) +
       xlab("$z_1$") +
       ylab("$z_2$")
@@ -449,14 +450,14 @@ plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = T
       }
    }
 
-   p <- p + geom_point(aes(colour = nD, shape = ext)) +
+   p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext')) +
       coord_fixed(ratio = 1) +
       scale_colour_grey(start = 0.6, end = 0)
    nudgeC=-(max(points$z1)-min(points$z1))/100
    if (showLbl & anyDuplicated(cbind(points$z1,points$z2), MARGIN = 1) > 0)
-      p <- p + geom_text_repel(aes(label = lbl), size=3, colour = "gray50")
+      p <- p + ggrepel::geom_text_repel(aes_string(label = 'lbl'), size=3, colour = "gray50")
    if (showLbl & anyDuplicated(cbind(points$z1,points$z2), MARGIN = 1) == 0)
-      p <- p + geom_text(aes(label = lbl), nudge_x = nudgeC, nudge_y = nudgeC, hjust=1, size=3,
+      p <- p + geom_text(aes_string(label = 'lbl'), nudge_x = nudgeC, nudge_y = nudgeC, hjust=1, size=3,
                          colour = "gray50")
    return(p)
 }
