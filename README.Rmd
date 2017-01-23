@@ -47,12 +47,19 @@ zPoints<-criterionPoints(iPoints, c1 = c(getC(LP)[1], 0), c2 = c(0, getC(LP)[2])
 plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)
 ```
 
-For more examples see `example("gMOIP-package")`.
+For more examples see `example("gMOIP-package")`. You may also create a tikz file of the plot for LaTeX using
+
+```{r, eval=FALSE}
+library(tikzDevice)
+tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
+plotPolytope(cPoints, zPoints, showLbl = TRUE)
+dev.off()
+```
+
 
 ## Installation
 
 Install the latest stable release from CRAN:
-
 
 ```{r, eval=FALSE}
 install.packages("gMOIP")

@@ -40,7 +40,14 @@ plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)
 
 ![](README-ex-2.png)
 
-For more examples see `example("gMOIP-package")`.
+For more examples see `example("gMOIP-package")`. You may also create a tikz file of the plot for LaTeX using
+
+``` r
+library(tikzDevice)
+tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
+plotPolytope(cPoints, zPoints, showLbl = TRUE)
+dev.off()
+```
 
 Installation
 ------------
