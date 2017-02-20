@@ -34,7 +34,7 @@ plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)
 
 ![](README-ex-2.png)
 
-For more examples see `example("gMOIP-package")`. You may also create a tikz file of the plot for LaTeX using
+For more examples see `example("gMOIP-package")` or my [blog post](http://www.research.relund.dk/?p=671). You may also create a tikz file of the plot for LaTeX using
 
 ``` r
 library(tikzDevice)
