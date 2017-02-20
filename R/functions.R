@@ -1,31 +1,16 @@
 ## functions for 2D plots for bounded MO-MILP problems in criterion and solution space.
 
 
-#' Integer points inside an LP.
+#' Integer points inside the feasible region (Ax<=b).
 #'
-#' @param LP The LP object defined using lpSolveAPI
+#' @param A A matrix.
+#' @param b Right hand side.
 #'
 #' @return A data frame with all integer points inside the feasible region (columns x1, x2, lbl).
 #' @note Do a simple enumeration of all integer points between min and max.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
-#' @examples
-#' # Create the LP using lpSolveAPI package
-#' LP <- make.lp(0, 2)
-#' set.objfn(LP, c(7.75, 10))
-#' add.constraint(LP, c(9, 10), "<=", 90)
-#' add.constraint(LP, c(2, 4), "<=", 27)
-#' add.constraint(LP, c(-3, 2), "<=", 3)
-#' colNames <- c("x1", "x2")
-#' colnames(LP) <- colNames
-#' set.type(LP, c(1,2), type = "integer")
-#'
-#' control <- lp.control(LP, sense='max')
-#' cPoints<-cornerPoints(getA(LP), get.rhs(LP))
-#' iPoints<-integerPoints(LP)
-#'
-#' plotPolytope(cPoints, iPoints, iso = getC(LP), crit = substr(lp.control(LP)$sense,1,3))
-#' @import lpSolveAPI
+#' @example inst/examples/examples.R
 integerPoints<-function(A, b) {
    cPoints <- cornerPoints(A, b)
    eps <- rep(0.00001,length(b))

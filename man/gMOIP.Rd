@@ -2,7 +2,6 @@
 % Please edit documentation in R/package_doc.R
 \docType{package}
 \name{gMOIP}
-\alias{Template}
 \alias{gMOIP}
 \alias{gMOIP-package}
 \title{2D plots of linear/integer programming models.}

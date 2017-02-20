@@ -4,7 +4,7 @@
 #' curve. Can also make a plot of a bi-objective criterion space.
 #'
 #' @name gMOIP
-#' @aliases gMOIP Template
+#' @aliases gMOIP-package
 #' @docType package
 #' @author Lars Relund <lars@relund.dk> [aut, cre].
 #'
