@@ -262,6 +262,7 @@ criterionPoints<-function(points, c1, c2, crit) {
 #' @param showLbl Add labels to the points (only if points have a \code{lbl} column).
 #' @param iso NULL or if 2D vector add the iso profit line the the solution plot.
 #' @param crit Either max or min (only used if add the iso profit line)
+#' @param latex If true make latex math labels for TikZ.
 #' @param ... Arguments passed to the \link{aes} function in \link{geom_point}.
 #'
 #' @return The ggplot2 object.
@@ -269,7 +270,8 @@ criterionPoints<-function(points, c1, c2, crit) {
 #' @export
 #' @example inst/examples/examples.R
 #' @import ggplot2
-plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, crit="max", ...)
+plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, crit="max",
+                       latex = FALSE, ...)
 {
    # Set Custom theme
    myTheme <- theme_set(theme_bw())
@@ -285,7 +287,9 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
    )
 
    # Create solution plot
-   p<- ggplot() + coord_fixed(ratio = 1) + xlab("$x_1$") + ylab("$x_2$")
+   p<- ggplot() + coord_fixed(ratio = 1)
+   if (latex) p <- p + xlab("$x_1$") + ylab("$x_2$")
+   if (!latex) p <- p + xlab(expression(x[1])) + ylab(expression(x[2]))
    #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = F) +
    if (!is.null(cPoints))
       p <- p + geom_polygon(data = cPoints, aes_string(x = 'x1', y = 'x2'), fill="gray90", size = 0.5,
@@ -312,7 +316,8 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
          points$z <- c[1]*points$x1 + c[2]*points$x2
          if (crit=="max") i <- which.max(points$z)
          if (crit=="min") i <- which.min(points$z)
-         str <- paste0("$x^* = (", points$x1[i], ",", points$x2[i], ")$")
+         if (latex) str <- paste0("$x^* = (", points$x1[i], ",", points$x2[i], ")$")
+         if (!latex) str <- paste0("x* = (", points$x1[i], ",", points$x2[i], ")")
          if (c[2]!=0) {
             p <- p + geom_abline(intercept = points$z[i]/c[2], slope = -c[1]/c[2], lty="dashed")
          } else {
@@ -334,12 +339,15 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
 #' @param addHull Add the convex hull of the non-dominated points and rays.
 #' @param crit Either min or max. The objective the criterion points are classified as. Note must
 #'    be the same as used in \link{criterionPoints}.
+#' @param latex If true make latex math labels for TikZ.
 #'
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @example inst/examples/examples.R
-plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = TRUE, crit="max") {
+plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = TRUE, crit="max",
+                        latex = FALSE)
+{
    # Set Custom theme
    myTheme <- theme_set(theme_bw())
    myTheme <- theme_update(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -353,10 +361,10 @@ plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = T
    )
 
    # Create criterion plot
-   p <- ggplot(points, aes_string(x = 'z1', y = 'z2') ) +
+   p <- ggplot(points, aes_string(x = 'z1', y = 'z2') )
+   if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
+   if (!latex) p <- p + xlab(expression(z[1])) + ylab(expression(z[2]))
       #coord_cartesian(xlim = c(min(points$z1)-delta, max(points$z1)+delta), ylim = c(min(points$z2)-delta, max(points$z2)+delta), expand = F) +
-      xlab("$z_1$") +
-      ylab("$z_2$")
    if (addHull) {
       tmp<-points[points$ext & !duplicated(cbind(points$z1,points$z2), MARGIN = 1),]
       delta=max( (max(points$z1)-min(points$z1))/10, (max(points$z2)-min(points$z2))/10 )
