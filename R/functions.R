@@ -142,10 +142,8 @@ cornerPoints<-function (A, b) {
    R<-R[-1,]
    rownames(R)<-NULL
    colnames(R)<-c("x1","x2")
-   # sort points so can be used for plots
-   R$slope <- R$x2/R$x1
-   R<-R[order(-R$slope),]
-   R$slope<-NULL
+   R<-R[!duplicated(cPoints, MARGIN = 1),]
+   R<-R[chull(R),]  # sort points clockwise
    return(R)
 }
 

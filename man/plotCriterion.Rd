@@ -70,7 +70,7 @@ plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min", showLb
 # Generate tikz file for LaTeX
 library(tikzDevice)
 tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
-plotPolytope(cPoints, zPoints, showLbl = TRUE)
+plotPolytope(cPoints, zPoints, showLbl = TRUE, latex = TRUE)
 dev.off()
 }
 
