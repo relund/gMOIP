@@ -4,6 +4,7 @@
 \name{gMOIP}
 \alias{gMOIP}
 \alias{gMOIP-package}
+\alias{gMOIP-package}
 \title{2D plots of linear/integer programming models.}
 \description{
 Make 2D plots of the polyeder of a LP or IP problem, including integer points and iso profit
@@ -57,11 +58,10 @@ dev.off()
 }
 
 }
-\author{
-Lars Relund <lars@relund.dk> [aut, cre].
-}
 \seealso{
 \link{plotPolytope} and \link{plotCriterion}.
 }
+\author{
+Lars Relund <lars@relund.dk> [aut, cre].
+}
 \keyword{package}
-

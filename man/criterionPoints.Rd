@@ -75,4 +75,3 @@ dev.off()
 \author{
 Lars Relund \email{lars@relund.dk}
 }
-
