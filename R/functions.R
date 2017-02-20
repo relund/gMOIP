@@ -389,7 +389,7 @@ plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = T
       p <- p + geom_polygon(fill="gray90", data=tmp)
    }
    if (addTriangles) {
-      tmp<-points[points$ext,]
+      tmp<-points[points$ext | points$nonExt,]
       if (length(tmp$z1)>1) { # triangles
          for (r in 1:(dim(tmp)[1] - 1)) {
             p <- p +
