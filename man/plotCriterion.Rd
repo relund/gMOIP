@@ -61,7 +61,7 @@ plotPolytope(cPoints, zPoints, showLbl = TRUE)
 plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min", showLbl = TRUE)
 # max and min
 zPoints<-criterionPoints(iPoints, c1 = c(-2, -1), c2 = c(1, 4), crit = "max")
-plotPolytope(cPoints, zPoints, showLbl = TRUE, shape = zPoints$nD) # non-dominated points is given another
+plotPolytope(cPoints, zPoints, showLbl = TRUE, shape = zPoints$nD)
 plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "max", showLbl = TRUE)
 zPoints<-criterionPoints(iPoints, c1 = c(-2, -1), c2 = c(1, 4), crit = "min")
 plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min", showLbl = TRUE)
