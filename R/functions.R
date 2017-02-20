@@ -142,7 +142,7 @@ cornerPoints<-function (A, b) {
    R<-R[-1,]
    rownames(R)<-NULL
    colnames(R)<-c("x1","x2")
-   R<-R[!duplicated(cPoints, MARGIN = 1),]
+   R<-R[!duplicated(R, MARGIN = 1),]
    R<-R[chull(R),]  # sort points clockwise
    return(R)
 }
