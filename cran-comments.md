@@ -4,11 +4,10 @@
 
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
+R CMD check results
+0 errors | 0 warnings | 0 notes
 
-There was 1 NOTE:
-
-* New submission.
+R CMD check succeeded
 
 
 ## Downstream dependencies
