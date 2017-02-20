@@ -18,7 +18,7 @@ plotPolytope(cPoints = NULL, points = NULL, showLbl = FALSE, iso = NULL,
 
 \item{crit}{Either max or min (only used if add the iso profit line)}
 
-\item{...}{Arguments passed to \link{geom_point}.}
+\item{...}{Arguments passed to the \link{aes} function in \link{geom_point}.}
 }
 \value{
 The ggplot2 object.
@@ -27,35 +27,28 @@ The ggplot2 object.
 If an iso profit line added then the max/min is obtained among the \code{points}.
 }
 \examples{
-# Create the LP using lpSolveAPI package
-LP <- make.lp(0, 2)
-set.objfn(LP, c(7.75, 10))
-add.constraint(LP, c(9, 10), "<=", 90)
-add.constraint(LP, c(2, 4), "<=", 27)
-add.constraint(LP, c(-3, 2), "<=", 3)
-colNames <- c("x1", "x2")
-colnames(LP) <- colNames
-set.type(LP, c(1,2), type = "integer")
-control <- lp.control(LP, sense='max')
+# Define the LP max/min coeff*x st. Ax<=b, x>=0
+A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
+b <- c(90,27,3)
+coeff <- c(7.75, 10)
 
 # Corner points of the polytope
-cPoints<-cornerPoints(getA(LP), get.rhs(LP))
+cPoints<-cornerPoints(A, b)
 # Integer points in the polytope
-iPoints<-integerPoints(LP)
+iPoints<-integerPoints(A, b)
 
 # Plot of the polytope
 plotPolytope(cPoints)
 plotPolytope(points = cPoints)
 plotPolytope(points = iPoints)
-plotPolytope(cPoints, cPoints, iso = getC(LP), crit = substr(lp.control(LP)$sense,1,3))
-plotPolytope(cPoints, iPoints, iso = getC(LP), crit = substr(lp.control(LP)$sense,1,3))
+plotPolytope(cPoints, cPoints, iso = coeff, crit = "max")
+plotPolytope(cPoints, iPoints, iso = coeff, crit = "max")
 plotPolytope(cPoints, iPoints, showLbl = TRUE)
 plotPolytope(cPoints, iPoints, iso = c(3,-3), crit = "min")
 plotPolytope(cPoints, iPoints) + xlab("x") + ylab("y")
 
 # Plot of criterion points given a bi-objective vector
-zPoints<-criterionPoints(iPoints, c1 = c(getC(LP)[1], 0), c2 = c(0, getC(LP)[2]),
-                         crit = substr(lp.control(LP)$sense,1,3))
+zPoints<-criterionPoints(iPoints, c1 = c(coeff[1], 0), c2 = c(0, coeff[2]), crit = "max")
 head(zPoints)
 plotCriterion(zPoints)
 plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)

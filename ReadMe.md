@@ -11,30 +11,24 @@ Usage
 -----
 
 ``` r
-LP <- make.lp(0, 2)
-set.objfn(LP, c(7.75, 10))
-add.constraint(LP, c(9, 10), "<=", 90)
-add.constraint(LP, c(2, 4), "<=", 27)
-add.constraint(LP, c(-3, 2), "<=", 3)
-colNames <- c("x1", "x2")
-colnames(LP) <- colNames
-set.type(LP, c(1,2), type = "integer")
-control <- lp.control(LP, sense='max')
+# Define the LP max/min coeff*x st. Ax<=b, x>=0
+A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
+b <- c(90,27,3)
+coeff <- c(7.75, 10)
 
 # Corner points of the polytope
-cPoints<-cornerPoints(getA(LP), get.rhs(LP))
+cPoints<-cornerPoints(A, b)
 # Integer points in the polytope
-iPoints<-integerPoints(LP)
+iPoints<-integerPoints(A, b)
 # plot polytope (ggplot2)
-plotPolytope(cPoints, iPoints, iso = getC(LP), crit = substr(lp.control(LP)$sense,1,3))
+plotPolytope(cPoints, iPoints, iso = coeff, crit = "max")
 ```
 
 ![](README-ex-1.png)
 
 ``` r
 # Plot of criterion points given a bi-objective vector
-zPoints<-criterionPoints(iPoints, c1 = c(getC(LP)[1], 0), c2 = c(0, getC(LP)[2]),
-                         crit = substr(lp.control(LP)$sense,1,3))
+zPoints<-criterionPoints(iPoints, c1 = c(coeff[1], 0), c2 = c(0, coeff[2]), crit = "max")
 plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)
 ```
 

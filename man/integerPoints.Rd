@@ -4,7 +4,7 @@
 \alias{integerPoints}
 \title{Integer points inside an LP.}
 \usage{
-integerPoints(LP)
+integerPoints(A, b)
 }
 \arguments{
 \item{LP}{The LP object defined using lpSolveAPI}

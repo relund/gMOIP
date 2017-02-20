@@ -26,24 +26,14 @@
 #'
 #' plotPolytope(cPoints, iPoints, iso = getC(LP), crit = substr(lp.control(LP)$sense,1,3))
 #' @import lpSolveAPI
-integerPoints<-function(LP) {
-   A <- getA(LP)
-   b <- get.rhs(LP)
-   c <- getC(LP)
+integerPoints<-function(A, b) {
+   cPoints <- cornerPoints(A, b)
    eps <- rep(0.00001,length(b))
-   obj <- lp.control(LP)$sense
-   if (obj=="minimize") lp.control(LP, sense='max')
-   set.objfn(LP, c(1, 0))
-   solve(LP)
-   maxX1<-get.objective(LP)
-   set.objfn(LP, c(0, 1))
-   solve(LP)
-   maxX2<-get.objective(LP)
-   set.objfn(LP, c) # restore
-   lp.control(LP, sense=obj)
-   minX1 <- get.bounds(LP, columns = 1)$lower
-   minX2 <- get.bounds(LP, columns = 2)$lower
-   const <- get.constr.type(LP)
+   maxX1<-floor(max(cPoints$x1))
+   maxX2<-floor(max(cPoints$x2))
+   minX1 <- ceiling(min(cPoints$x1))
+   minX2 <- ceiling(min(cPoints$x2))
+   const <- rep('<=',dim(A)[1])
    ans<-matrix(0, 0, 2)
    for (x1 in minX1:maxX1) {
       for (x2 in minX2:maxX2) {
@@ -59,39 +49,6 @@ integerPoints<-function(LP) {
    return(ans)
 }
 
-
-
-#' Return the A matrix of the LP
-#'
-#' @param LP The LP object defined using lpSolveAPI
-#' @author Lars Relund \email{lars@@relund.dk}
-#' @export
-getA<-function(LP) {
-   m <- dim(LP)[1]
-   n <- dim(LP)[2]
-   ans <- matrix(0, m, n)
-   for (c in 1:n) {
-      for (r in 1:m) ans[r,c]<-get.mat(LP,r,c)
-   }
-   return(ans)
-}
-
-
-
-#' Return the coefficient vector of the LP
-#'
-#' @param LP The LP object defined using lpSolveAPI
-#' @author Lars Relund \email{lars@@relund.dk}
-#' @export
-getC<-function(LP) {
-   n <- dim(LP)[2]
-   ans <- rep(0,n)
-   for (c in 1:n) {
-      res<-get.column(LP,c)
-      if (res$nzrow[1]==0) ans[c] <- res$column[1]
-   }
-   return(ans)
-}
 
 
 
@@ -320,7 +277,7 @@ criterionPoints<-function(points, c1, c2, crit) {
 #' @param showLbl Add labels to the points (only if points have a \code{lbl} column).
 #' @param iso NULL or if 2D vector add the iso profit line the the solution plot.
 #' @param crit Either max or min (only used if add the iso profit line)
-#' @param ... Arguments passed to \link{geom_point}.
+#' @param ... Arguments passed to the \link{aes} function in \link{geom_point}.
 #'
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
@@ -354,7 +311,7 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
    #    geom_segment(aes(x=0, xend = 0 , y=0, yend = max(cPoints$x2)+1), size=1, arrow = arrow(length = unit(0.3,"cm")))
    # integer points
    if (!is.null(points)) {
-      p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=points, ...)
+      p <- p + geom_point(aes_string(x = 'x1', y = 'x2', ...), data=points)
       if (showLbl & length(points$lbl)>0) {
          nudgeS=-(max(points$x1)-min(points$x1))/100
          if (anyDuplicated(cbind(points$x1,points$x2), MARGIN = 1) > 0)
