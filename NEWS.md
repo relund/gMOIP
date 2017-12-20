@@ -1,3 +1,7 @@
+# gMOIP 1.2.0
+
+* Added support for MILP problems too. 
+
 # gMOIP 1.1.1
 
 * Fixed bug in `cornerPoints`.

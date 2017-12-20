@@ -36,8 +36,82 @@ integerPoints<-function(A, b) {
 
 
 
+#' Calculate the ranges (lines) inside the polytope Ax<=b, x>=0 assuming exactly one variable is continuous.
+#'
+#' @param A A matrix.
+#' @param b Right hand side.
+#' @param x1 Variable type x1. Must be int (integer) or cont (continuous).
+#' @param x2 Variable type x2. Must be int (integer) or cont (continuous).
+#'
+#' @return A data frame with a range points. Each two rows are the points which must be connected.
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @example inst/examples/examples.R
+ranges<-function (A, b, x1, x2) {
+   if (!((x1 == "cont" & x2 == "int") | (x2 == "cont" & x1 == "int"))) stop("Exactly one variable must be continuous!")
+   iPoints<-integerPoints(A, b)
+   bT <- c(b,0,0)
+   AT <- rbind(A, c(0,-1), c(-1,0))
+   if (x2=="cont") {
+      i <- 1   # integer index
+      j <- 2   # cont index
+      rng <- min(iPoints$x1):max(iPoints$x1)
+   } else {
+      i <- 2   # integer index
+      j <- 1   # cont index
+      rng <- min(iPoints$x2):max(iPoints$x2)
+   }
+   R <- NULL
+   p <- c(0,0)
+   for (x in rng) {
+      res <- (bT - AT[,i]*x)/AT[,j]
+      idxMin <- AT[,j]>0
+      p[i] <- x
+      p[j] <- min(res[idxMin])
+      R <- rbind(R, p)
+      idxMax <- AT[,j]<0
+      p[j] <- max(res[idxMax])
+      R <- rbind(R, p)
+   }
+   R<-as.data.frame(R)
+   R$lbl <- ""
+   rownames(R)<-NULL
+   colnames(R)<-c("x1","x2", "lbl")
+   R$grp<-rep(1:(length(R$x1)/2), each=2)
+   return(R)
+}
 
-#' Calculate the corner points for the polytope Ax<=b, x>=0 (used some code from the \code{intpoint} package)
+
+
+#' Calculate the corner points for the polytope Ax<=b, x>=0.
+#'
+#' @param A A matrix.
+#' @param b Right hand side.
+#' @param x1 Variable type x1. Must be int (integer) or cont (continuous).
+#' @param x2 Variable type x2. Must be int (integer) or cont (continuous).
+#'
+#' @return A data frame with a corner point in each row.
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @example inst/examples/examples.R
+cornerPoints<-function (A, b, x1 = "cont", x2 = "cont") {
+   if (x1 == "cont" & x2 == "cont") return(cornerPointsCont(A,b))
+   if (x1 == "int" & x2 == "int") {
+      iPoints<-integerPoints(A, b)
+      R<-iPoints[grDevices::chull(iPoints),1:2]
+      R$lbl <- ""
+      return(R)
+   }
+   if (x2=="cont") R <- ranges(A, b, x1="int", x2="cont")
+   if (x1=="cont") R <- ranges(A, b, x1="cont", x2="int")
+   R<-R[!duplicated(R, MARGIN = 1),]
+   R<-R[grDevices::chull(R),]  # sort points clockwise
+   return(R)
+}
+
+
+
+#' Calculate the corner points for the polytope Ax<=b, x>=0 (both continuous) (used some code from the \code{intpoint} package)
 #'
 #' @param A A matrix.
 #' @param b Right hand side.
@@ -46,7 +120,7 @@ integerPoints<-function(A, b) {
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @example inst/examples/examples.R
-cornerPoints<-function (A, b) {
+cornerPointsCont<-function (A, b) {
    m <- nrow(A)
    R <- matrix(0, 1, 2)
    # corner points not on axis
@@ -143,16 +217,17 @@ cornerPoints<-function (A, b) {
    rownames(R)<-NULL
    colnames(R)<-c("x1","x2")
    R<-R[!duplicated(R, MARGIN = 1),]
-   R<-R[chull(R),]  # sort points clockwise
+   R<-R[grDevices::chull(R),]  # sort points clockwise
+   R$lbl <- ""
    return(R)
 }
 
 
 
-#' Calculate the criterion points of a set of points and find the set of non-dominated points
+#' Calculate the criterion points of a set of points and ranges to find the set of non-dominated points
 #' (pareto points) and classify them into extreme supported, non-extreme supported, non-supported.
 #'
-#' @param points A data frame with columns x1 and x2.
+#' @param points A data frame with columns x1 and x2 (can also be a rangePoints).
 #' @param c1 2D vector for first criterion.
 #' @param c2 2D vector for second criterion.
 #' @param crit Either max or min.
@@ -257,10 +332,12 @@ criterionPoints<-function(points, c1, c2, crit) {
 #'
 #' @param cPoints Corner points in the polytope.
 #' @param points Points to plot (e.g integer points inside the polytope or corner points).
+#' @param rangePoints Ranges to plot (e.g if one variable is continuous). Found using \code{ranges} function.
 #' @param showLbl Add labels to the points (only if points have a \code{lbl} column).
 #' @param iso NULL or if 2D vector add the iso profit line the the solution plot.
 #' @param crit Either max or min (only used if add the iso profit line)
 #' @param latex If true make latex math labels for TikZ.
+#' @param feasible The points searched for max/min value (only used if add the iso profit line).
 #' @param ... Arguments passed to the \link{aes} function in \link{geom_point}.
 #'
 #' @return The ggplot2 object.
@@ -268,9 +345,10 @@ criterionPoints<-function(points, c1, c2, crit) {
 #' @export
 #' @example inst/examples/examples.R
 #' @import ggplot2
-plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, crit="max",
-                       latex = FALSE, ...)
+plotPolytope<-function(cPoints = NULL, points = NULL, rangePoints = NULL, showLbl=FALSE, iso=NULL, crit="max",
+                       latex = FALSE, feasible = rbind(cPoints, points, rangePoints), ...)
 {
+   if (is.null(points) & is.null(rangePoints) & is.null(cPoints)) stop("Arguments cPoints, points or rangePoints must be specified!")
    # Set Custom theme
    myTheme <- theme_set(theme_bw())
    myTheme <- theme_update(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -291,7 +369,7 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
    #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = F) +
    if (!is.null(cPoints))
       p <- p + geom_polygon(data = cPoints, aes_string(x = 'x1', y = 'x2'), fill="gray90", size = 0.5,
-                            linetype = 1, color="black")
+                            linetype = 1, color="gray")
    # axes
    # p <- p +
    #    geom_segment(aes(x=0, xend = max(cPoints$x1)+1 , y=0, yend = 0), size=1, arrow = arrow(length = unit(0.3,"cm"))) +
@@ -299,31 +377,41 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
    # integer points
    if (!is.null(points)) {
       p <- p + geom_point(aes_string(x = 'x1', y = 'x2', ...), data=points)
-      if (showLbl & length(points$lbl)>0) {
-         nudgeS=-(max(points$x1)-min(points$x1))/100
-         if (anyDuplicated(cbind(points$x1,points$x2), MARGIN = 1) > 0)
-            p <- p + ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=points, size=3,
-                                     colour = "gray50")
-         if (anyDuplicated(cbind(points$x1,points$x2), MARGIN = 1) == 0)
-            p <- p + geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=points, nudge_x = nudgeS,
-                               nudge_y = nudgeS, hjust=1, size=3, colour = "gray50")
-      }
-   # add iso profit line
-      if (!is.null(iso)) {
+   }
+
+   if (!is.null(rangePoints)) {
+      p <- p + geom_line(aes_string(x = 'x1', y = 'x2', group='grp'), data=rangePoints)
+   }
+
+   tmp <- rbind(points[,1:3], cPoints[,1:3], rangePoints[,1:3])
+   if (showLbl & length(tmp$lbl)>0) {
+      nudgeS=-(max(tmp$x1)-min(tmp$x1))/100
+      if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) > 0)
+         p <- p + ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, size=3,
+                                           colour = "gray50")
+      if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) == 0)
+         p <- p + geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, nudge_x = nudgeS,
+                            nudge_y = nudgeS, hjust=1, size=3, colour = "gray50")
+   }
+
+   if (!is.null(rangePoints) | !is.null(points) | !is.null(cPoints)) {
+      if (!is.null(iso)) {    # add iso profit line
+         tmp <- feasible
          c <- iso
-         points$z <- c[1]*points$x1 + c[2]*points$x2
-         if (crit=="max") i <- which.max(points$z)
-         if (crit=="min") i <- which.min(points$z)
-         if (latex) str <- paste0("$x^* = (", points$x1[i], ",", points$x2[i], ")$")
-         if (!latex) str <- paste0("x* = (", points$x1[i], ",", points$x2[i], ")")
+         tmp$z <- c[1]*tmp$x1 + c[2]*tmp$x2
+         if (crit=="max") i <- which.max(tmp$z)
+         if (crit=="min") i <- which.min(tmp$z)
+         if (latex) str <- paste0("$x^* = (", tmp$x1[i], ",", tmp$x2[i], ")$")
+         if (!latex) str <- paste0("x* = (", tmp$x1[i], ",", tmp$x2[i], ")")
          if (c[2]!=0) {
-            p <- p + geom_abline(intercept = points$z[i]/c[2], slope = -c[1]/c[2], lty="dashed")
+            p <- p + geom_abline(intercept = tmp$z[i]/c[2], slope = -c[1]/c[2], lty="dashed")
          } else {
-            p <- p + geom_vline(xintercept = points$x1[i], lty="dashed")
+            p <- p + geom_vline(xintercept = tmp$x1[i], lty="dashed")
          }
-         p <- p + geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = points[i,], nudge_x = 1.5)
+         p <- p + geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,], nudge_x = 1.5)
       }
    }
+
    return(p)
 }
 
@@ -331,7 +419,8 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
 
 #' Create a plot of criterion space
 #'
-#' @param points Data frame with criterion points
+#' @param points Data frame with criterion points. This is the points used to find nondominated points.
+#' @param rangePoints Ranges to plot (e.g if one variable is continuous). Only used to draw the lines.
 #' @param showLbl Add labels to the points.
 #' @param addTriangles Add triangles to the non-dominated points
 #' @param addHull Add the convex hull of the non-dominated points and rays.
@@ -339,13 +428,16 @@ plotPolytope<-function(cPoints = NULL, points = NULL, showLbl=FALSE, iso=NULL, c
 #'    be the same as used in \link{criterionPoints}.
 #' @param latex If true make latex math labels for TikZ.
 #'
+#' @note Currently only points are checked for dominance. That is, some nondominated points may infact
+#'    be dominated by a segment.
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @example inst/examples/examples.R
-plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = TRUE, crit="max",
+plotCriterion<-function(points, rangePoints = NULL, showLbl=FALSE, addTriangles = FALSE, addHull = TRUE, crit="max",
                         latex = FALSE)
 {
+   if (is.null(points) & is.null(rangePoints)) stop("Arguments points or rangePoints must be specified!")
    # Set Custom theme
    myTheme <- theme_set(theme_bw())
    myTheme <- theme_update(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -391,16 +483,21 @@ plotCriterion<-function(points, showLbl=FALSE, addTriangles = FALSE, addHull = T
       if (length(tmp$z1)>1) { # triangles
          for (r in 1:(dim(tmp)[1] - 1)) {
             p <- p +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray50") +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r],yend=tmp$z2[r+1], colour="gray50") +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r+1],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray0")
+               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray") +
+               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r],yend=tmp$z2[r+1], colour="gray") +
+               geom_segment(x=tmp$z1[r],y=tmp$z2[r+1],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray")
          }
       }
+   }
+
+   if (!is.null(rangePoints)) {
+      p <- p + geom_line(aes_string(x = 'z1', y = 'z2', group='grp'), data=rangePoints)
    }
 
    p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext')) +
       coord_fixed(ratio = 1) +
       scale_colour_grey(start = 0.6, end = 0)
+
    nudgeC=-(max(points$z1)-min(points$z1))/100
    if (showLbl & anyDuplicated(cbind(points$z1,points$z2), MARGIN = 1) > 0)
       p <- p + ggrepel::geom_text_repel(aes_string(label = 'lbl'), size=3, colour = "gray50")
