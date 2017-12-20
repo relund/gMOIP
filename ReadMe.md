@@ -5,7 +5,7 @@
 gMOIP - 2D plots of LP/IP programming models
 ============================================
 
-Make 2D plots of the polyeder of a linear programming (LP) or integer programming (IP) model, including integer points and iso profit curve. Can also make a plot of a bi-objective criterion space and the non-dominated (Pareto) set.
+Make 2D plots of the polyeder of a linear programming (LP), integer programming (IP) model, or mixed integer linear programming (MILP) model, including integer points, ranges and iso profit curve. Can also make a plot of a bi-objective criterion space and the non-dominated (Pareto) set.
 
 Usage
 -----
