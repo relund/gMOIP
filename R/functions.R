@@ -1,6 +1,5 @@
 
 
-
 #' Calculate the criterion points of a set of points and ranges to find the set of non-dominated points
 #' (pareto points) and classify them into extreme supported, non-extreme supported, non-supported.
 #'
@@ -135,40 +134,6 @@ criterionPoints<-function(points, coeff, crit, labels = "coord") {
 
 
 
-# cornerPointsCont3D <- function (A, b, nonneg = rep(TRUE, ncol(A))) {
-#    planes <- cbind(A,-b)
-#    nneg <- NULL
-#    for (i in 1:ncol(A)) {
-#       if (nonneg[i]) {
-#          v <- rep(0, ncol(A))
-#          v[i] <- -1
-#          nneg <- rbind(nneg, c(v,0))
-#       }
-#    }
-#    planes <- rbind(planes,nneg)
-#
-#    # Compute the vertices (all cont variables)
-#    n <- nrow(planes)
-#    vertices <- NULL
-#    for( i in 1:n )
-#       for( j in 1:n)
-#          for( k in 1:n )
-#             if( i < j && j < k ) try( {
-#                # Intersection of the planes i, j, k
-#                vertex <- solve(planes[c(i,j,k),-4], -planes[c(i,j,k),4] )
-#                # Check that it is indeed in the polyhedron
-#                if( all( planes %*% c(vertex,1) <= 1e-6 ) ) {
-#                   vertices <- rbind( vertices, vertex )
-#                }
-#             }, silent = TRUE)
-#    vertices <- as.data.frame(vertices)
-#    colnames(vertices) <- c("x1","x2","x3")
-#    rownames(vertices) <- NULL
-#    vertices$lbl <- df2String(vertices)
-#    return(vertices)
-# }
-
-
 
 
 #' Calculate the corner points for the polytope Ax<=b assuming all variables are
@@ -217,54 +182,6 @@ cornerPointsCont <- function (A, b, nonneg = rep(TRUE, ncol(A))) {
    #vertices$lbl <- df2String(vertices)
    return(vertices)
 }
-# A <- matrix( c(
-#    3, -2, 1,
-#    2, 4, -2,
-#    -3, 2, 1
-# ), nc = 3, byrow = TRUE)
-#
-# b <- c(10,12,3)
-#
-# cornerPointsCont(A,b)
-#
-# A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
-# b <- c(90,27,3)
-# cornerPointsCont(A,b)
-
-
-
-
-
-# cornerPoints3D <- function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A))) {
-#    if (all(type == "c")) return(cornerPointsCont3D(A, b, nonneg))
-#    if (all(type == "i")) {
-#       iPoints <- integerPoints3D(A, b, nonneg)
-#       #iPoints <- cornerPointsCont3D(A, b, nonneg)
-#       p <- iPoints[,1:3]
-#       #plot3d(p, col="gray80", box = F, type ="p", size = 10)
-#       tri <- t(convhulln(p))
-#
-#       #rgl.triangles(p[tri,1],p[tri,2],p[tri,3],col="gold2",alpha=.6)
-#       idx <- unique(as.vector(tri))
-#       #p <- p[idx,]
-#       #points3d(p, col="blue", size = 15)
-#       return(iPoints[idx,])
-#    }
-#    # else combination
-#    p <- planes3D(A, b, type, nonneg)
-#    p <- do.call(rbind, p)
-#    tri <- t(convhulln(p))
-#    #rgl.triangles(p[tri,1],p[tri,2],p[tri,3],col="gold2",alpha=.6)
-#    idx <- unique(as.vector(tri))
-#    #p <- p[idx,]
-#    #points3d(p, col="blue", size = 15)
-#    p <- as.data.frame(p[idx,])
-#    colnames(p) <- c("x1","x2","x3")
-#    rownames(p) <- NULL
-#    p$lbl <- df2String(p)
-#    return(p)
-# }
-#cornerPoints3D(A,b)
 
 
 #' Calculate the corner points for the polytope Ax<=0.
@@ -345,16 +262,15 @@ integerPoints<-function(A, b, nonneg = rep(TRUE, ncol(A))) {
    return(as.matrix(iPoints))
 }
 
-
-
-
-
-
+#' Convert each row to a string.
+#'
+#' @param df Data frame.
+#' @param round How many digits to round
+#'
+#' @return A vector of strings.
 df2String <- function(df, round = 2) {
    apply(df, 1, function(x) paste0("(", paste0(round(x,round), collapse = ", "), ")"))
 }
-
-
 
 
 #' Calculate the ranges (lines) inside the polytope Ax<=b, x>=0 assuming exactly one variable is continuous.
@@ -455,6 +371,27 @@ df2String <- function(df, round = 2) {
 
 
 
+#' Find all corner points i the slices define for each fixed integer combination.
+#'
+#' @param A The constraint matrix.
+#' @param b Right hand side.
+#' @param type A character vector of same length as number of variables. If
+#'   entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
+#' @param nonneg A boolean vector of same length as number of variables. If
+#'   entry k is TRUE then variable k must be non-negative.
+#' @param collapse Collapse list to a data frame.
+#'
+#' @return A list with the corner points.
+#' @export
+#'
+#' @examples
+#' A <- matrix( c(3, -2, 1,2, 4, -2,-3, 2, 1), nc = 3, byrow = TRUE)
+#' b <- c(10,12,3)
+#' planes(A, b, type=c("i","c","i"))
+#'
+#' A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
+#' b <- c(90,27,3)
+#' planes(A, b, type=c("c","i"), collapse = TRUE)
 planes<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), collapse = FALSE) {
    if (length(type)!=ncol(A)) stop("Arg 'type' must be same length as columns in A!")
    if (sum(type=="i")==0) stop("One variable must be integer to generate planes!")
@@ -536,17 +473,6 @@ planes<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
    }
    return(lst)
 }
-# A <- matrix( c(
-#    3, -2, 1,
-#    2, 4, -2,
-#    -3, 2, 1
-# ), nc = 3, byrow = TRUE)
-# b <- c(10,12,3)
-# planes(A, b, type=c("i","c","i"))
-#
-# A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
-# b <- c(90,27,3)
-# planes(A, b, type=c("c","i"))
 
 
 
@@ -865,8 +791,7 @@ plotPolytope2D<-function(A, b, coeff = NULL, type = rep("c", ncol(A)), nonneg = 
    }
 
    if (!is.null(labels)) {
-      tmp <- points
-      print(tmp)
+      tmp <- points[,1:ncol(A)]
       tmp <- as.data.frame(tmp)
       if (labels == "coord")
          tmp$lbl <- df2String(tmp)
