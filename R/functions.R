@@ -1,13 +1,16 @@
 
 
-#' Calculate the criterion points of a set of points and ranges to find the set of non-dominated points
-#' (pareto points) and classify them into extreme supported, non-extreme supported, non-supported.
+#' Calculate the criterion points of a set of points and ranges to find the set
+#' of non-dominated points (pareto points) and classify them into extreme
+#' supported, non-extreme supported, non-supported.
 #'
-#' @param points A data frame with a column for each variable in the solution space (can also be a rangePoints).
+#' @param points A data frame with a column for each variable in the solution
+#'   space (can also be a rangePoints).
 #' @param coeff A p x n matrix(one row for each criterion).
 #' @param crit Either max or min.
-#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-#'   coordinates to the points. Otherwise number all points from one.
+#' @param labels If \code{NULL} or "n" don't add any labels (empty string). If
+#'   'coord' labels are the solution space coordinates. Otherwise number all
+#'   points from one based on the soluton space points.
 #'
 #' @return A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
 #'   (non-dominated), ext (extreme), nonExt (non-extreme supported).
@@ -16,15 +19,9 @@
 #' @examples
 #' A <- matrix( c(3, -2, 1, 2, 4, -2, -3, 2, 1), nc = 3, byrow = TRUE)
 #' b <- c(10,12,3)
-#' coeff <- matrix( c(4,1,1,1,6,8,1,1,1), byrow = TRUE, ncol = 3 )
-#' points <- cornerPoints(A,b)
-#' criterionPoints(points, coeff, crit = "min",  )
-#'
-#' A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
-#' b <- c(90,27,3)
-#' coeff <- matrix( c(4,1,1,6,1,1), byrow = TRUE, ncol = 2 )
-#' points <- cornerPoints(A,b)
-#' criterionPoints(points, coeff, crit = "max" )
+#' points <- integerPoints(A, b)
+#' coeff <- matrix( c(1,-3,1,-1,1,-1), byrow = TRUE, ncol = 3 )
+#' criterionPoints(points, coeff, crit = "max", labels = "numb")
 criterionPoints<-function(points, coeff, crit, labels = "coord") {
    n <- ncol(coeff)
    zVal <- points %*% t(coeff)
@@ -263,10 +260,7 @@ df2String <- function(df, round = 2) {
 }
 
 
-
-
-
-#' Find all corner points i the slices define for each fixed integer combination.
+#' Find all corner points in the slices define for each fixed integer combination.
 #'
 #' @param A The constraint matrix.
 #' @param b Right hand side.
@@ -276,7 +270,7 @@ df2String <- function(df, round = 2) {
 #'   entry k is TRUE then variable k must be non-negative.
 #' @param collapse Collapse list to a data frame with unique points.
 #'
-#' @return A list with the corner points.
+#' @return A list with the corner points (one entry for each slice).
 #' @export
 #'
 #' @examples
@@ -905,11 +899,11 @@ mergeLists <- function (a,b) {
 #' @param crit Either max or min (only used if add the iso profit line).
 #' @param addTriangles Add seach triangles defined by the non-dominated extreme
 #'   points.
-#' @param addHull Add the convex hull of each slice of the non-dominated points
-#'   and the rays.
-#'
+#' @param addHull Add the convex hull and the rays.
+#' @param plotFeasible If \code{True} then plot the criterion points/slices.
 #' @param latex If true make latex math labels for TikZ.
-#' @param labels Add labels to the points.
+#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
+#'   coordinates to the points. Otherwise number all points from one.
 #'
 #' @note Currently only points are checked for dominance. That is, for MILP
 #'   models some nondominated points may infact be dominated by a segment.
@@ -958,6 +952,13 @@ plotCriterion2D <- function(A,
       points <- slices(A, b, type, nonneg, collapse = TRUE)
    }
    points <- criterionPoints(points, coeff, crit, labels)
+   if (all(type == "c")) { # if cont then no non-ext
+      print(points)
+      points$nD[points$nD & !points$ext] <- FALSE
+      points$ext[points$nD & !points$ext] <- FALSE
+      points$nonExt[points$nD & !points$ext] <- FALSE
+      print(points)
+   }
    #print(points)
    dat <<- points  # hack to get data as data frame
    # Initialize plot
