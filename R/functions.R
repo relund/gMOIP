@@ -6,13 +6,25 @@
 #' @param points A data frame with a column for each variable in the solution space (can also be a rangePoints).
 #' @param coeff A p x n matrix(one row for each criterion).
 #' @param crit Either max or min.
+#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
+#'   coordinates to the points. Otherwise number all points from one.
 #'
-#' @return A data frame with columns x1, ..., xn, z1, ..., zp, lbl = label, nD =
-#'   non-dominated, ext = extreme, nonExt = non-extreme supported.
+#' @return A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
+#'   (non-dominated), ext (extreme), nonExt (non-extreme supported).
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
-#' @example inst/examples/examples.R
+#' @examples
+#' A <- matrix( c(3, -2, 1, 2, 4, -2, -3, 2, 1), nc = 3, byrow = TRUE)
+#' b <- c(10,12,3)
+#' coeff <- matrix( c(4,1,1,1,6,8,1,1,1), byrow = TRUE, ncol = 3 )
+#' points <- cornerPoints(A,b)
+#' criterionPoints(points, coeff, crit = "min",  )
 #'
+#' A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
+#' b <- c(90,27,3)
+#' coeff <- matrix( c(4,1,1,6,1,1), byrow = TRUE, ncol = 2 )
+#' points <- cornerPoints(A,b)
+#' criterionPoints(points, coeff, crit = "max" )
 criterionPoints<-function(points, coeff, crit, labels = "coord") {
    n <- ncol(coeff)
    zVal <- points %*% t(coeff)
@@ -103,8 +115,6 @@ criterionPoints<-function(points, coeff, crit, labels = "coord") {
          }
       }
    }
-
-
    # set correct labels
    iP$lbl <- iP$oldLbl
    iP$oldLbl <- NULL
@@ -114,26 +124,6 @@ criterionPoints<-function(points, coeff, crit, labels = "coord") {
 
    return(iP)
 }
-# A <- matrix( c(
-#    3, -2, 1,
-#    2, 4, -2,
-#    -3, 2, 1
-# ), nc = 3, byrow = TRUE)
-# b <- c(10,12,3)
-# coeff <- matrix( c(4,1,1,1,6,8,1,1,1), byrow = TRUE, ncol = 3 )
-# points <- cornerPointsCont(A,b)
-# criterionPoints(points, coeff, crit = "min" )
-#
-# A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
-# b <- c(90,27,3)
-# coeff <- matrix( c(4,1,1,6,1,1), byrow = TRUE, ncol = 2 )
-# points <- cornerPointsCont(A,b)
-# criterionPoints(points, coeff, crit = "max" )
-
-
-
-
-
 
 
 #' Calculate the corner points for the polytope Ax<=b assuming all variables are
@@ -213,7 +203,7 @@ cornerPoints <- function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, nco
       return(iPoints[idx,])
    }
    # else combination
-   p <- planes(A, b, type, nonneg)
+   p <- slices(A, b, type, nonneg)
    p <- do.call(rbind, p)
    tri <- t(geometry::convhulln(p))
    #rgl.triangles(p[tri,1],p[tri,2],p[tri,3],col="gold2",alpha=.6)
@@ -273,101 +263,6 @@ df2String <- function(df, round = 2) {
 }
 
 
-#' Calculate the ranges (lines) inside the polytope Ax<=b, x>=0 assuming exactly one variable is continuous.
-#'
-#' @param A A matrix.
-#' @param b Right hand side.
-#' @param x1 Variable type x1. Must be int (integer) or cont (continuous).
-#' @param x2 Variable type x2. Must be int (integer) or cont (continuous).
-#'
-#' @return A data frame with a range points. Each two rows are the points which must be connected.
-#' @author Lars Relund \email{lars@@relund.dk}
-#' @export
-#' @example inst/examples/examples.R
-# planes3D<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A))) {
-#    if (sum(type=="i")==0) stop("One variable must be integer to generate planes!")
-#    if (all(type=="i")) stop("Cannot generate planes since all variables are integer!")
-#
-#    planes <- cbind(A,-b)
-#    nneg <- NULL
-#    for (i in 1:ncol(A)) {
-#       if (nonneg[i]) {
-#          v <- rep(0, ncol(A))
-#          v[i] <- -1
-#          nneg <- rbind(nneg, c(v,0))
-#       }
-#    }
-#    planes <- rbind(planes,nneg)
-#
-#    getV <- function(intCst) {
-#       nR <- nrow(intCst)
-#       planes <- rbind(planes,intCst)
-#       n <- nrow(planes)- nR
-#       vertices <- NULL
-#       if (nR == 1) {
-#          for( i in 1:n ) {
-#             for( j in 1:n) {
-#                k <- n + nR
-#                if( i < j) try( {
-#                   print
-#                   # Intersection of the planes i, j, k
-#                   vertex <- solve(planes[c(i,j,k),-4], -planes[c(i,j,k),4] )
-#                   # Check that it is indeed in the polyhedron
-#                   if( all( planes %*% c(vertex,1) <= 1e-6 ) ) {
-#                      vertices <- rbind( vertices, vertex )
-#                   }
-#                }, silent = TRUE)
-#             }
-#          }
-#          return(vertices)
-#       }
-#       if (nR == 2) {
-#          for( i in 1:n ) {
-#             j <- n + nR -1
-#             k <- n + nR
-#             try( {
-#                # Intersection of the planes i, j, k
-#                vertex <- solve(planes[c(i,j,k),-4], -planes[c(i,j,k),4] )
-#                # Check that it is indeed in the polyhedron
-#                if( all( planes %*% c(vertex,1) <= 1e-6 ) ) {
-#                   vertices <- rbind( vertices, vertex )
-#                }
-#             }, silent = TRUE)
-#          }
-#          return(vertices)
-#       }
-#       Stop("Error in internal getV function!")
-#    }
-#
-#    iPoints <- integerPoints3D(A, b, nonneg)
-#
-#    idx <- which(type=="i")
-#    if (length(idx)==2) {
-#       minI <- apply(iPoints[,idx], 2, min)
-#       maxI <- apply(iPoints[,idx], 2, max)
-#       cases <- as.matrix(expand.grid(minI[1]:maxI[1], minI[2]:maxI[2]))
-#       #colnames(cases) <- names(maxI)
-#    } else {
-#       cases <- as.matrix(min(iPoints[,idx]):max(iPoints[,idx]))
-#    }
-#
-#    lst <- vector("list", nrow(cases))
-#    for (i in 1:nrow(cases)) {
-#       intCst <- NULL
-#       tmp <- rep(0,ncol(A)+1)
-#       for (j in 1:length(cases[i,])) {
-#          tmp1 <- tmp
-#          tmp1[idx[j]] <- -1
-#          tmp1[ncol(A)+1] <- cases[i,j]
-#          intCst <- rbind(intCst, tmp1)
-#       }
-#       lst[[i]] <- getV(intCst)
-#    }
-#    return(plyr::compact(lst))
-# }
-#planes3D(A, b, type = c("i","c","i"))
-
-
 
 
 
@@ -379,7 +274,7 @@ df2String <- function(df, round = 2) {
 #'   entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
 #' @param nonneg A boolean vector of same length as number of variables. If
 #'   entry k is TRUE then variable k must be non-negative.
-#' @param collapse Collapse list to a data frame.
+#' @param collapse Collapse list to a data frame with unique points.
 #'
 #' @return A list with the corner points.
 #' @export
@@ -387,15 +282,15 @@ df2String <- function(df, round = 2) {
 #' @examples
 #' A <- matrix( c(3, -2, 1,2, 4, -2,-3, 2, 1), nc = 3, byrow = TRUE)
 #' b <- c(10,12,3)
-#' planes(A, b, type=c("i","c","i"))
+#' slices(A, b, type=c("i","c","i"))
 #'
 #' A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
 #' b <- c(90,27,3)
-#' planes(A, b, type=c("c","i"), collapse = TRUE)
-planes<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), collapse = FALSE) {
+#' slices(A, b, type=c("c","i"), collapse = TRUE)
+slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), collapse = FALSE) {
    if (length(type)!=ncol(A)) stop("Arg 'type' must be same length as columns in A!")
-   if (sum(type=="i")==0) stop("One variable must be integer to generate planes!")
-   if (all(type=="i")) stop("Cannot generate planes since all variables are integer!")
+   if (sum(type=="i")==0) stop("One variable must be integer to generate slices!")
+   if (all(type=="i")) stop("Cannot generate slices since all variables are integer!")
 
    planes <- cbind(A,-b)
    nneg <- NULL
@@ -749,7 +644,7 @@ plotPolytope2D<-function(A, b, coeff = NULL, type = rep("c", ncol(A)), nonneg = 
    } else if (all(type == "i")) {
       points <- integerPoints(A, b, nonneg)
    } else {
-      pl <- planes(A, b, type, nonneg)
+      pl <- slices(A, b, type, nonneg)
       pl <- lapply(pl, unique)
       for (i in 1:length(pl)) pl[[i]] <- cbind(pl[[i]],i)
       pl <- lapply(pl, function(x) {
@@ -770,7 +665,7 @@ plotPolytope2D<-function(A, b, coeff = NULL, type = rep("c", ncol(A)), nonneg = 
          p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=points, ...) #+ scale_colour_grey(start = 0.6, end = 0)
       }
       if (length(which(type == "c"))==1) {
-         # pl <- planes(A, b, type, nonneg)
+         # pl <- slices(A, b, type, nonneg)
          # pl <- lapply(pl, unique)
          # for (i in 1:length(pl)) pl[[i]] <- cbind(pl[[i]],i)
          # pl <- lapply(pl, function(x) {
@@ -930,7 +825,7 @@ plotPolytope3D <-
             iPoints <- integerPoints(A, b, nonneg)
             points3d(iPoints[,1:3], col="black", size = 10)
          } else {
-            pl <- planes(A, b, type, nonneg)
+            pl <- slices(A, b, type, nonneg)
             for (i in 1:length(pl)) {
                mat <- pl[[i]]
                if (is.null(mat)) next
@@ -971,7 +866,7 @@ plotPolytope3D <-
          } else if (all(type == "i")) {
             points <- integerPoints(A, b, nonneg)
          } else {
-            points <- planes(A, b, type, nonneg, collapse = TRUE)
+            points <- slices(A, b, type, nonneg, collapse = TRUE)
          }
          points <- as.data.frame(points)
          rownames(points) <- NULL
@@ -998,19 +893,26 @@ mergeLists <- function (a,b) {
 
 
 
-#' Create a plot of criterion space
+#' Create a plot of the criterion space of a bi-objective problem.
 #'
-#' @param points Data frame with criterion points. This is the points used to find nondominated points.
-#' @param rangePoints Ranges to plot (e.g if one variable is continuous). Only used to draw the lines.
-#' @param showLbl Add labels to the points.
-#' @param addTriangles Add triangles to the non-dominated points
-#' @param addHull Add the convex hull of the non-dominated points and rays.
-#' @param crit Either min or max. The objective the criterion points are classified as. Note must
-#'    be the same as used in \link{criterionPoints}.
+#' @param A The constraint matrix.
+#' @param b Right hand side.
+#' @param coeff A p x n matrix(one row for each criterion).
+#' @param type A character vector of same length as number of variables. If
+#'   entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
+#' @param nonneg A boolean vector of same length as number of variables. If
+#'   entry k is TRUE then variable k must be non-negative.
+#' @param crit Either max or min (only used if add the iso profit line).
+#' @param addTriangles Add seach triangles defined by the non-dominated extreme
+#'   points.
+#' @param addHull Add the convex hull of each slice of the non-dominated points
+#'   and the rays.
+#'
 #' @param latex If true make latex math labels for TikZ.
+#' @param labels Add labels to the points.
 #'
-#' @note Currently only points are checked for dominance. That is, some nondominated points may infact
-#'    be dominated by a segment.
+#' @note Currently only points are checked for dominance. That is, for MILP
+#'   models some nondominated points may infact be dominated by a segment.
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
@@ -1053,7 +955,7 @@ plotCriterion2D <- function(A,
    } else if (all(type == "c")) {
       points <- cornerPoints(A, b, type, nonneg)
    } else {
-      points <- planes(A, b, type, nonneg, collapse = TRUE)
+      points <- slices(A, b, type, nonneg, collapse = TRUE)
    }
    points <- criterionPoints(points, coeff, crit, labels)
    #print(points)
@@ -1102,7 +1004,7 @@ plotCriterion2D <- function(A,
          #    #coord_fixed(ratio = 1) +
          #    scale_colour_grey(start = 0.6, end = 0)
       } else {
-         pl <- planes(A, b, type, nonneg)
+         pl <- slices(A, b, type, nonneg)
          pl <- lapply(pl, function(x) {
             x <- x %*% t(coeff)
             if (is.vector(x)) x <- matrix(x, nrow=1)
