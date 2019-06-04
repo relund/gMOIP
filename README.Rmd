@@ -18,12 +18,13 @@ library(gMOIP)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
 [![CRAN_Downloads_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
 
-# gMOIP - 2D plots of LP/IP programming models 
+# gMOIP - 2D and 3D plots of LP/IP/MILP programming models 
 
-Make 2D plots of the polyeder of a linear programming (LP), integer programming (IP) model,
-or mixed integer linear programming (MILP) model, 
-including integer points, ranges and iso profit curve. Can also make a plot of a bi-objective criterion
-space and the non-dominated (Pareto) set.
+Make 2D and 3D plots of the polyeder of a linear programming (LP), integer programming (IP) model,
+or mixed integer linear programming (MILP) model with 2 or 3 varibles, 
+including integer points, ranges and iso profit curve. 
+
+Can also make a plot of the bi-objective criterion space and the non-dominated (Pareto) set for bi-objective LP/IP/MILP programming models.
 
 ## Usage
 
@@ -32,6 +33,23 @@ space and the non-dominated (Pareto) set.
 A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
 b <- c(90,27,3)
 coeff <- c(7.75, 10)
+
+plotPolytope(
+  A,
+  b,
+  coeff,
+  type = rep("c", ncol(A)),
+  crit = "max",
+  faces = rep("c", ncol(A)),
+  plotFaces = T,
+  plotFeasible = T,
+  plotOptimum = F,
+  labels = NULL
+  )
+   
+   cPoints, iPoints, iso = coeff, crit = "max")
+
+
 
 # Corner points of the polytope
 cPoints<-cornerPoints(A, b)

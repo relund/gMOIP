@@ -2,129 +2,25 @@
 % Please edit documentation in R/functions.R
 \name{cornerPointsCont}
 \alias{cornerPointsCont}
-\title{Calculate the corner points for the polytope Ax<=b, x>=0 (both continuous) (used some code from the \code{intpoint} package)}
+\title{Calculate the corner points for the polytope Ax<=b assuming all variables are
+continuous.}
 \usage{
-cornerPointsCont(A, b)
+cornerPointsCont(A, b, nonneg = rep(TRUE, ncol(A)))
 }
 \arguments{
-\item{A}{A matrix.}
+\item{A}{Constraint matrix.}
 
 \item{b}{Right hand side.}
+
+\item{nonneg}{A boolean vector of same length as number of variables. If
+entry k is TRUE then variable k must be non-negative.}
 }
 \value{
 A data frame with a corner point in each row.
 }
 \description{
-Calculate the corner points for the polytope Ax<=b, x>=0 (both continuous) (used some code from the \code{intpoint} package)
-}
-\examples{
-# Define the LP max/min coeff*x st. Ax<=b, x>=0
-A <- matrix(c(9,10,2,4,-3,2), ncol = 2, byrow = TRUE)
-b <- c(90,27,3)
-coeff <- c(7.75, 10)
-
-## LP model
-# Corner points of the polytope
-cPoints<-cornerPoints(A, b)
-plotPolytope(cPoints)
-plotPolytope(cPoints, points = cPoints)
-cPointsWLbl <- cPoints
-cPointsWLbl$lbl <- paste0("(", cPoints$x1, ",", cPoints$x2, ")")
-plotPolytope(cPointsWLbl, showLbl = TRUE)
-plotPolytope(cPoints, cPointsWLbl, showLbl = TRUE)
-plotPolytope(cPoints, cPoints, iso = coeff, crit = "max")
-plotPolytope(cPoints, cPoints, iso = c(3,-3), crit = "min")
-plotPolytope(cPoints, cPoints) + xlab("x") + ylab("y")
-
-## IP model
-# Integer points in the polytope
-iPoints<-integerPoints(A, b)
-plotPolytope(cPoints, points = iPoints)
-plotPolytope(cPoints, iPoints, iso = coeff, crit = "max", feasible = iPoints)
-plotPolytope(cPoints, iPoints, iso = c(3,-3), crit = "min", feasible = iPoints)
-cPoints<-cornerPoints(A, b, x1="int", x2="int")
-plotPolytope(cPoints, points = iPoints)
-plotPolytope(cPoints, iPoints, iso = coeff, crit = "max", feasible = iPoints)
-plotPolytope(cPoints, iPoints, iso = c(3,-3), crit = "min", feasible = iPoints)
-
-## MILP model
-cPoints<-cornerPoints(A, b)
-rngPoints <- ranges(A, b, x1="int", x2="cont")
-plotPolytope(cPoints, rangePoints = rngPoints)
-plotPolytope(cPoints, points = rngPoints, rangePoints = rngPoints)
-plotPolytope(cPoints, rngPoints, rngPoints, iso = coeff, crit = "max", feasible = rngPoints)
-plotPolytope(cPoints, rngPoints, rngPoints, iso = c(3,-3), crit = "min", feasible = rngPoints)
-cPoints<-cornerPoints(A, b, x1="int", x2="cont")
-plotPolytope(cPoints, rangePoints = rngPoints)
-plotPolytope(cPoints, points = rngPoints, rangePoints = rngPoints)
-plotPolytope(cPoints, rngPoints, rngPoints, iso = coeff, crit = "max", feasible = rngPoints)
-plotPolytope(cPoints, rngPoints, rngPoints, iso = c(3,-3), crit = "min", feasible = rngPoints)
-rngPoints <- ranges(A, b, x1="cont", x2="int")
-cPoints<-cornerPoints(A, b, x1="cont", x2="int")
-plotPolytope(cPoints, rngPoints, rngPoints)
-
-### Bi-objective problem: Plot of criterion space given a bi-objective vector
-## LP model
-cPoints<-cornerPoints(A, b)
-zPoints<-criterionPoints(cPoints, c1 = c(coeff[1], -10), c2 = c(-10, coeff[2]), crit = "max")
-zPoints<-zPoints[zPoints$ext,]  # remove all nonextreme (since LP model)
-plotCriterion(zPoints)
-
-## IP model
-iPoints<-integerPoints(A, b)
-zPoints<-criterionPoints(iPoints, c1 = c(coeff[1], 0), c2 = c(0, coeff[2]), crit = "max")
-head(zPoints)
-plotCriterion(zPoints)
-plotCriterion(zPoints, addHull = FALSE, addTriangles = TRUE)
-# other criteria
-zPoints<-criterionPoints(iPoints, c1 = c(coeff[1], -10), c2 = c(-5, coeff[2]), crit = "max")
-plotCriterion(zPoints, addTriangles = TRUE)
-# mimimize
-zPoints<-criterionPoints(zPoints, c1 = c(-1, 1), c2 = c(1, -1), crit = "min")
-plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min")
-zPoints<-criterionPoints(iPoints, c1 = c(coeff[1], -10), c2 = c(-5, coeff[2]), crit = "min")
-plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min")
-# identify solutions (x1,x2) corresponding to (z1,z2)
-plotPolytope(cPoints, zPoints, showLbl = TRUE)
-plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min", showLbl = TRUE)
-# other examples (max and min with shapes)
-zPoints<-criterionPoints(iPoints, c1 = c(-2, -1), c2 = c(1, 4), crit = "max")
-plotPolytope(cPoints, zPoints, showLbl = TRUE, shape = zPoints$nD)
-plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "max", showLbl = TRUE)
-zPoints<-criterionPoints(iPoints, c1 = c(-2, -1), c2 = c(1, 4), crit = "min")
-plotCriterion(zPoints, addHull = TRUE, addTriangles = TRUE, crit = "min", showLbl = TRUE)
-
-## MILP model
-# x1 integer
-cPoints<-cornerPoints(A, b, x1="int", x2="cont")
-rngPoints <- ranges(A, b, x1="int", x2="cont")
-plotPolytope(cPoints, points = rngPoints, rangePoints = rngPoints)
-zRngPoints<-criterionPoints(rngPoints, c1 = c(coeff[1], 0), c2 = c(0, coeff[2]), crit = "max")
-plotCriterion(zRngPoints, rangePoints = zRngPoints, addTriangles = TRUE)
-zRngPoints<-criterionPoints(rngPoints, c1 = c(coeff[1], -10), c2 = c(-5, coeff[2]), crit = "max")
-plotCriterion(zRngPoints, rangePoints = zRngPoints, addTriangles = TRUE)
-zRngPoints<-criterionPoints(rngPoints, c1 = c(coeff[1], -10), c2 = c(-5, coeff[2]), crit = "min")
-plotCriterion(zRngPoints, rangePoints = zRngPoints, addTriangles = TRUE, crit = "min")
-# x2 integer
-cPoints<-cornerPoints(A, b, x1="cont", x2="int")
-rngPoints <- ranges(A, b, x1="cont", x2="int")
-plotPolytope(cPoints, points = rngPoints, rangePoints = rngPoints)
-zRngPoints<-criterionPoints(rngPoints, c1 = c(coeff[1], 0), c2 = c(0, coeff[2]), crit = "max")
-plotCriterion(zRngPoints, rangePoints = zRngPoints, addTriangles = TRUE)
-zRngPoints<-criterionPoints(rngPoints, c1 = c(coeff[1], -10), c2 = c(-5, coeff[2]), crit = "max")
-plotCriterion(zRngPoints, rangePoints = zRngPoints, addTriangles = TRUE)
-zRngPoints<-criterionPoints(rngPoints, c1 = c(coeff[1], -10), c2 = c(-5, coeff[2]), crit = "min")
-plotCriterion(zRngPoints, rangePoints = zRngPoints, addTriangles = TRUE, crit = "min")
-
-
-\dontrun{
-# Generate tikz file for LaTeX
-library(tikzDevice)
-tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
-plotPolytope(cPoints, zPoints, showLbl = TRUE, latex = TRUE)
-dev.off()
-}
-
+Calculate the corner points for the polytope Ax<=b assuming all variables are
+continuous.
 }
 \author{
 Lars Relund \email{lars@relund.dk}
