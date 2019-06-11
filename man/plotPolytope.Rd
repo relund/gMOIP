@@ -250,20 +250,6 @@ plotPolytope(
 
 
 ### 3D examples
-# Function to load the view angle in RGL
-loadView <- function(fname = "view.RData", v = NULL) {
-   if (!is.null(v)) {
-      rgl::view3d(userMatrix = v)
-   } else {
-      if (file.exists(fname)) {
-         load(fname)
-         rgl::view3d(userMatrix = view)
-      } else {
-         warning(paste0("Can'TRUE load view in file ", fname, "!"))
-      }
-   }
-}
-
 # Ex 1
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,

@@ -1048,9 +1048,74 @@ plotCriterion2D <- function(A,
 }
 
 
+#' Help function to save the view angle for the RGL 3D plot
+#'
+#' @param fname The file name of the view.
+#' @param overwrite Overwrite existing file.
+#' @param print Print the view so can be copied to R code (no file is saved).
+#'
+#' @note Only save if the file name don't exists.
+#' @return The ggplot2 object.
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @examples
+#' view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0,
+#' 0.910147845745087, -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183,
+#' 0.97196090221405, 0.231208890676498, 0, 0, 0, 0, 1), nc = 4)
+#'
+#' loadView(v = view)
+#' A <- matrix( c(3, 2, 5, 2, 1, 1, 1, 1, 3, 5, 2, 4), nc = 3, byrow = TRUE)
+#' b <- c(55, 26, 30, 57)
+#' obj <- c(20, 10, 15)
+#' plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
+#'
+#' # Try to modify the angle in the RGL window
+#' saveView(print = TRUE)  # get the viewangle to insert into R code
+saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
+   if (print) {
+      view <- rgl::par3d()$userMatrix
+      cat(paste0("view <- matrix( c(", paste0(view, collapse = ", "), "), nc = 4)"))
+   } else if (!file.exists(fname) | overwrite) {
+      view <- rgl::par3d()$userMatrix
+      save(view, file = fname)
+      message(paste0("RGL view saved to RData file ", fname, "."))
+   }
+}
 
 
-
+#' Help function to load the view angle for the RGL 3D plot from a file or matrix
+#'
+#' @param fname The file name of the view.
+#' @param v The view matrix.
+#'
+#' @return NULL
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @examples
+#' view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0,
+#' 0.910147845745087, -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183,
+#' 0.97196090221405, 0.231208890676498, 0, 0, 0, 0, 1), nc = 4)
+#'
+#' loadView(v = view)
+#' A <- matrix( c(3, 2, 5, 2, 1, 1, 1, 1, 3, 5, 2, 4), nc = 3, byrow = TRUE)
+#' b <- c(55, 26, 30, 57)
+#' obj <- c(20, 10, 15)
+#' plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
+#'
+#' # Try to modify the angle in the RGL window
+#' saveView(print = TRUE)  # get the viewangle to insert into R code
+loadView <- function(fname = "view.RData", v = NULL) {
+   if (!is.null(v)) {
+      rgl::view3d(userMatrix = v)
+   } else {
+      if (file.exists(fname)) {
+         load(fname)
+         rgl::view3d(userMatrix = view)
+      } else {
+         warning(paste0("Can't load view in file ", fname, "!"))
+      }
+   }
+}
 
 
 

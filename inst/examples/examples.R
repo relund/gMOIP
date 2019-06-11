@@ -1,7 +1,7 @@
 # Define the LP max/min coeff*x st. Ax<=b, x>=0
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
-coeff <- c(7.75, 10)
+obj <- c(7.75, 10)
 
 
 ## LP model
@@ -9,7 +9,7 @@ coeff <- c(7.75, 10)
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("c", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -22,7 +22,7 @@ plotPolytope(
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("c", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -35,7 +35,7 @@ plotPolytope(
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("c", ncol(A)),
    crit = "min",
    faces = rep("c", ncol(A)),
@@ -48,7 +48,7 @@ plotPolytope(
 p <- plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("c", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -63,11 +63,11 @@ p + ggplot2::xlab("x") + ggplot2::ylab("y")
 ## LP-model with no non-negativity constraints
 A <- matrix(c(-3, 2, 2, 4, 9, 10, 1, -2), ncol = 2, byrow = TRUE)
 b <- c(3, 27, 90, 2)
-coeff <- c(7.75, 10)
+obj <- c(7.75, 10)
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("c", ncol(A)),
    nonneg = rep(F, ncol(A)),
    crit = "max",
@@ -83,12 +83,12 @@ plotPolytope(
 ## The package don't plot feasible regions that are unbounded e.g if we drop the 2 and 3 constraint
 A <- matrix(c(-3,2), ncol = 2, byrow = TRUE)
 b <- c(3)
-coeff <- c(7.75, 10)
+obj <- c(7.75, 10)
 # Wrong plot
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("c", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -104,7 +104,7 @@ b <- c(b, 10, 10)
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("c", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -123,7 +123,7 @@ plotPolytope(
 # require(lpSolve)
 # A <- matrix(c(-3,2), ncol = 2, byrow = TRUE)
 # b <- c(3)
-# coeff <- c(7.75, 10)
+# obj <- c(7.75, 10)
 #
 #
 # # Direction of the constraints
@@ -131,7 +131,7 @@ plotPolytope(
 #
 # # Find the optimal solution
 # optimum <-  lp(direction="max",
-#                objective.in = coeff,
+#                objective.in = obj,
 #                const.mat = A,
 #                const.dir = constranints_direction,
 #                const.rhs = b)
@@ -165,12 +165,12 @@ plotPolytope(
 ### ILP model
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
-coeff <- c(7.75, 10)
+obj <- c(7.75, 10)
 # ILP model with LP faces:
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("i", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -183,7 +183,7 @@ plotPolytope(
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = rep("i", ncol(A)),
    crit = "max",
    faces = rep("i", ncol(A)),
@@ -197,12 +197,12 @@ plotPolytope(
 ## MILP model
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
-coeff <- c(7.75, 10)
+obj <- c(7.75, 10)
 # Second coordinate integer
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = c("c", "i"),
    crit = "max",
    faces = c("c", "i"),
@@ -215,7 +215,7 @@ plotPolytope(
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = c("i", "c"),
    crit = "max",
    faces = c("c", "c"),
@@ -228,7 +228,7 @@ plotPolytope(
 plotPolytope(
    A,
    b,
-   coeff,
+   obj,
    type = c("i", "c"),
    crit = "max",
    faces = c("i", "c"),
@@ -248,7 +248,7 @@ plotPolytope(
    plotPolytope(
       A,
       b,
-      coeff,
+      obj,
       type = c("i", "c"),
       crit = "max",
       faces = c("i", "c"),
@@ -272,7 +272,7 @@ library(grid)
 library(gridExtra)
 
 # function for plotting solution and criterion space
-plotBiObj <- function(A, b, coeff,
+plotBiObj <- function(A, b, obj,
    type = rep("c", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -285,57 +285,57 @@ plotBiObj <- function(A, b, coeff,
 {
    p1 <- plotPolytope(A, b, type = type, crit = crit, faces = faces, plotFaces = plotFaces,
                       plotFeasible = plotFeasible, plotOptimum = plotOptimum, labels = labels)
-   p2 <- plotCriterion2D(A, b, coeff, type = type, crit = crit, addTriangles = addTriangles,
+   p2 <- plotCriterion2D(A, b, obj, type = type, crit = crit, addTriangles = addTriangles,
                          addHull = addHull, plotFeasible = plotFeasible, labels = labels)
    grid.arrange(p1, p2, nrow = 1)
 }
 
 ## LP model
-coeff <- matrix(
+obj <- matrix(
    c(7, -10, # first criterion
      -10, -10), # second criterion
    nrow = 2)
-plotBiObj(A, b, coeff, addTriangles = F)
+plotBiObj(A, b, obj, addTriangles = F)
 
 ## ILP models with different criteria (maximize)
-coeff <- matrix(c(7, -10, -10, -10), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)))
-coeff <- matrix(c(3, -1, -2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)))
-coeff <- matrix(c(-7, -1, -5, 5), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)))
-coeff <- matrix(c(-1, -1, 2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)))
+obj <- matrix(c(7, -10, -10, -10), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)))
+obj <- matrix(c(3, -1, -2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)))
+obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)))
+obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)))
 
 ## ILP models with different criteria (minimize)
-coeff <- matrix(c(7, -10, -10, -10), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)), crit = "min")
-coeff <- matrix(c(3, -1, -2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)), crit = "min")
-coeff <- matrix(c(-7, -1, -5, 5), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)), crit = "min")
-coeff <- matrix(c(-1, -1, 2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = rep("i", ncol(A)), crit = "min")
+obj <- matrix(c(7, -10, -10, -10), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)), crit = "min")
+obj <- matrix(c(3, -1, -2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)), crit = "min")
+obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)), crit = "min")
+obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 
 ## MILP model (x1 integer) with different criteria (maximize)
-coeff <- matrix(c(7, -10, -10, -10), nrow = 2)
-plotBiObj(A, b, coeff, type = c("i", "c"))
-coeff <- matrix(c(3, -1, -2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = c("i", "c"))
-coeff <- matrix(c(-7, -1, -5, 5), nrow = 2)
-plotBiObj(A, b, coeff, type = c("i", "c"))
-coeff <- matrix(c(-1, -1, 2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = c("i", "c"))
+obj <- matrix(c(7, -10, -10, -10), nrow = 2)
+plotBiObj(A, b, obj, type = c("i", "c"))
+obj <- matrix(c(3, -1, -2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = c("i", "c"))
+obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
+plotBiObj(A, b, obj, type = c("i", "c"))
+obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = c("i", "c"))
 
 ## MILP model (x2 integer) with different criteria (minimize)
-coeff <- matrix(c(7, -10, -10, -10), nrow = 2)
-plotBiObj(A, b, coeff, type = c("c", "i"), crit = "min")
-coeff <- matrix(c(3, -1, -2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = c("c", "i"), crit = "min")
-coeff <- matrix(c(-7, -1, -5, 5), nrow = 2)
-plotBiObj(A, b, coeff, type = c("c", "i"), crit = "min")
-coeff <- matrix(c(-1, -1, 2, 2), nrow = 2)
-plotBiObj(A, b, coeff, type = c("c", "i"), crit = "min")
+obj <- matrix(c(7, -10, -10, -10), nrow = 2)
+plotBiObj(A, b, obj, type = c("c", "i"), crit = "min")
+obj <- matrix(c(3, -1, -2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = c("c", "i"), crit = "min")
+obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
+plotBiObj(A, b, obj, type = c("c", "i"), crit = "min")
+obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
+plotBiObj(A, b, obj, type = c("c", "i"), crit = "min")
 
 
 
@@ -346,18 +346,18 @@ plotBiObj(A, b, coeff, type = c("c", "i"), crit = "min")
 ### 3D examples
 saveView <- function(fname = "view.RData") {
    if (!file.exists(fname)) {
-      view <- par3d()$userMatrix
+      view <- rgl::par3d()$userMatrix
       save(view, file = fname)
       message(paste0("RGL view saved to RData file ", fname, "."))
    }
 }
 loadView <- function(fname = "view.RData", v = NULL) {
    if (!is.null(v)) {
-      view3d(userMatrix = v)
+      rgl::view3d(userMatrix = v)
    } else {
       if (file.exists(fname)) {
          load(fname)
-         view3d(userMatrix = view)
+         rgl::view3d(userMatrix = view)
       } else {
          warning(paste0("Can't load view in file ", fname, "!"))
       }
@@ -380,17 +380,17 @@ A <- matrix( c(
 b <- c(55, 26, 30, 57)
 obj <- c(20, 10, 15)
 # LP model
-plotPolytope(A, b, plotOptimum = T, coeff = obj, labels = "coord")
+plotPolytope(A, b, plotOptimum = T, obj = obj, labels = "coord")
 # ILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, obj = obj)
 # MILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, obj = obj)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, coeff = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, obj = obj, plotFaces = F)
 
 view <- matrix( c(-0.812462985515594, -0.029454167932272, 0.582268416881561, 0, 0.579295456409454, -0.153386667370796, 0.800555109977722, 0, 0.0657325685024261, 0.987727105617523, 0.14168381690979, 0, 0, 0, 0, 1), nc = 4)
 loadView(v = view)
@@ -400,17 +400,17 @@ A <- matrix( c(
 ), nc = 3, byrow = TRUE)
 b <- c(10, 24)
 obj <- c(20, 10, 15)
-plotPolytope(A, b, plotOptimum = T, coeff = obj, labels = "coord")
+plotPolytope(A, b, plotOptimum = T, obj = obj, labels = "coord")
 # ILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, obj = obj)
 # MILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, obj = obj)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, coeff = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, obj = obj, plotFaces = F)
 
 view <- matrix( c(0.976349174976349, -0.202332556247711, 0.0761845782399178, 0, 0.0903248339891434, 0.701892614364624, 0.706531345844269, 0, -0.196427255868912, -0.682940244674683, 0.703568696975708, 0, 0, 0, 0, 1), nc = 4)
 loadView(v = view)
@@ -423,17 +423,17 @@ A <- matrix( c(
 ), nc = 3, byrow = TRUE)
 b <- c(5, 45, 27, 24, 10)
 obj <- c(5, 45, 15)
-plotPolytope(A, b, plotOptimum = T, coeff = obj, labels = "coord")
+plotPolytope(A, b, plotOptimum = T, obj = obj, labels = "coord")
 # ILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, obj = obj)
 # MILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, obj = obj)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, coeff = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, obj = obj, plotFaces = F)
 
 view <- matrix( c(-0.452365815639496, -0.446501553058624, 0.77201122045517, 0, 0.886364221572876, -0.320795893669128, 0.333835482597351, 0, 0.0986008867621422, 0.835299551486969, 0.540881276130676, 0, 0, 0, 0, 1), nc = 4)
 loadView(v = view)
@@ -448,17 +448,17 @@ Ab <- matrix( c(
 A <- Ab[,1:3]
 b <- Ab[,4]
 obj = c(1,1,3)
-plotPolytope(A, b, plotOptimum = T, coeff = obj, labels = "coord")
+plotPolytope(A, b, plotOptimum = T, obj = obj, labels = "coord")
 # ILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = T, obj = obj)
 # MILP model
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, coeff = obj)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = T, obj = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = T, obj = obj)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, coeff = obj, plotFaces = F)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, coeff = obj)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","c"), plotOptimum = T, obj = obj, plotFaces = F)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = T, obj = obj)
 
 
 

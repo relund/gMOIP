@@ -21,6 +21,10 @@ Imports:
    rgl, 
    MASS, 
    plyr
-Suggests: tikzDevice,
-   grid,
-   gridExtra
+Suggests: 
+    tikzDevice,
+    grid,
+    gridExtra,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
