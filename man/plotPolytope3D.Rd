@@ -38,10 +38,11 @@ only one is shown) and add the iso profit line.}
 
 \item{latex}{If \code{True} make latex math labels for TikZ.}
 
-\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-coordinates to the points. Otherwise number all points from one.}
+\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
+'coord' add coordinates to the points. Otherwise number all points from one.}
 
-\item{...}{Not used.}
+\item{...}{Arguments passed to axes3d, plot3d, title3d. Parsed using lists argsAxes3d,
+argsPlot3d and argsTitle3d.}
 }
 \value{
 A rgl window with 3D plot.
@@ -50,7 +51,8 @@ A rgl window with 3D plot.
 Plot the polytope (bounded convex set) of a linear matematical program
 }
 \note{
-The feasiable region defined by the constraints must be bounded otherwise you may see strange results.
+The feasiable region defined by the constraints must be bounded otherwise you may see
+  strange results.
 }
 \author{
 Lars Relund \email{lars@relund.dk}

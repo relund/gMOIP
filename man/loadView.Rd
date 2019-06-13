@@ -4,12 +4,21 @@
 \alias{loadView}
 \title{Help function to load the view angle for the RGL 3D plot from a file or matrix}
 \usage{
-loadView(fname = "view.RData", v = NULL)
+loadView(fname = "view.RData", v = NULL, clear = TRUE,
+  close = FALSE, zoom = 1, ...)
 }
 \arguments{
 \item{fname}{The file name of the view.}
 
 \item{v}{The view matrix.}
+
+\item{clear}{Call \link{clear3d}.}
+
+\item{close}{Call \link{rgl.close}.}
+
+\item{zoom}{Zoom level.}
+
+\item{...}{Additional parameters passed to \link{view3d}.}
 }
 \description{
 Help function to load the view angle for the RGL 3D plot from a file or matrix

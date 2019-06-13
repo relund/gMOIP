@@ -528,6 +528,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #' @return If 2D a ggplot2 object. If 3D a rgl window with 3D plot.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
+#' @import rgl ggplot2
 #' @example inst/examples/ex_polytope.R
 plotPolytope <-
    function(A,
@@ -726,11 +727,13 @@ plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = re
 #' @param plotOptimum Show the optimum corner solution point (if alternative solutions
 #'   only one is shown) and add the iso profit line.
 #' @param latex If \code{True} make latex math labels for TikZ.
-#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-#'   coordinates to the points. Otherwise number all points from one.
-#' @param ... Not used.
+#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
+#'   'coord' add coordinates to the points. Otherwise number all points from one.
+#' @param ... Arguments passed to axes3d, plot3d, title3d. Parsed using lists argsAxes3d,
+#'   argsPlot3d and argsTitle3d.
 #'
-#' @note The feasiable region defined by the constraints must be bounded otherwise you may see strange results.
+#' @note The feasiable region defined by the constraints must be bounded otherwise you may see
+#'   strange results.
 #'
 #' @return A rgl window with 3D plot.
 #' @author Lars Relund \email{lars@@relund.dk}
@@ -752,7 +755,7 @@ plotPolytope3D <-
       # set plot parameters
       args <- list(...)
       argsAxes3d <- mergeLists(list(edges=c('x', 'y', 'z')), args$argsAxes3d)
-      argsPlot3d <- mergeLists(list(xlab = '', box = FALSE, axes = F), args$argsPlot3d)
+      argsPlot3d <- mergeLists(list(xlab = '', box = F, axes = F), args$argsPlot3d)
       argsTitle3d <- mergeLists(list(xlab = 'x1', ylab = 'x2', zlab = 'x3'), args$argsTitle3d)
 
       #open3d()
@@ -760,7 +763,7 @@ plotPolytope3D <-
       aspect3d("iso")
 
       plotMat <- function(mat, col="black") {
-         if (nrow(mat)==1) points3d(mat, col=col, size = 10)
+         if (nrow(mat)==1) pch3d(mat, col=col, cex = 0.1, pch = 16) #points3d(mat, col=col, size = 10)
          if (nrow(mat)==2) { #segments3d(mat, col = "black", lwd=10, smooth=T)
             cyl <- cylinder3d(mat, radius = 0.01)
             shade3d(cyl, col = col)
@@ -799,15 +802,19 @@ plotPolytope3D <-
             # don't plot anything
          } else if (all(type == "i")) {
             iPoints <- integerPoints(A, b, nonneg)
-            points3d(iPoints[,1:3], col="black", size = 7)
+            #points3d(iPoints[,1:3], col="black", size = 7)
+            pch3d(iPoints[,1:3], col="black", cex = 0.1, pch = 16)
          } else {
             pl <- slices(A, b, type, nonneg)
             for (i in 1:length(pl)) {
                mat <- pl[[i]]
                if (is.null(mat)) next
-               if (nrow(mat)==1) points3d(mat, col="black", size = 7)
+               if (nrow(mat)==1) {
+                  #pch3d(mat, col="black", cex = 0.1, pch = 16)
+                  points3d(mat, col="black", size = 7)
+               }
                if (nrow(mat)==2) { #segments3d(mat, col = "black", lwd=10, smooth=T)
-                  cyl <- cylinder3d(mat, radius = 0.01)
+                  cyl <- cylinder3d(mat, radius = 0.015)
                   shade3d(cyl, col = "black")
                }
                if (nrow(mat)==3) triangles3d(mat, col="grey100", alpha=0.6)
@@ -831,6 +838,7 @@ plotPolytope3D <-
          idx <- which.max(val)
          val <- vertices[idx,1:3]
          points3d(val[1], val[2], val[3], col="red", size = 14)
+         #pch3d(val[1], val[2], val[3], col="red", cex = 0.2, pch = 16)
          #spheres3d(val[1], val[2], val[3], col="black", radius = 1)
          #planes3d(obj, d = -val, alpha = 0.6)
          #arrow3d(c(0,0,0), 0.25*obj, type="lines", barblen = 0.01, col="red", lwd=5)
@@ -846,8 +854,10 @@ plotPolytope3D <-
          }
          points <- as.data.frame(points)
          rownames(points) <- NULL
-         if (length(which(type == "c"))<length(type) & length(which(type == "c"))>0)
+         if (length(which(type == "c"))<length(type) & length(which(type == "c"))>0) {
+            #pch3d(iPoints[,1:3], col="black", cex = 0.1, pch = 16)
             points3d(points[,1:3], col="grey50", size = 7)
+         }
 
          if (labels=="coord")
             points$lbl <- df2String(points)
@@ -1087,6 +1097,10 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #'
 #' @param fname The file name of the view.
 #' @param v The view matrix.
+#' @param clear Call \link{clear3d}.
+#' @param close Call \link{rgl.close}.
+#' @param zoom Zoom level.
+#' @param ... Additional parameters passed to \link{view3d}.
 #'
 #' @return NULL
 #' @author Lars Relund \email{lars@@relund.dk}
@@ -1104,9 +1118,11 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #'
 #' # Try to modify the angle in the RGL window
 #' saveView(print = TRUE)  # get the viewangle to insert into R code
-loadView <- function(fname = "view.RData", v = NULL) {
+loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE, zoom = 1, ...) {
+   if (clear) rgl::clear3d()
+   if (close) rgl::rgl.close()
    if (!is.null(v)) {
-      rgl::view3d(userMatrix = v)
+      rgl::view3d(userMatrix = v, zoom = zoom, ...)
    } else {
       if (file.exists(fname)) {
          load(fname)

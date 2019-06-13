@@ -2,7 +2,7 @@
 title: "Plotting polytopes in 2D"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{polytope_2d}
+  %\VignetteIndexEntry{Plotting polytopes in 2D}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-With `gMOIP` you can make 2D plots of the the polyeder/feasible region/solution space of a linear programming (LP), integer linear programming (ILP) model, or mixed integer linear programming (MILP) model. This vignette gives examples on how to make plots given a model with two variables. 
+With `gMOIP` you can make 2D plots of the the polytope/feasible region/solution space of a linear programming (LP), integer linear programming (ILP) model, or mixed integer linear programming (MILP) model. This vignette gives examples on how to make plots given a model with two variables. 
 
 First we load the package:
 
