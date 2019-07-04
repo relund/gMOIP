@@ -1,3 +1,9 @@
+# gMOIP 1.3.0
+
+* Added support for 3D plots using RGL.
+* Added highlevel functions for plotting.
+* Can plot the criterion space for bi-objective models.
+
 # gMOIP 1.2.0
 
 * Added support for MILP problems too. 
@@ -10,7 +16,6 @@
 
 * Removed dependency on `lpSolveAPI` (seems a bit overkill). Now you only need to specify A, b and 
   the coefficient.
-
 
 # gMOIP 1.0.0
 

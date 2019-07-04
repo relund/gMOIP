@@ -1,5 +1,5 @@
 ## Test environments
-* Ubuntu 12.04.5 LTS (on travis-ci), R 3.4.2
+* Ubuntu 12.04.5 LTS (on travis-ci), R 3.6.0
 * win-builder (devel and release)
 
 

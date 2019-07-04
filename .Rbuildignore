@@ -3,6 +3,8 @@
 ^\.travis\.yml$
 ^ReadMe\.md$
 ^README\.Rmd$
+^README\.html$
 ^README-.*\.png$
 ^cran-comments\.md$
 ^NEWS\.md$
+^.*\.tex$

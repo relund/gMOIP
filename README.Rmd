@@ -19,7 +19,6 @@ knit_hooks$set(webgl = hook_webgl)
 library(gMOIP)
 ```
 
-
 [![Travis-CI Build Status](https://travis-ci.org/relund/gMOIP.svg?branch=master)](https://travis-ci.org/relund/gMOIP)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
 [![CRAN_Downloads_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
@@ -109,6 +108,8 @@ obj <- c(20, 10, 15)
 ```
 
 
+To view the 3D plot you have to view the [html page](http://htmlpreview.github.io/?https://github.com/relund/gMOIP/blob/master/README.html) of this markdown
+
 ```{r, webgl=TRUE, include=TRUE}
 # LP model
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
@@ -154,5 +155,7 @@ install.packages("devtools")
 devtools::install_github("relund/gMOIP")
 
 library(gMOIP)
+browseVignettes('gMOIP')
 example("gMOIP-package")
 ```
+

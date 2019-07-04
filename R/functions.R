@@ -763,7 +763,7 @@ plotPolytope3D <-
       aspect3d("iso")
 
       plotMat <- function(mat, col="black") {
-         if (nrow(mat)==1) pch3d(mat, col=col, cex = 0.1, pch = 16) #points3d(mat, col=col, size = 10)
+         if (nrow(mat)==1) pch3d(mat, color=col, cex = 0.1, pch = 16) #points3d(mat, col=col, size = 10)
          if (nrow(mat)==2) { #segments3d(mat, col = "black", lwd=10, smooth=T)
             cyl <- cylinder3d(mat, radius = 0.01)
             shade3d(cyl, col = col)
@@ -803,14 +803,14 @@ plotPolytope3D <-
          } else if (all(type == "i")) {
             iPoints <- integerPoints(A, b, nonneg)
             #points3d(iPoints[,1:3], col="black", size = 7)
-            pch3d(iPoints[,1:3], col="black", cex = 0.1, pch = 16)
+            pch3d(iPoints[,1:3], color = "black", cex = 0.1, pch = 16)
          } else {
             pl <- slices(A, b, type, nonneg)
             for (i in 1:length(pl)) {
                mat <- pl[[i]]
                if (is.null(mat)) next
                if (nrow(mat)==1) {
-                  #pch3d(mat, col="black", cex = 0.1, pch = 16)
+                  #pch3d(mat, color="black", cex = 0.1, pch = 16)
                   points3d(mat, col="black", size = 7)
                }
                if (nrow(mat)==2) { #segments3d(mat, col = "black", lwd=10, smooth=T)
@@ -1126,7 +1126,7 @@ loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE
    } else {
       if (file.exists(fname)) {
          load(fname)
-         rgl::view3d(userMatrix = view)
+         rgl::view3d(userMatrix = v)
       } else {
          warning(paste0("Can't load view in file ", fname, "!"))
       }
