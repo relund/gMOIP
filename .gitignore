@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 inst/doc
+polytope.tex
+ex_3d.tex

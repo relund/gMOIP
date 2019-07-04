@@ -8,9 +8,8 @@
 #' @docType package
 #' @author Lars Relund <lars@relund.dk> [aut, cre].
 #'
-#' @seealso \link{plotPolytope} and \link{plotCriterion}.
+#' @seealso \link{plotPolytope} and \link{plotCriterion2D}.
 #' @keywords package
-#' @example inst/examples/examples.R
 NULL
 
 
