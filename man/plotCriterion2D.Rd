@@ -98,6 +98,9 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 
+
+# More examples
+\donttest{
 ## MILP model (x1 integer) with different criteria (maximize)
 obj <- matrix(c(7, -10, -10, -10), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("i", "c"))
@@ -266,6 +269,7 @@ plotBiObj3D(A, b, obj, type = c("i","i","c"), crit = "min", labels = "n")
 plotBiObj3D(A, b, obj, type = c("i","c","c"), crit = "min", labels = "n")
 plotBiObj3D(A, b, obj, type = c("c","i","c"), crit = "min", labels = "n", plotFaces = FALSE)
 plotBiObj3D(A, b, obj, type = c("c","c","i"), crit = "min", labels = "n")
+}
 }
 \author{
 Lars Relund \email{lars@relund.dk}

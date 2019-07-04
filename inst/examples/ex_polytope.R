@@ -59,7 +59,8 @@ p <- plotPolytope(
 )
 p + ggplot2::xlab("x") + ggplot2::ylab("y")
 
-
+# More examples
+\donttest{
 ## LP-model with no non-negativity constraints
 A <- matrix(c(-3, 2, 2, 4, 9, 10, 1, -2), ncol = 2, byrow = TRUE)
 b <- c(3, 27, 90, 2)
@@ -296,3 +297,4 @@ plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotFaces = FA
 plotPolytope(A, b, type = c("i","c","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 plotPolytope(A, b, type = c("c","i","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("c","c","i"), plotOptimum = TRUE, obj = obj)
+}
