@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{plotPolytope2D}
 \alias{plotPolytope2D}
-\title{Plot the polytope (bounded convex set) of a linear matematical program}
+\title{Plot the polytope (bounded convex set) of a linear mathematical program}
 \usage{
 plotPolytope2D(A, b, obj = NULL, type = rep("c", ncol(A)),
   nonneg = rep(TRUE, ncol(A)), crit = "max", faces = rep("c",
@@ -26,7 +26,7 @@ entry k is TRUE then variable k must be non-negative.}
 
 \item{faces}{A character vector of same length as number of variables. If
 entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
-Usefull if e.g. want to show the linear relaxation of an IP.}
+Useful if e.g. want to show the linear relaxation of an IP.}
 
 \item{plotFaces}{If \code{True} then plot the faces.}
 
@@ -48,7 +48,7 @@ coordinates to the points. Otherwise number all points from one.}
 A ggplot2 object.
 }
 \description{
-Plot the polytope (bounded convex set) of a linear matematical program
+Plot the polytope (bounded convex set) of a linear mathematical program
 }
 \author{
 Lars Relund \email{lars@relund.dk}

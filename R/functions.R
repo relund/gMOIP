@@ -10,7 +10,7 @@
 #' @param crit Either max or min.
 #' @param labels If \code{NULL} or "n" don't add any labels (empty string). If
 #'   'coord' labels are the solution space coordinates. Otherwise number all
-#'   points from one based on the soluton space points.
+#'   points from one based on the solution space points.
 #'
 #' @return A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
 #'   (non-dominated), ext (extreme), nonExt (non-extreme supported).
@@ -891,7 +891,7 @@ mergeLists <- function (a,b) {
 #' @param nonneg A boolean vector of same length as number of variables. If
 #'   entry k is TRUE then variable k must be non-negative.
 #' @param crit Either max or min (only used if add the iso profit line).
-#' @param addTriangles Add seach triangles defined by the non-dominated extreme
+#' @param addTriangles Add search triangles defined by the non-dominated extreme
 #'   points.
 #' @param addHull Add the convex hull and the rays.
 #' @param plotFeasible If \code{True} then plot the criterion points/slices.

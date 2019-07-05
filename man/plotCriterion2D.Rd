@@ -23,7 +23,7 @@ entry k is TRUE then variable k must be non-negative.}
 
 \item{crit}{Either max or min (only used if add the iso profit line).}
 
-\item{addTriangles}{Add seach triangles defined by the non-dominated extreme
+\item{addTriangles}{Add search triangles defined by the non-dominated extreme
 points.}
 
 \item{addHull}{Add the convex hull and the rays.}
@@ -43,7 +43,7 @@ Create a plot of the criterion space of a bi-objective problem
 }
 \note{
 Currently only points are checked for dominance. That is, for MILP
-  models some nondominated points may infact be dominated by a segment.
+  models some nondominated points may in fact be dominated by a segment.
 }
 \examples{
 ### Set up 2D plot

@@ -1,6 +1,6 @@
 Package: gMOIP
 Type: Package
-Title: '2D and 3D plots of linear matematical programming models'
+Title: '2D and 3D plots of linear mathematical programming models'
 Version: 1.3.0
 Authors@R: person("Lars", "Relund", email = "lars@relund.dk",
   role = c("aut", "cre"))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{plotPolytope}
 \alias{plotPolytope}
-\title{Plot the polytope (bounded convex set) of a linear matematical program}
+\title{Plot the polytope (bounded convex set) of a linear mathematical program}
 \usage{
 plotPolytope(A, b, obj = NULL, type = rep("c", ncol(A)),
   nonneg = rep(TRUE, ncol(A)), crit = "max", faces = type,
@@ -26,7 +26,7 @@ entry k is TRUE then variable k must be non-negative.}
 
 \item{faces}{A character vector of same length as number of variables. If
 entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
-Usefull if e.g. want to show the linear relaxation of an IP.}
+Useful if e.g. want to show the linear relaxation of an IP.}
 
 \item{plotFaces}{If \code{True} then plot the faces.}
 
@@ -48,10 +48,10 @@ coordinates to the points. Otherwise number all points from one.}
 If 2D a ggplot2 object. If 3D a rgl window with 3D plot.
 }
 \description{
-Plot the polytope (bounded convex set) of a linear matematical program
+Plot the polytope (bounded convex set) of a linear mathematical program
 }
 \note{
-The feasiable region defined by the constraints must be bounded otherwise you may see strange results.
+The feasible region defined by the constraints must be bounded otherwise you may see strange results.
 }
 \examples{
 ### 2D examples

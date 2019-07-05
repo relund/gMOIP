@@ -3,7 +3,7 @@
 \name{criterionPoints}
 \alias{criterionPoints}
 \title{Calculate the criterion points of a set of points and ranges to find the set
-of non-dominated points (pareto points) and classify them into extreme
+of non-dominated points (Pareto points) and classify them into extreme
 supported, non-extreme supported, non-supported.}
 \usage{
 criterionPoints(points, obj, crit, labels = "coord")
@@ -18,7 +18,7 @@ space (can also be a rangePoints).}
 
 \item{labels}{If \code{NULL} or "n" don't add any labels (empty string). If
 'coord' labels are the solution space coordinates. Otherwise number all
-points from one based on the soluton space points.}
+points from one based on the solution space points.}
 }
 \value{
 A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
@@ -26,7 +26,7 @@ A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
 }
 \description{
 Calculate the criterion points of a set of points and ranges to find the set
-of non-dominated points (pareto points) and classify them into extreme
+of non-dominated points (Pareto points) and classify them into extreme
 supported, non-extreme supported, non-supported.
 }
 \examples{
