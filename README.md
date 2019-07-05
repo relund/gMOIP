@@ -1,51 +1,37 @@
----
-output: github_document
-editor_options: 
-  chunk_output_type: console
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include=FALSE}
-library(knitr)
-library(rgl)
-opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-",
-  echo = TRUE, warning=FALSE, message=FALSE, include = TRUE, fig.show='hold'
-)
-knit_hooks$set(webgl = hook_webgl, rgl = hook_rgl)
-library(gMOIP)
-```
+[![Travis-CI Build
+Status](https://travis-ci.org/relund/gMOIP.svg?branch=master)](https://travis-ci.org/relund/gMOIP)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
+[![CRAN\_Downloads\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
 
-[![Travis-CI Build Status](https://travis-ci.org/relund/gMOIP.svg?branch=master)](https://travis-ci.org/relund/gMOIP)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
-[![CRAN_Downloads_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
+# gMOIP - 2D and 3D plots of LP/ILP/MILP programming models
 
-# gMOIP - 2D and 3D plots of LP/ILP/MILP programming models 
+Make 2D and 3D plots of the polyeder of a linear programming (LP),
+integer linear programming (ILP) model, or mixed integer linear
+programming (MILP) model with 2 or 3 variables, including integer
+points, ranges and iso profit curve.
 
-Make 2D and 3D plots of the polyeder of a linear programming (LP), integer linear programming (ILP) model,
-or mixed integer linear programming (MILP) model with 2 or 3 variables, 
-including integer points, ranges and iso profit curve. 
-
-Can also make a plot of the bi-objective criterion space and the non-dominated (Pareto) set for bi-objective LP/ILP/MILP programming models.
-
-
+Can also make a plot of the bi-objective criterion space and the
+non-dominated (Pareto) set for bi-objective LP/ILP/MILP programming
+models.
 
 ## Usage
 
-We define the model $\max\{cx | Ax \leq b\}$ (could also be minimized) with 2 variables:
+We define the model \(\max\{cx | Ax \leq b\}\) (could also be minimized)
+with 2 variables:
 
-```{r model}
+``` r
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 obj <- c(7.75, 10)  # coefficients c
 ```
 
-The polytope of the LP model with non-negative continuous variables ($x \geq 0$):
+The polytope of the LP model with non-negative continuous variables
+(\(x \geq 0\)):
 
-```{r lp}
+``` r
 plotPolytope(
    A,
    b,
@@ -60,9 +46,11 @@ plotPolytope(
 )
 ```
 
-The polytope of the ILP model with LP faces ($x\in \mathbb{Z}_0$):
+![](README-lp-1.png)<!-- -->
 
-```{r ilp}
+The polytope of the ILP model with LP faces (\(x\in \mathbb{Z}_0\)):
+
+``` r
 plotPolytope(
    A,
    b,
@@ -77,9 +65,11 @@ plotPolytope(
 )
 ```
 
+![](README-ilp-1.png)<!-- -->
+
 The polytope of the MILP model (first variable integer) with LP faces:
 
-```{r milp}
+``` r
 plotPolytope(
    A,
    b,
@@ -94,9 +84,11 @@ plotPolytope(
 )
 ```
 
+![](README-milp-1.png)<!-- -->
+
 You can do the same with three variables:
 
-```{r}
+``` r
 A <- matrix( c(
    3, 2, 5,
    2, 1, 1,
@@ -107,7 +99,7 @@ b <- c(55, 26, 30, 57)
 obj <- c(20, 10, 15)
 ```
 
-```{r 3d, rgl=TRUE, include=TRUE}
+``` r
 # LP model
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
@@ -116,15 +108,20 @@ loadView(v = view)  # set view angle
 plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
 ```
 
-The 3D plot is here a static image (so it can be seen in markdown). However, it may be an interactive plot as seen in [this example](http://htmlpreview.github.io/?https://github.com/relund/gMOIP/blob/master/inst/examples/3d_interactive.html).
+![](README-3d-1.png)<!-- -->
 
-For more examples see `example("gMOIP-package")` or `browseVignettes('gMOIP')`. 
+The 3D plot is here a static image (so it can be seen in markdown).
+However, it may be an interactive plot as seen in [this
+example](http://htmlpreview.github.io/?https://github.com/relund/gMOIP/blob/master/inst/examples/3d_interactive.html).
+
+For more examples see `example("gMOIP-package")` or
+`browseVignettes('gMOIP')`.
 
 ## LaTeX support
 
 You may create a TikZ file of the plot for LaTeX using
 
-```{r, eval=FALSE}
+``` r
 library(tikzDevice)
 tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
 plotPolytope(
@@ -146,13 +143,13 @@ dev.off()
 
 Install the latest stable release from CRAN:
 
-```{r, eval=FALSE}
+``` r
 install.packages("gMOIP")
 ```
 
 Alternatively, install the latest development version from GitHub:
 
-```{r, eval=FALSE}
+``` r
 install.packages("devtools")
 devtools::install_github("relund/gMOIP")
 
@@ -160,4 +157,3 @@ library(gMOIP)
 browseVignettes('gMOIP')
 example("gMOIP-package")
 ```
-

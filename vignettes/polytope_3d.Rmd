@@ -400,7 +400,7 @@ writeASY(outtype = "pdflatex", prc = TRUE, title = "polytope")  # prc = T(intera
 
 Next, you include the file in you LaTeX document (`test.tex`):
 
-```{latex}
+```
 \documentclass{article}
 \usepackage{a4wide}
 \usepackage[pdftex]{graphicx}

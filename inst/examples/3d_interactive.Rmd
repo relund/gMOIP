@@ -33,6 +33,7 @@ b <- c(55, 26, 30, 57)
 obj <- c(20, 10, 15)
 ```
 
+Rotate/zoom/twist the plot with your mouse:
 ```{r 3d, webgl=TRUE, include=TRUE}
 # LP model
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
