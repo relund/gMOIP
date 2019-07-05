@@ -1,7 +1,7 @@
 
 
 #' Calculate the criterion points of a set of points and ranges to find the set
-#' of non-dominated points (pareto points) and classify them into extreme
+#' of non-dominated points (Pareto points) and classify them into extreme
 #' supported, non-extreme supported, non-supported.
 #'
 #' @param points A data frame with a column for each variable in the solution
@@ -499,7 +499,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 
 
 
-#' Plot the polytope (bounded convex set) of a linear matematical program
+#' Plot the polytope (bounded convex set) of a linear mathematical program
 #'
 #' @param A The constraint matrix.
 #' @param b Right hand side.
@@ -511,7 +511,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #' @param crit Either max or min (only used if add the iso profit line)
 #' @param faces A character vector of same length as number of variables. If
 #'   entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
-#'   Usefull if e.g. want to show the linear relaxation of an IP.
+#'   Useful if e.g. want to show the linear relaxation of an IP.
 #' @param plotFaces If \code{True} then plot the faces.
 #' @param plotFeasible If \code{True} then plot the feasible points/segments
 #'   (relevant for IPLP/MILP).
@@ -523,7 +523,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #' @param ... If 2D arguments passed to the \link{aes_string} function in
 #'   \link{geom_point} or \link{geom_line}.
 #'
-#' @note The feasiable region defined by the constraints must be bounded otherwise you may see strange results.
+#' @note The feasible region defined by the constraints must be bounded otherwise you may see strange results.
 #'
 #' @return If 2D a ggplot2 object. If 3D a rgl window with 3D plot.
 #' @author Lars Relund \email{lars@@relund.dk}
@@ -555,7 +555,7 @@ plotPolytope <-
 
 
 
-#' Plot the polytope (bounded convex set) of a linear matematical program
+#' Plot the polytope (bounded convex set) of a linear mathematical program
 #'
 #' @param A The constraint matrix.
 #' @param b Right hand side.
@@ -567,7 +567,7 @@ plotPolytope <-
 #' @param crit Either max or min (only used if add the iso profit line)
 #' @param faces A character vector of same length as number of variables. If
 #'   entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
-#'   Usefull if e.g. want to show the linear relaxation of an IP.
+#'   Useful if e.g. want to show the linear relaxation of an IP.
 #' @param plotFaces If \code{True} then plot the faces.
 #' @param plotFeasible If \code{True} then plot the feasible points/segments
 #'   (relevant for IPLP/MILP).
@@ -708,7 +708,7 @@ plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = re
 }
 
 
-#' Plot the polytope (bounded convex set) of a linear matematical program
+#' Plot the polytope (bounded convex set) of a linear mathematical program
 #'
 #' @param A The constraint matrix.
 #' @param b Right hand side.
@@ -720,7 +720,7 @@ plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = re
 #' @param crit Either max or min (only used if add the iso profit line)
 #' @param faces A character vector of same length as number of variables. If
 #'   entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
-#'   Usefull if e.g. want to show the linear relaxation of an IP.
+#'   Useful if e.g. want to show the linear relaxation of an IP.
 #' @param plotFaces If \code{True} then plot the faces.
 #' @param plotFeasible If \code{True} then plot the feasible points/segments
 #'   (relevant for IPLP/MILP).
@@ -732,7 +732,7 @@ plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = re
 #' @param ... Arguments passed to axes3d, plot3d, title3d. Parsed using lists argsAxes3d,
 #'   argsPlot3d and argsTitle3d.
 #'
-#' @note The feasiable region defined by the constraints must be bounded otherwise you may see
+#' @note The feasible region defined by the constraints must be bounded otherwise you may see
 #'   strange results.
 #'
 #' @return A rgl window with 3D plot.
@@ -900,7 +900,7 @@ mergeLists <- function (a,b) {
 #'   coordinates to the points. Otherwise number all points from one.
 #'
 #' @note Currently only points are checked for dominance. That is, for MILP
-#'   models some nondominated points may infact be dominated by a segment.
+#'   models some nondominated points may in fact be dominated by a segment.
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
@@ -983,7 +983,7 @@ plotCriterion2D <- function(A,
    }
 
    if (plotFeasible) {
-      # plot feasiable areas
+      # plot feasible areas
       if (all(type == "c")) {
          idx <- grDevices::chull(points[,c("z1","z2")])
          p <- p + geom_polygon(data = points[idx,], aes_string(x = 'z1', y = 'z2'),
