@@ -25,7 +25,7 @@ library(gMOIP)
 
 # gMOIP - 2D and 3D plots of LP/ILP/MILP programming models 
 
-Make 2D and 3D plots of the polyeder of a linear programming (LP), integer linear programming (ILP) model,
+Make 2D and 3D plots of the polytope of a linear programming (LP), integer linear programming (ILP) model,
 or mixed integer linear programming (MILP) model with 2 or 3 variables, 
 including integer points, ranges and iso profit curve. 
 

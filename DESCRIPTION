@@ -6,7 +6,7 @@ Authors@R: person("Lars", "Relund", email = "lars@relund.dk",
   role = c("aut", "cre"))
 URL: https://github.com/relund/gMOIP/
 BugReports: https://github.com/relund/gMOIP/issues
-Description: Make 2D and 3D plots of the polyeder of a LP, ILP or MILP problem, including
+Description: Make 2D and 3D plots of the polytope of a LP, ILP or MILP problem, including
     integer points and iso profit curve. Can also make a plot of the bi-objective
     criterion space.
 License: GPL (>= 3.3.2)
