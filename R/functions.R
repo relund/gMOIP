@@ -570,7 +570,7 @@ plotPolytope <-
 #'   Useful if e.g. want to show the linear relaxation of an IP.
 #' @param plotFaces If \code{True} then plot the faces.
 #' @param plotFeasible If \code{True} then plot the feasible points/segments
-#'   (relevant for IPLP/MILP).
+#'   (relevant for ILP/MILP).
 #' @param plotOptimum Show the optimum corner solution point (if alternative solutions
 #'   only one is shown) and add the iso profit line.
 #' @param latex If \code{True} make latex math labels for TikZ.
