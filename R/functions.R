@@ -1135,4 +1135,234 @@ loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE
 
 
 
+#' Create a plot of a discrete non-dominated set.
+#'
+#' @param points Data frame with non-dominated points.
+#' @param crit Either max or min (only used if add the iso profit line).
+#' @param addTriangles Add search triangles defined by the non-dominated extreme
+#'   points.
+#' @param addHull Add the convex hull and the rays.
+#' @param latex If true make latex math labels for TikZ.
+#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
+#'   coordinates to the points. Otherwise number all points from one.
+#'
+#' @note Currently only points are checked for dominance. That is, for MILP
+#'   models some nondominated points may in fact be dominated by a segment.
+#' @return The ggplot2 object.
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @examples
+#' dat <- data.frame(z1=c(12,14,16,18,18,18,14,15,15), z2=c(18,16,12,4,2,6,14,14,16))
+#' points <- addNDSet(dat, crit = "min", keepDom = TRUE)
+#' plotNDSet2D(points, crit = "min", addTriangles = TRUE)
+#' points <- addNDSet(dat, crit = "max", keepDom = TRUE)
+#' plotNDSet2D(points, crit = "max", addTriangles = TRUE)
+plotNDSet2D <- function(points,
+                            crit,
+                            addTriangles = FALSE,
+                            addHull = TRUE,
+                            latex = FALSE,
+                            labels = NULL)
+{
+   # Set Custom theme
+   myTheme <- theme_bw()
+   myTheme <-
+      myTheme + theme(
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         panel.border = element_blank(),
+         #axis.line = element_blank(),
+         axis.line = element_line(
+            colour = "black",
+            size = 0.5,
+            arrow = arrow(length = unit(0.3, "cm"))
+         ),
+         #axis.ticks = element_blank()
+         #axis.text.x = element_text(margin = margin(r = 30))
+         # axis.ticks.length = unit(0.5,"mm"),
+         #aspect.ratio=4/3,
+         legend.position = "none"
+      )
+   # Initialize plot
+   p <- ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
+   if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
+   if (!latex) p <- p + xlab(expression(z[1])) + ylab(expression(z[2]))
+
+   # Add hull plus rays
+   if (addHull) {
+      tmp<-points[points$ext & !duplicated(cbind(points$z1,points$z2), MARGIN = 1),]
+      delta <- max( (max(points$z1)-min(points$z1))/10, (max(points$z2)-min(points$z2))/10 )
+      if (crit=="max") {
+         tmp<-rbind(tmp[1:2,],tmp,tmp[1,]) # add rows
+         tmp$z1[1] <- min(points$z1) - delta
+         tmp$z2[1] <- min(points$z2) - delta
+         tmp$z1[2] <- min(points$z1) - delta
+         tmp$z2[2] <- max(points$z2)
+         tmp$z1[length(tmp$z1)] <- max(points$z1)
+         tmp$z2[length(tmp$z1)] <- min(points$z2)- delta
+      }
+      if (crit=="min") {
+         tmp<-rbind(tmp[1,],tmp,tmp[1:2,]) # add rows
+         tmp$z1[1] <- max(points$z1) + delta
+         tmp$z2[1] <- min(points$z2)
+         tmp$z1[length(tmp$z1)-1] <- min(points$z1)
+         tmp$z2[length(tmp$z1)-1] <- max(points$z2) + delta
+         tmp$z1[length(tmp$z1)] <- max(points$z1) + delta
+         tmp$z2[length(tmp$z1)] <- max(points$z2) + delta
+      }
+      p <- p + geom_polygon(fill="gray95", col = NA, data=tmp)
+   }
+
+   p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext'), data = points) +
+         #    #coord_fixed(ratio = 1) +
+         scale_colour_grey(start = 0.6, end = 0)
+
+   # Add triangles
+   if (addTriangles) {
+      tmp<-points[points$ext | points$nonExt,]
+      if (length(tmp$z1)>1) { # triangles
+         for (r in 1:(dim(tmp)[1] - 1)) {
+            p <- p +
+               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray") +
+               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r],yend=tmp$z2[r+1], colour="gray") +
+               geom_segment(x=tmp$z1[r],y=tmp$z2[r+1],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray")
+         }
+      }
+   }
+
+   nudgeC=-(max(points$z1)-min(points$z1))/100
+   if (!is.null(labels) & anyDuplicated(round(cbind(points$z1,points$z2),10), MARGIN = 1) > 0)
+      p <- p + ggrepel::geom_text_repel(aes_string(label = 'lbl'), size=3, colour = "gray50", data=points)
+   if (!is.null(labels) & anyDuplicated(round(cbind(points$z1,points$z2),10), MARGIN = 1) == 0)
+      p <- p + geom_text(aes_string(label = 'lbl'), nudge_x = nudgeC, nudge_y = nudgeC, hjust=1, size=3,
+                         colour = "gray50", data=points)
+   p <- p + myTheme
+   return(p)
+}
+
+
+
+
+#' Add 2D discrete points to a non-dominated set and classify them into extreme
+#' supported, non-extreme supported, non-supported.
+#'
+#' @param points A data frame with two columns (z1 and z2).
+#' @param nDSet A data frame with current non-dominated set (NULL is none yet).
+#' @param crit Either max or min.
+#' @param keepDom Keep dominated points.
+#'
+#' @return A data frame with columns z1 and z2, nD (non-dominated),
+#'         ext (extreme), nonExt (non-extreme supported).
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @examples
+#' nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4))
+#' points <- data.frame(z1 = c(18,18,14,15,15), z2=c(2,6,14,14,16))
+#' addNDSet(points, nDSet, crit = "max")
+#' addNDSet(points, nDSet, crit = "max", keepDom = TRUE)
+#' addNDSet(points, nDSet, crit = "min")
+addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
+   #if (is.null(nDSet)) nDSet = data.frame(z1=numeric(), z2=numeric())
+   iP = points[,1:2]
+   colnames(iP) <- paste0("z", 1:2)
+   iP <- round(iP,10)
+   rownames(iP) <- NULL
+   iP <- rbind(iP, nDSet[,1:2])
+   tol <- 1e-4
+   if (crit=="max") iP <- iP[order(-iP$z2,-iP$z1),]
+   if (crit=="min") iP <- iP[order(iP$z2,iP$z1),]
+
+   # classify non dom
+   iP$nD <- FALSE
+   iP$nD[1] <- TRUE  # upper left point
+   p1 <- iP$z1[1]; p2 <- iP$z2[1]  # current non dom point (due to sorting will p2 always be larger than or equal to current)
+   for (r in 2:length(iP$z1)) { # current point under consideration
+      if (abs(p2-iP$z2[r])<tol & abs(p1-iP$z1[r])<tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
+      if (crit=="max" & p2-iP$z2[r]>tol & iP$z1[r]>p1+tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
+      if (crit=="min" & iP$z2[r]-p2>tol & iP$z1[r]<p1-tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
+   }
+   # iP$nD <- TRUE
+   # for (i in 2:nrow(iP)) { # remove non-dom z2
+   #    if (iP$z2[i-1]==iP$z2[i]) iP$nD[i] <- FALSE
+   # }
+   # if (!keepDom) iP <- iP[iP$nD,]
+   # for (i in 2:nrow(iP)) { # remove non-dom z1
+   #    if (iP$z1[i-1]==iP$z1[i]) iP$nD[i] <- FALSE
+   # }
+   if (!keepDom) iP <- iP[iP$nD,]
+   iP$lbl <- 1:nrow(iP)
+   # classify extreme supported
+   idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
+   iP$ext <- FALSE
+   iP$ext[idx[1]] <- TRUE
+   iP$ext[idx[length(idx)]] <- TRUE
+   if (length(idx)<3) {
+      iP$nonExt <- FALSE
+      #return(iP)   # a single extreme
+   } else {
+      nD <- iP[idx,]
+      ul<-1
+      lr<-length(idx)
+      while (ul<length(idx)) {
+         # for (k in 1:1000) {
+         slope <- (nD$z2[lr]-nD$z2[ul])/(nD$z1[lr]-nD$z1[ul])
+         nD$val <- nD$z2-slope*nD$z1
+         #cat("val:",nD$val[ul],"max:",max(nD$val),"min:",min(nD$val),"\n")
+         if (crit=="max") {
+            i <- which.max(nD$val)
+            if (nD$val[ul]<nD$val[i] - tol) {
+               iP$ext[nD$lbl[i]] <- TRUE
+               lr <- i
+            } else {
+               ul <- lr
+               lr<-length(idx)
+            }
+         }
+         if (crit=="min") {
+            i <- which.min(nD$val)
+            if (nD$val[ul]>nD$val[i] + tol) {
+               iP$ext[nD$lbl[i]] <- TRUE
+               lr <- i
+            } else {
+               ul <- lr
+               lr<-length(idx)
+            }
+         }
+      }
+      # classify nonextreme supported
+      idxExt <- which(iP$ext)
+      iP$nonExt <- FALSE
+      if (length(idxExt)>1) {
+         for (i in 2:length(idxExt)) {
+            slope <- (iP$z2[idxExt[i]]-iP$z2[idxExt[i-1]])/(iP$z1[idxExt[i]]-iP$z1[idxExt[i-1]])
+            nDCand <- iP[idxExt[i-1]:idxExt[i],]
+            nDCand <- nDCand[nDCand$nD & !duplicated(cbind(nDCand$z1,nDCand$z2), MARGIN = 1),]
+            nDCand <- nDCand[c(-1,-length(nDCand$nD)),]
+            if (length(nDCand$nD)==0) next   # no points inbetween
+            for (j in 1:length(nDCand$nD)) {
+               slopeCur = (nDCand$z2[j]-iP$z2[idxExt[i-1]])/(nDCand$z1[j]-iP$z1[idxExt[i-1]])
+               if (abs(slope - slopeCur) < tol) iP$nonExt[nDCand$lbl[j]==iP$lbl] <- TRUE
+            }
+         }
+      }
+      # classify dublicates
+      idx <- which(iP$nD)
+      if (!length(idx)<2) {
+         for (i in 2:length(idx)) {
+            if (iP$ext[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
+               iP$ext[i] = TRUE
+               next
+            }
+            if (iP$nonExt[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
+               iP$nonExt[i] = TRUE
+            }
+         }
+      }
+   }
+   iP$lab <- NULL
+   return(iP)
+}
+
+
+
 
