@@ -171,7 +171,7 @@ cornerPointsCont <- function (A, b, nonneg = rep(TRUE, ncol(A))) {
 }
 
 
-#' Calculate the corner points for the polytope Ax<=0.
+#' Calculate the corner points for the polytope Ax<=b.
 #'
 #' @param A Constraint matrix.
 #' @param b Right hand side.
@@ -1213,10 +1213,6 @@ plotNDSet2D <- function(points,
       p <- p + geom_polygon(fill="gray95", col = NA, data=tmp)
    }
 
-   p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext'), data = points) +
-         #    #coord_fixed(ratio = 1) +
-         scale_colour_grey(start = 0.6, end = 0)
-
    # Add triangles
    if (addTriangles) {
       tmp<-points[points$ext | points$nonExt,]
@@ -1229,6 +1225,10 @@ plotNDSet2D <- function(points,
          }
       }
    }
+
+   p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext'), data = points) +
+      #    #coord_fixed(ratio = 1) +
+      scale_colour_grey(start = 0.6, end = 0)
 
    nudgeC=-(max(points$z1)-min(points$z1))/100
    if (!is.null(labels) & anyDuplicated(round(cbind(points$z1,points$z2),10), MARGIN = 1) > 0)
@@ -1246,7 +1246,7 @@ plotNDSet2D <- function(points,
 #' Add 2D discrete points to a non-dominated set and classify them into extreme
 #' supported, non-extreme supported, non-supported.
 #'
-#' @param points A data frame with two columns (z1 and z2).
+#' @param points A data frame. It is assumed that z1 and z2 are in the two first columns.
 #' @param nDSet A data frame with current non-dominated set (NULL is none yet).
 #' @param crit Either max or min.
 #' @param keepDom Keep dominated points.
@@ -1262,13 +1262,17 @@ plotNDSet2D <- function(points,
 #' addNDSet(points, nDSet, crit = "max", keepDom = TRUE)
 #' addNDSet(points, nDSet, crit = "min")
 addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
-   #if (is.null(nDSet)) nDSet = data.frame(z1=numeric(), z2=numeric())
-   iP = points[,1:2]
-   colnames(iP) <- paste0("z", 1:2)
-   iP <- round(iP,10)
+   nDSet$nD <- NULL; nDSet$ext <- NULL; nDSet$nonExt <- NULL
+   if (!is.null(nDSet))
+      if (ncol(points)!=ncol(nDSet))
+         stop("Number of columns minus classification colunms must be the same!")
+   iP = points
+   colnames(iP)[1:2] <- paste0("z", 1:2)
+   #iP <- round(iP,10)
    rownames(iP) <- NULL
-   iP <- rbind(iP, nDSet[,1:2])
+   iP <- rbind(iP, nDSet)
    tol <- 1e-4
+   iP$oldRowIdx <- 1:length(iP$z1)
    if (crit=="max") iP <- iP[order(-iP$z2,-iP$z1),]
    if (crit=="min") iP <- iP[order(iP$z2,iP$z1),]
 
@@ -1290,7 +1294,7 @@ addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
    #    if (iP$z1[i-1]==iP$z1[i]) iP$nD[i] <- FALSE
    # }
    if (!keepDom) iP <- iP[iP$nD,]
-   iP$lbl <- 1:nrow(iP)
+   iP$rowIdx <- 1:nrow(iP)
    # classify extreme supported
    idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
    iP$ext <- FALSE
@@ -1311,7 +1315,7 @@ addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
          if (crit=="max") {
             i <- which.max(nD$val)
             if (nD$val[ul]<nD$val[i] - tol) {
-               iP$ext[nD$lbl[i]] <- TRUE
+               iP$ext[nD$rowIdx[i]] <- TRUE
                lr <- i
             } else {
                ul <- lr
@@ -1321,7 +1325,7 @@ addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
          if (crit=="min") {
             i <- which.min(nD$val)
             if (nD$val[ul]>nD$val[i] + tol) {
-               iP$ext[nD$lbl[i]] <- TRUE
+               iP$ext[nD$rowIdx[i]] <- TRUE
                lr <- i
             } else {
                ul <- lr
@@ -1341,7 +1345,7 @@ addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
             if (length(nDCand$nD)==0) next   # no points inbetween
             for (j in 1:length(nDCand$nD)) {
                slopeCur = (nDCand$z2[j]-iP$z2[idxExt[i-1]])/(nDCand$z1[j]-iP$z1[idxExt[i-1]])
-               if (abs(slope - slopeCur) < tol) iP$nonExt[nDCand$lbl[j]==iP$lbl] <- TRUE
+               if (abs(slope - slopeCur) < tol) iP$nonExt[nDCand$rowIdx[j]==iP$rowIdx] <- TRUE
             }
          }
       }
@@ -1359,7 +1363,8 @@ addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
          }
       }
    }
-   iP$lab <- NULL
+   iP$rowIdx <- NULL
+   iP$oldRowIdx <- NULL
    return(iP)
 }
 

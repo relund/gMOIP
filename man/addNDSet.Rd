@@ -8,7 +8,7 @@ supported, non-extreme supported, non-supported.}
 addNDSet(points, nDSet = NULL, crit = "max", keepDom = FALSE)
 }
 \arguments{
-\item{points}{A data frame with two columns (z1 and z2).}
+\item{points}{A data frame. It is assumed that z1 and z2 are in the two first columns.}
 
 \item{nDSet}{A data frame with current non-dominated set (NULL is none yet).}
 
