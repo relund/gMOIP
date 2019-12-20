@@ -22,7 +22,7 @@ points from one based on the solution space points.}
 }
 \value{
 A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
-  (non-dominated), ext (extreme), nonExt (non-extreme supported).
+(non-dominated), ext (extreme), nonExt (non-extreme supported).
 }
 \description{
 Calculate the criterion points of a set of points and ranges to find the set

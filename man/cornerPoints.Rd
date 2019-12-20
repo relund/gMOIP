@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{cornerPoints}
 \alias{cornerPoints}
-\title{Calculate the corner points for the polytope Ax<=0.}
+\title{Calculate the corner points for the polytope Ax<=b.}
 \usage{
 cornerPoints(A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE,
   ncol(A)))
@@ -22,7 +22,7 @@ entry k is TRUE then variable k must be non-negative.}
 A data frame with a corner point in each row.
 }
 \description{
-Calculate the corner points for the polytope Ax<=0.
+Calculate the corner points for the polytope Ax<=b.
 }
 \examples{
 A <- matrix( c(3,-2, 1, 2, 4,-2,-3, 2, 1), nc = 3, byrow = TRUE)
