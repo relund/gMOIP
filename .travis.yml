@@ -3,7 +3,6 @@ r:
   - release
   - devel
 latex: false
-fortran: false
 cache: packages
 os:
   - linux
