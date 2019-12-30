@@ -4,7 +4,7 @@ r: devel
 latex: false
 fortran: false
 cache: packages
-warnings_are_errors: true
+warnings_are_errors: false
 os:
   - linux
   - osx
