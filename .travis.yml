@@ -5,6 +5,8 @@ cache: packages
 env:
   global: RGL_USE_NULL=TRUE
 
+r_check_args: "--as-cran"
+
 matrix:
   include:
     - os: osx

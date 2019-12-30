@@ -25,8 +25,7 @@ R CMD check succeeded
 
 ## Steps for releasing to CRAN
 devtools::spell_check()
-devtools::run_examples()
-devtools::check()
+devtools::check(run_dont_test = TRUE)
 devtools::check_rhub(platforms = "windows-x86_64-release")
 devtools::check_win_release(quiet = TRUE)
 devtools::release()
