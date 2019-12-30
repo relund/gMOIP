@@ -1,3 +1,8 @@
+# gMOIP 1.4.0
+
+* Added support for plotting rectangles, points, planes, hulls in 3D. 
+* Nondominated points in 3D can now be generated.
+
 # gMOIP 1.3.0
 
 * Added support for 3D plots using RGL.

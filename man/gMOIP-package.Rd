@@ -4,7 +4,7 @@
 \name{gMOIP-package}
 \alias{gMOIP}
 \alias{gMOIP-package}
-\title{gMOIP: Tools for 2D and 3D plots of single and multi-objective linear/integer programming models}
+\title{gMOIP: Tools for 2D and 3D Plots of Single and Multi-Objective Linear/Integer Programming Models}
 \description{
 With this package you can make 2D and 3D plots of linear programming (LP), 
     integer linear programming (ILP), or mixed integer linear programming (MILP) models 

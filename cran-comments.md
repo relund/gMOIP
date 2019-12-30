@@ -1,5 +1,5 @@
 ## Test environments
-* Ubuntu 14.04.5 LTS (on travis-ci), R 3.6.1
+* Ubuntu 14.04.5 LTS (on travis-ci), R 3.6.2
 * rhub (devel and release - Win Server, Ubuntu Linux, Fedora Linux)
 
 
@@ -26,8 +26,10 @@ R CMD check succeeded
 * None
 
 ## Steps for realesing to CRAN
-devtools::check()
 devtools::spell_check()
+devtools::run_examples()
+devtools::check()
 devtools::check_rhub(interactive = FALSE)
 devtools::check_win_devel()
 devtools::release()
+

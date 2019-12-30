@@ -928,6 +928,7 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
 #' plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addR3 = TRUE)
 #' finalize3D()
 #'
+#' \donttest{
 #' pts <- genNDSet()
 #' pts <- as.data.frame(pts)
 #'
@@ -957,6 +958,7 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
 #' plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addR3 = TRUE)
 #' plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 #' finalize3D()
+#' }
 plotHull3D <- function(pts,
                        drawPoints = FALSE,
                        drawLines = TRUE,
