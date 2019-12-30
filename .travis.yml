@@ -1,7 +1,10 @@
 language: R
+r: release
+r: devel
 latex: false
 fortran: false
 cache: packages
+warnings_are_errors: true
 os:
   - linux
   - osx
@@ -10,10 +13,4 @@ env:
   global: RGL_USE_NULL=TRUE
 
 r_check_args: "--as-cran"
-
-before_install:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install mesa-common-dev; fi
-
-
-
 
