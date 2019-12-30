@@ -1,16 +1,18 @@
-language: r
+language: R
 latex: false
 fortran: false
 cache: packages
+os:
+  - linux
+  - osx
 
-matrix:
-  include:
-    - dist: trusty
-      before_script:
-        - "export DISPLAY=:99.0"
-        - "sh -e /etc/init.d/xvfb start"
-        - sleep 3 # give xvfb some time to start
-    - os: osx
+env:
+  global: RGL_USE_NULL=TRUE
+
+r_check_args: "--as-cran --install-args=--build"
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install mesa-common-dev; fi
 
 
 
