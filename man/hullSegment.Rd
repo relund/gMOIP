@@ -4,8 +4,11 @@
 \alias{hullSegment}
 \title{Find segments (lines) of a face.}
 \usage{
-hullSegment(vertices, hull = geometry::convhulln(vertices),
-  tol = mean(mean(abs(vertices))) * sqrt(.Machine$double.eps))
+hullSegment(
+  vertices,
+  hull = geometry::convhulln(vertices),
+  tol = mean(mean(abs(vertices))) * sqrt(.Machine$double.eps)
+)
 }
 \arguments{
 \item{vertices}{A mxp array of vertices of the convex hull, as used by

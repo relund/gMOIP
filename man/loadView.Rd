@@ -4,8 +4,14 @@
 \alias{loadView}
 \title{Help function to load the view angle for the RGL 3D plot from a file or matrix}
 \usage{
-loadView(fname = "view.RData", v = NULL, clear = TRUE,
-  close = FALSE, zoom = 1, ...)
+loadView(
+  fname = "view.RData",
+  v = NULL,
+  clear = TRUE,
+  close = FALSE,
+  zoom = 1,
+  ...
+)
 }
 \arguments{
 \item{fname}{The file name of the view.}

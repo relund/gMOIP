@@ -4,8 +4,13 @@
 \alias{slices}
 \title{Find all corner points in the slices define for each fixed integer combination.}
 \usage{
-slices(A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)),
-  collapse = FALSE)
+slices(
+  A,
+  b,
+  type = rep("c", ncol(A)),
+  nonneg = rep(TRUE, ncol(A)),
+  collapse = FALSE
+)
 }
 \arguments{
 \item{A}{The constraint matrix.}

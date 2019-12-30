@@ -10,8 +10,8 @@ finalize3D(...)
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{
-\item \code{argsAxes3d}: A list of arguments for \link[rgl:axes3d]{rgl::axes3d}.
-\item \code{argsTitle3d}: A list of arguments for \link[rgl:title3d]{rgl::title3d}.
+\item \code{argsAxes3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::axes3d}}.
+\item \code{argsTitle3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::title3d}}.
 }}
 }
 \value{

@@ -4,9 +4,19 @@
 \alias{plotCriterion2D}
 \title{Create a plot of the criterion space of a bi-objective problem}
 \usage{
-plotCriterion2D(A, b, obj, type = rep("c", ncol(A)), nonneg = rep(TRUE,
-  ncol(A)), crit = "max", addTriangles = FALSE, addHull = TRUE,
-  plotFeasible = TRUE, latex = FALSE, labels = NULL)
+plotCriterion2D(
+  A,
+  b,
+  obj,
+  type = rep("c", ncol(A)),
+  nonneg = rep(TRUE, ncol(A)),
+  crit = "max",
+  addTriangles = FALSE,
+  addHull = TRUE,
+  plotFeasible = TRUE,
+  latex = FALSE,
+  labels = NULL
+)
 }
 \arguments{
 \item{A}{The constraint matrix.}

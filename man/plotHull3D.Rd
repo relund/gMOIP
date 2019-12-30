@@ -4,8 +4,15 @@
 \alias{plotHull3D}
 \title{Plot the convex hull of a set of points.}
 \usage{
-plotHull3D(pts, drawPoints = FALSE, drawLines = TRUE,
-  drawPolygons = TRUE, addText = FALSE, addR3 = FALSE, ...)
+plotHull3D(
+  pts,
+  drawPoints = FALSE,
+  drawLines = TRUE,
+  drawPolygons = TRUE,
+  addText = FALSE,
+  addR3 = FALSE,
+  ...
+)
 }
 \arguments{
 \item{pts}{A matrix with a point in each row.}
@@ -24,11 +31,11 @@ and \code{both} supported.}
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
-\item \code{argsPlot3d}: A list of arguments for \link[rgl:plot3d]{rgl::plot3d}.
-\item \code{argsSegments3d}: A list of arguments for \link[rgl:segments3d]{rgl::segments3d}.
-\item \code{argsPolygon3d}: A list of arguments for \link[rgl:polygon3d]{rgl::polygon3d}.
-\item \code{argsShade3d}: A list of arguments for \link[rgl:shade3d]{rgl::shade3d}.
-\item \code{argsText3d}: A list of arguments for \link[rgl:text3d]{rgl::text3d}.
+\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
+\item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:points3d]{rgl::segments3d}}.
+\item \code{argsPolygon3d}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}}.
+\item \code{argsShade3d}: A list of arguments for \code{\link[rgl:mesh3d]{rgl::shade3d}}.
+\item \code{argsText3d}: A list of arguments for \code{\link[rgl:text3d]{rgl::text3d}}.
 }}
 }
 \value{
@@ -107,6 +114,6 @@ ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
   ylim = c(0,max(pts$y)+2),
   zlim = c(0,max(pts$z)+2)))
 plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addR3 = TRUE)
-plotCones3D(pts, argsPolygon3d = list(alpha = 1), retangle = TRUE)
+plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 finalize3D()
 }

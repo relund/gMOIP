@@ -12,8 +12,8 @@ ini3D(new = FALSE, ...)
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{
-\item \code{argsPlot3d}: A list of arguments for \link[rgl:plot3d]{rgl::plot3d}.
-\item \code{argsAspect3d}: A list of arguments for \link[rgl:aspect3d]{rgl::aspect3d}.
+\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
+\item \code{argsAspect3d}: A list of arguments for \code{\link[rgl:aspect3d]{rgl::aspect3d}}.
 }}
 }
 \value{

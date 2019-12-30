@@ -9,7 +9,7 @@ genNDSet(n = 100, random = FALSE, onSphere = TRUE, keep = F, ...)
 \arguments{
 \item{n}{Number of samples generated (note only a subset of these points are nondominated).}
 
-\item{random}{Random sampeling.}
+\item{random}{Random sampling.}
 
 \item{onSphere}{Generate points on a sphere.}
 

@@ -742,9 +742,9 @@ plotNDSet2D <- function(points,
 }
 
 
-#' Plot a retangle defined by two corner points.
+#' Plot a rectangle defined by two corner points.
 #'
-#' The retangle is defined by {x|a <= x <= b} where a is the minimum values and
+#' The rectangle is defined by {x|a <= x <= b} where a is the minimum values and
 #' b is the maximum values.
 #'
 #' @param a A vector of length 3.
@@ -752,22 +752,22 @@ plotNDSet2D <- function(points,
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
-#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d].
-#'   * `argsSegments3d`: A list of arguments for [rgl::segments3d].
-#'   * `argsPolygon3d`: A list of arguments for [rgl::polygon3d].
-#'   * `argsShade3d`: A list of arguments for [rgl::shade3d].
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
+#'   * `argsSegments3d`: A list of arguments for [`rgl::segments3d`][rgl::points3d].
+#'   * `argsPolygon3d`: A list of arguments for [`rgl::polygon3d`].
+#'   * `argsShade3d`: A list of arguments for [`rgl::shade3d`][rgl::mesh3d].
 #'
-#' @return The corner points of the retangle (invisible).
+#' @return The corner points of the rectangle (invisible).
 #' @export
 #'
 #' @examples
 #' ini3D()
-#' plotRetangle3D(c(0,0,0), c(1,1,1))
-#' plotRetangle3D(c(1,1,1), c(4,4,3), drawPoints = TRUE, drawLines = FALSE,
+#' plotRectangle3D(c(0,0,0), c(1,1,1))
+#' plotRectangle3D(c(1,1,1), c(4,4,3), drawPoints = TRUE, drawLines = FALSE,
 #'            argsPlot3d = list(size=2, type="s", alpha=0.3))
-#' plotRetangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
+#' plotRectangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
 #' finalize3D()
-plotRetangle3D <- function(a, b, ...) {
+plotRectangle3D <- function(a, b, ...) {
    args <- list(...)
    argsSegments3d <- mergeLists(list(), args$argsSegments3d)
    argsPlot3d <- mergeLists(list(), args$argsPlot3d)
@@ -797,13 +797,13 @@ plotRetangle3D <- function(a, b, ...) {
 #' @param drawPoint Draw the points defining the cone.
 #' @param drawLines Draw lines of the cone.
 #' @param reverse Cones are defined as the point minus R3+
-#' @param retangle Draw the cone as a retangle.
+#' @param rectangle Draw the cone as a rectangle.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
-#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d].
-#'   * `argsSegments3d`: A list of arguments for [rgl::segments3d].
-#'   * `argsPolygon3d`: A list of arguments for [rgl::polygon3d].
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
+#'   * `argsSegments3d`: A list of arguments for [`rgl::segments3d`][rgl::points3d].
+#'   * `argsPolygon3d`: A list of arguments for [`rgl::polygon3d`].
 #'
 #' @return NULL (invisible)
 #' @export
@@ -812,11 +812,11 @@ plotRetangle3D <- function(a, b, ...) {
 #' ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
 #' plotCones3D(c(4,4,4), drawLines = FALSE, drawPoint = TRUE,
 #'            argsPlot3d = list(col = "red", size = 10),
-#'            argsPolygon3d = list(alpha = 1), retangle = TRUE)
-#' plotCones3D(c(1,1,1), reverse = TRUE, retangle = TRUE)
+#'            argsPolygon3d = list(alpha = 1), rectangle = TRUE)
+#' plotCones3D(c(1,1,1), reverse = TRUE, rectangle = TRUE)
 #' plotCones3D(matrix(c(3,3,3,2,2,2), ncol = 3, byrow = TRUE))
 #' finalize3D()
-plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE, retangle = FALSE, ...) {
+plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE, rectangle = FALSE, ...) {
    args <- list(...)
    argsPlot3d <- mergeLists(list(), args$argsPlot3d)
    argsSegments3d <- mergeLists(list(lwd = 1, col = "grey40"), args$argsSegments3d)
@@ -836,13 +836,13 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
          stop("The cone will not be in the interior of the current bounding box. Resize your axes.")
       }
       if (reverse) {
-         if (retangle) do.call(plotRetangle3D, args = c(list(p,p2), list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)))
+         if (rectangle) do.call(plotRectangle3D, args = c(list(p,p2), list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)))
          else x <- matrix(c(p,p2), ncol=3, byrow = TRUE)
       } else {
-         if (retangle) do.call(plotRetangle3D, args = c(list(p,p1), list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)))
+         if (rectangle) do.call(plotRectangle3D, args = c(list(p,p1), list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)))
          else x <- matrix(c(p,p1), ncol=3, byrow = TRUE)
       }
-      if (!retangle) {
+      if (!rectangle) {
          x <- expand.grid(x=c(x[1,1],x[2,1]), y=c(x[1,2],x[2,2]), z=c(x[1,3],x[2,3]))
          x <- as.matrix(x)
          # text3d(x, texts = paste(x[,1],x[,2],x[,3], "r", 1:dim(x)[1]))
@@ -876,11 +876,11 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
-#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d].
-#'   * `argsSegments3d`: A list of arguments for [rgl::segments3d].
-#'   * `argsPolygon3d`: A list of arguments for [rgl::polygon3d].
-#'   * `argsShade3d`: A list of arguments for [rgl::shade3d].
-#'   * `argsText3d`: A list of arguments for [rgl::text3d].
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
+#'   * `argsSegments3d`: A list of arguments for [`rgl::segments3d`][rgl::points3d].
+#'   * `argsPolygon3d`: A list of arguments for [`rgl::polygon3d`].
+#'   * `argsShade3d`: A list of arguments for [`rgl::shade3d`][rgl::mesh3d].
+#'   * `argsText3d`: A list of arguments for [`rgl::text3d`].
 #'
 #' @return The convex hull (invisible).
 #' @export
@@ -955,7 +955,7 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
 #'   ylim = c(0,max(pts$y)+2),
 #'   zlim = c(0,max(pts$z)+2)))
 #' plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addR3 = TRUE)
-#' plotCones3D(pts, argsPolygon3d = list(alpha = 1), retangle = TRUE)
+#' plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 #' finalize3D()
 plotHull3D <- function(pts,
                        drawPoints = FALSE,
@@ -1066,9 +1066,9 @@ plotHull3D <- function(pts,
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
-#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d].
-#'   * `argsPch3d`: A list of arguments for [rgl::pch3d].
-#'   * `argsText3d`: A list of arguments for [rgl::text3d].
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
+#'   * `argsPch3d`: A list of arguments for [`rgl::pch3d`].
+#'   * `argsText3d`: A list of arguments for [`rgl::text3d`].
 #'
 #' @return NULL (invisible)
 #' @export
@@ -1151,8 +1151,8 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, ...) {
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
-#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d].
-#'   * `argsAspect3d`: A list of arguments for [rgl::aspect3d].
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
+#'   * `argsAspect3d`: A list of arguments for [`rgl::aspect3d`].
 #'
 #' @return NULL (invisible).
 #' @export
@@ -1180,8 +1180,8 @@ ini3D <- function(new = FALSE, ...){
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
-#'   * `argsAxes3d`: A list of arguments for [rgl::axes3d].
-#'   * `argsTitle3d`: A list of arguments for [rgl::title3d].
+#'   * `argsAxes3d`: A list of arguments for [`rgl::axes3d`].
+#'   * `argsTitle3d`: A list of arguments for [`rgl::title3d`][rgl::axes3d].
 #'
 #' @return NULL (invisible).
 #' @export

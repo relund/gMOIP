@@ -4,8 +4,14 @@
 \alias{plotNDSet2D}
 \title{Create a plot of a discrete non-dominated set.}
 \usage{
-plotNDSet2D(points, crit, addTriangles = FALSE, addHull = TRUE,
-  latex = FALSE, labels = NULL)
+plotNDSet2D(
+  points,
+  crit,
+  addTriangles = FALSE,
+  addHull = TRUE,
+  latex = FALSE,
+  labels = NULL
+)
 }
 \arguments{
 \item{points}{Data frame with non-dominated points.}

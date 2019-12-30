@@ -128,7 +128,7 @@ addNDSet<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' Generate a sample of nondominated points.
 #'
 #' @param n Number of samples generated (note only a subset of these points are nondominated).
-#' @param random Random sampeling.
+#' @param random Random sampling.
 #' @param onSphere Generate points on a sphere.
 #' @param keep Keep dominated points also.
 #' @param ... Arguments for generating the points based on method. Currently two lists may be added:

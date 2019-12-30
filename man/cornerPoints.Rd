@@ -4,8 +4,7 @@
 \alias{cornerPoints}
 \title{Calculate the corner points for the polytope Ax<=b.}
 \usage{
-cornerPoints(A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE,
-  ncol(A)))
+cornerPoints(A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)))
 }
 \arguments{
 \item{A}{Constraint matrix.}

@@ -4,8 +4,14 @@
 \alias{plotCones3D}
 \title{Plot a cone defined by a point in 3D.}
 \usage{
-plotCones3D(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE,
-  retangle = FALSE, ...)
+plotCones3D(
+  pts,
+  drawPoint = TRUE,
+  drawLines = TRUE,
+  reverse = FALSE,
+  rectangle = FALSE,
+  ...
+)
 }
 \arguments{
 \item{pts}{A matrix with a point in each row.}
@@ -16,14 +22,14 @@ plotCones3D(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE,
 
 \item{reverse}{Cones are defined as the point minus R3+}
 
-\item{retangle}{Draw the cone as a retangle.}
+\item{rectangle}{Draw the cone as a rectangle.}
 
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
-\item \code{argsPlot3d}: A list of arguments for \link[rgl:plot3d]{rgl::plot3d}.
-\item \code{argsSegments3d}: A list of arguments for \link[rgl:segments3d]{rgl::segments3d}.
-\item \code{argsPolygon3d}: A list of arguments for \link[rgl:polygon3d]{rgl::polygon3d}.
+\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
+\item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:points3d]{rgl::segments3d}}.
+\item \code{argsPolygon3d}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}}.
 }}
 }
 \value{
@@ -36,8 +42,8 @@ The cones are defined as the point plus R3+.
 ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
 plotCones3D(c(4,4,4), drawLines = FALSE, drawPoint = TRUE,
            argsPlot3d = list(col = "red", size = 10),
-           argsPolygon3d = list(alpha = 1), retangle = TRUE)
-plotCones3D(c(1,1,1), reverse = TRUE, retangle = TRUE)
+           argsPolygon3d = list(alpha = 1), rectangle = TRUE)
+plotCones3D(c(1,1,1), reverse = TRUE, rectangle = TRUE)
 plotCones3D(matrix(c(3,3,3,2,2,2), ncol = 3, byrow = TRUE))
 finalize3D()
 }

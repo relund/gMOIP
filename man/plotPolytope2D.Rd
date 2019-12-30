@@ -4,10 +4,21 @@
 \alias{plotPolytope2D}
 \title{Plot the polytope (bounded convex set) of a linear mathematical program}
 \usage{
-plotPolytope2D(A, b, obj = NULL, type = rep("c", ncol(A)),
-  nonneg = rep(TRUE, ncol(A)), crit = "max", faces = rep("c",
-  ncol(A)), plotFaces = TRUE, plotFeasible = TRUE,
-  plotOptimum = FALSE, latex = FALSE, labels = NULL, ...)
+plotPolytope2D(
+  A,
+  b,
+  obj = NULL,
+  type = rep("c", ncol(A)),
+  nonneg = rep(TRUE, ncol(A)),
+  crit = "max",
+  faces = rep("c", ncol(A)),
+  plotFaces = TRUE,
+  plotFeasible = TRUE,
+  plotOptimum = FALSE,
+  latex = FALSE,
+  labels = NULL,
+  ...
+)
 }
 \arguments{
 \item{A}{The constraint matrix.}

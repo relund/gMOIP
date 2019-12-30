@@ -4,10 +4,21 @@
 \alias{plotPolytope}
 \title{Plot the polytope (bounded convex set) of a linear mathematical program}
 \usage{
-plotPolytope(A, b, obj = NULL, type = rep("c", ncol(A)),
-  nonneg = rep(TRUE, ncol(A)), crit = "max", faces = type,
-  plotFaces = TRUE, plotFeasible = TRUE, plotOptimum = FALSE,
-  latex = FALSE, labels = NULL, ...)
+plotPolytope(
+  A,
+  b,
+  obj = NULL,
+  type = rep("c", ncol(A)),
+  nonneg = rep(TRUE, ncol(A)),
+  crit = "max",
+  faces = type,
+  plotFaces = TRUE,
+  plotFeasible = TRUE,
+  plotOptimum = FALSE,
+  latex = FALSE,
+  labels = NULL,
+  ...
+)
 }
 \arguments{
 \item{A}{The constraint matrix.}

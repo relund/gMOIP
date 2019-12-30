@@ -15,9 +15,9 @@ and \code{both} supported.}
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
-\item \code{argsPlot3d}: A list of arguments for \link[rgl:plot3d]{rgl::plot3d}.
-\item \code{argsPch3d}: A list of arguments for \link[rgl:pch3d]{rgl::pch3d}.
-\item \code{argsText3d}: A list of arguments for \link[rgl:text3d]{rgl::text3d}.
+\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
+\item \code{argsPch3d}: A list of arguments for \code{\link[rgl:pch3d]{rgl::pch3d}}.
+\item \code{argsText3d}: A list of arguments for \code{\link[rgl:text3d]{rgl::text3d}}.
 }}
 }
 \value{

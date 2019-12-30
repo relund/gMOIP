@@ -4,8 +4,12 @@
 \alias{inHull}
 \title{Efficient test for points inside a convex hull in p dimensions.}
 \usage{
-inHull(pts, vertices, hull = NULL, tol = mean(mean(abs(vertices))) *
-  sqrt(.Machine$double.eps))
+inHull(
+  pts,
+  vertices,
+  hull = NULL,
+  tol = mean(mean(abs(vertices))) * sqrt(.Machine$double.eps)
+)
 }
 \arguments{
 \item{pts}{A \eqn{nxp} array to test, \eqn{n} data points, in dimension \eqn{p}. If you have
