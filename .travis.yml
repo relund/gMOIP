@@ -5,7 +5,6 @@ r:
 latex: false
 fortran: false
 cache: packages
-# warnings_are_errors: false
 os:
   - linux
   - osx
@@ -15,5 +14,5 @@ env:
 
 r_check_args: "--as-cran --install-args=--build"
 
-#before_install:
-#  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install mesa-common-dev; fi
+before_install:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install mesa-common-dev; fi
