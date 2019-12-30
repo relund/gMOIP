@@ -1,23 +1,21 @@
 ## Test environments
-* Ubuntu 14.04.5 LTS (on travis-ci), R 3.6.2
-* rhub (devel and release - Win Server, Ubuntu Linux, Fedora Linux)
+* Ubuntu (newest stable version on Travis CI), R (release)
+* Mac OSX (newest stable version on Travis CI), R (release)
+* Rhub (windows-x86_64-release)
+* Win-builder (check_win_release)
 
 
 ## R CMD check results
 R CMD check results
 0 errors | 0 warnings | 1 note
 
-√  checking for file 'gMOIP/DESCRIPTION'
--  checking extension type ... Package
--  this is package 'gMOIP' version '1.3.0' (814ms)
--  package encoding: UTF-8
-N  checking CRAN incoming feasibility
-   Maintainer: 'Lars Relund <lars@relund.dk>'
-   
-   Possibly mis-spelled words in DESCRIPTION:
-     ILP (9:60)
-     MILP (9:67)
-     polytope (9:42)
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Lars Relund Nielsen <lars@relund.dk>'
+
+New maintainer:
+  Lars Relund Nielsen <lars@relund.dk>
+Old maintainer(s):
+  Lars Relund <lars@relund.dk>
 
 R CMD check succeeded
 
@@ -25,11 +23,11 @@ R CMD check succeeded
 ## Downstream dependencies
 * None
 
-## Steps for realesing to CRAN
+## Steps for releasing to CRAN
 devtools::spell_check()
 devtools::run_examples()
 devtools::check()
-devtools::check_rhub(interactive = FALSE)
-devtools::check_win_devel()
+devtools::check_rhub(platforms = "windows-x86_64-release")
+devtools::check_win_release(quiet = TRUE)
 devtools::release()
 

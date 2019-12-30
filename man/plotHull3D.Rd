@@ -87,6 +87,7 @@ ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
 plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addR3 = TRUE)
 finalize3D()
 
+\donttest{
 pts <- genNDSet()
 pts <- as.data.frame(pts)
 
@@ -116,4 +117,5 @@ ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
 plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addR3 = TRUE)
 plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 finalize3D()
+}
 }
