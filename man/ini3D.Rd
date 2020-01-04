@@ -9,6 +9,8 @@ ini3D(new = FALSE, clear = TRUE, ...)
 \arguments{
 \item{new}{A new window is opened (otherwise the current is cleared).}
 
+\item{clear}{Clear the current rgl window.}
+
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{

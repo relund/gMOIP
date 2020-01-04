@@ -1150,6 +1150,7 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, ...) {
 #' Initialize the rgl window.
 #'
 #' @param new A new window is opened (otherwise the current is cleared).
+#' @param clear Clear the current rgl window.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
