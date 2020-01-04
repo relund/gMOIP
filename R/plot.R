@@ -1164,17 +1164,17 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, ...) {
 #' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pts)
 #' finalize3D()
-ini3D <- function(new = FALSE, ...){
+ini3D <- function(new = FALSE, clear = TRUE, ...){
    args <- list(...)
    argsPlot3d <- mergeLists(list(xlab = '', ylab = '', zlab = '', box = F, axes = F), args$argsPlot3d)
    argsAspect3d <- mergeLists(list(x = "iso"), args$argsAspect3d)
 
    if (new) rgl::open3d()
    rgl::highlevel()
-   rgl::clear3d()
+   if (clear) rgl::clear3d()
    do.call(rgl::plot3d, args = c(list(x = replicate(2, 1:3), type = 'n'), argsPlot3d))
    do.call(rgl::aspect3d, args = argsAspect3d)
-   return(invisible(NULL))
+   # return(invisible(NULL))
 }
 
 #' Finalize the rgl window.
@@ -1200,5 +1200,5 @@ finalize3D <- function(...){
 
    do.call(rgl::axes3d, args = argsAxes3d)
    do.call(rgl::title3d, args = argsTitle3d)
-   return(invisible(NULL))
+   # return(invisible(NULL))
 }
