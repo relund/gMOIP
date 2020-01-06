@@ -864,6 +864,52 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
 }
 
 
+
+# Old implementation using subscenes
+# plotCones3D <- function(point, col = "grey100") {
+#   p <- point
+#   eps <- 0.00001
+#   if (is.matrix(p)) points <- p else points <- t(as.matrix(p))
+#   plot3d( # hack to expand bounding box
+#     points-eps,
+#     type = "p", size = 0.1, add = T, col = "white"
+#   )
+#   plot3d(
+#     points,
+#     type = "p",
+#     col = "black",
+#     size = 5, add = T
+#   )
+#   root <- currentSubscene3d()
+#   for (i in 1:dim(points)[1]) {
+#     p <- points[i,]
+#     newSubscene3d(
+#       "inherit",
+#       "inherit",
+#       "inherit",
+#       copyShapes = T,
+#       copyBBoxDeco = F,
+#       parent = root
+#     )
+#     planes3d(1, 0, 0, -p[1], alpha = 0.5, col = col)
+#     planes3d(0, 1, 0, -p[2], alpha = 0.5, col = col)
+#     planes3d(0, 0, 1, -p[3], alpha = 0.5, col = col)
+#     clipplanes3d(1, 0, 0,-p[1] + eps)
+#     clipplanes3d(0, 1, 0,-p[2] + eps)
+#     clipplanes3d(0, 0, 1,-p[3] + eps)
+#   }
+#   useSubscene3d(root)
+# }
+
+
+
+
+
+
+
+
+
+
 #' Plot the convex hull of a set of points.
 #'
 #' @param pts A matrix with a point in each row.
