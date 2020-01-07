@@ -4,7 +4,7 @@
 * Rhub (windows-x86_64-release)
 * Win-builder (check_win_release)
 
-
+1
 ## R CMD check results
 R CMD check results
 0 errors | 0 warnings | 1 note
@@ -29,4 +29,3 @@ devtools::check(run_dont_test = TRUE)
 devtools::check_rhub(platforms = "windows-x86_64-release")
 devtools::check_win_release(quiet = TRUE)
 devtools::release()
-

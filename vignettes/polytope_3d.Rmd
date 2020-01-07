@@ -69,7 +69,7 @@ The ILP model with LP and ILP faces:
 
 ```{r ex1ILP, webgl = TRUE}
 loadView(v = view)
-mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
+rgl::mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj, 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
 plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible = FALSE, obj = obj,
@@ -154,7 +154,7 @@ The ILP model with LP and ILP faces:
 
 ```{r ex2ILP, webgl = TRUE}
 loadView(v = view)
-mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
+rgl::mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj, 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
 plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible = FALSE, obj = obj,
@@ -242,7 +242,7 @@ The ILP model with LP and ILP faces:
 
 ```{r ex3ILP, webgl = TRUE}
 loadView(v = view)
-mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
+rgl::mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj, 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
 plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible = FALSE, obj = obj,
@@ -332,7 +332,7 @@ The ILP model with LP and ILP faces:
 
 ```{r ex4ILP, webgl = TRUE}
 loadView(v = view)
-mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
+rgl::mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj, 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
 plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible = FALSE, obj = obj,
@@ -395,7 +395,7 @@ file:
 loadView(v = view, close = F, zoom = 0.75)
 plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "n", 
              argsTitle3d=list(xlab = '$x_1$', ylab='$y_1$', zlab='$y_2$'))
-writeASY(outtype = "pdflatex", prc = TRUE, title = "polytope")  # prc = T(interactive) / F(static)
+rgl::writeASY(outtype = "pdflatex", prc = TRUE, title = "polytope")  # prc = T(interactive) / F(static)
 ```
 
 Next, you include the file in you LaTeX document (`test.tex`):

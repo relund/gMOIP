@@ -862,9 +862,6 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
    }
    return(invisible(NULL))
 }
-
-
-
 # Old implementation using subscenes
 # plotCones3D <- function(point, col = "grey100") {
 #   p <- point
@@ -900,14 +897,6 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
 #   }
 #   useSubscene3d(root)
 # }
-
-
-
-
-
-
-
-
 
 
 #' Plot the convex hull of a set of points.
@@ -1243,7 +1232,8 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
 finalize3D <- function(...){
    args <- list(...)
    argsAxes3d <- mergeLists(list(edges = c('x', 'y', 'z')), args$argsAxes3d)
-   argsTitle3d <- mergeLists(list(xlab = 'x1', ylab = 'x2', zlab = 'x3'), args$argsTitle3d)
+   argsTitle3d <- mergeLists(list(xlab = TeX('$x_{1}$'), ylab = TeX('$x_{2}$'),
+                                  zlab = TeX('$x_{3}$')), args$argsTitle3d)
 
    do.call(rgl::axes3d, args = argsAxes3d)
    do.call(rgl::title3d, args = argsTitle3d)
