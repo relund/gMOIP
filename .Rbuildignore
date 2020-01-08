@@ -9,3 +9,5 @@
 ^.*\.tex$
 ^CRAN-RELEASE$
 vignettes/lb_ub_set.Rmd$
+^.*\.log$
+^test*$
