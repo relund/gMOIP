@@ -1232,8 +1232,8 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
 finalize3D <- function(...){
    args <- list(...)
    argsAxes3d <- mergeLists(list(edges = c('x', 'y', 'z')), args$argsAxes3d)
-   argsTitle3d <- mergeLists(list(xlab = TeX('$x_{1}$'), ylab = TeX('$x_{2}$'),
-                                  zlab = TeX('$x_{3}$')), args$argsTitle3d)
+   argsTitle3d <- mergeLists(list(xlab = expression(italic(x)[1]), ylab = expression(italic(x)[2]),
+                                  zlab = expression(italic(x)[3])), args$argsTitle3d)
 
    do.call(rgl::axes3d, args = argsAxes3d)
    do.call(rgl::title3d, args = argsTitle3d)

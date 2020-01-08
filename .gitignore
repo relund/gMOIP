@@ -4,3 +4,6 @@
 inst/doc
 polytope.tex
 ex_3d.tex
+CRAN-RELEASE
+*.log
+*.pdf
