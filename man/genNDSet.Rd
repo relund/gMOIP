@@ -4,50 +4,58 @@
 \alias{genNDSet}
 \title{Generate a sample of nondominated points.}
 \usage{
-genNDSet(n = 100, random = FALSE, onSphere = TRUE, keep = F, ...)
+genNDSet(
+  p,
+  n,
+  range = c(1, 100),
+  random = FALSE,
+  sphere = TRUE,
+  box = FALSE,
+  keep = FALSE,
+  ...
+)
 }
 \arguments{
-\item{n}{Number of samples generated (note only a subset of these points are nondominated).}
+\item{p}{Dimension of the points.}
+
+\item{n}{Number of samples generated.}
+
+\item{range}{The range of the points in each dimension (a vector or matrix with \code{p} rows).}
 
 \item{random}{Random sampling.}
 
-\item{onSphere}{Generate points on a sphere.}
+\item{sphere}{Generate points on a sphere.}
+
+\item{box}{Generate points in boxes.}
 
 \item{keep}{Keep dominated points also.}
 
-\item{...}{Arguments for generating the points based on method. Currently two lists may be added:
-argsRandom Arguments for random sampling.
-argsSphere Arguments for sampling on a sphere.}
+\item{...}{Further arguments passed on to \code{\link{genSample}}.}
 }
 \value{
-A data frame with xyz columns and ...0
+A data frame with \code{p+1} columns (last one indicate if dominated or not).
 }
 \description{
 Generate a sample of nondominated points.
 }
 \examples{
+range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
 ini3D()
-p <- genNDSet(1000, random = TRUE, keep = TRUE)
-head(p)
-plotPoints3D(p)
-plotPoints3D(p[!p$dom,], argsPlot3d = list(col = "red", size = 10))
+pts <- genNDSet(3, 1000, range = range, random = TRUE, keep = TRUE)
+head(pts)
+Rfast::colMinsMaxs(as.matrix(pts))
+plotPoints3D(pts)
+plotPoints3D(pts[!pts$dom,], argsPlot3d = list(col = "red", size = 10))
 finalize3D()
 
 ini3D()
-p <- genNDSet(1000, keep = TRUE)
-rgl::spheres3d(c(52,52,52), radius=50, color = "grey100", alpha=0.1)
-plotPoints3D(p)
-plotPoints3D(p[!p$dom,], argsPlot3d = list(col = "red", size = 10))
-rgl::planes3d(52,52,52,-8112, alpha = 0.5, col = "red")
-finalize3D()
-
-ini3D()
-cent <- c(100,100,100)
-r <- 75
-p <- genNDSet(1000, keep = TRUE, argsSphere = list(center = cent, radius = r))
-rgl::spheres3d(cent, radius=r, color = "grey100", alpha=0.1)
-plotPoints3D(p)
-plotPoints3D(p[!p$dom,], argsPlot3d = list(col = "red", size = 10))
+range <- c(1,100)
+cent <- rep(range[1] + (range[2]-range[1])/2, 3)
+pts <- genNDSet(3, 1000, range = range, sphere = TRUE, keep = TRUE,
+       argsSphere = list(center = cent))
+rgl::spheres3d(cent, radius=49.5, color = "grey100", alpha=0.1)
+plotPoints3D(pts)
+plotPoints3D(pts[!pts$dom,], argsPlot3d = list(col = "red", size = 10))
 rgl::planes3d(cent[1],cent[2],cent[3],-sum(cent^2), alpha = 0.5, col = "red")
 finalize3D()
 
@@ -56,11 +64,11 @@ cent <- c(100,100,100)
 r <- 75
 planeC <- c(cent+r/3)
 planeC <- c(planeC, -sum(planeC^2))
-p <- genNDSet(1000, keep = TRUE,
-  argsSphere = list(center = cent, radius = r, below = FALSE, plane = planeC))
+pts <- genNDSet(3, 100, keep = TRUE,
+  argsSphere = list(center = cent, radius = r, below = FALSE, plane = planeC, factor = 6))
 rgl::spheres3d(cent, radius=r, color = "grey100", alpha=0.1)
-plotPoints3D(p)
-plotPoints3D(p[!p$dom,], argsPlot3d = list(col = "red", size = 10))
+plotPoints3D(pts)
+plotPoints3D(pts[!pts$dom,], argsPlot3d = list(col = "red", size = 10))
 rgl::planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
 finalize3D()
 }

@@ -1208,7 +1208,7 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
    if (new) rgl::open3d()
    rgl::highlevel()
    if (clear) rgl::clear3d()
-   do.call(rgl::plot3d, args = c(list(x = replicate(2, 1:3), type = 'n'), argsPlot3d))
+   do.call(rgl::plot3d, args = c(list(x = c(1,1), y = c(1,1), z = c(1,1), type = 'n'), argsPlot3d))
    do.call(rgl::aspect3d, args = argsAspect3d)
    # return(invisible(NULL))
 }
