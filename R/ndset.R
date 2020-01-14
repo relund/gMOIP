@@ -183,7 +183,7 @@ addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' finalize3D()
 #'
 #' ## other p
-#' p <- 20
+#' p <- 10
 #' range <- c(1,100)
 #' pts <- genSample(p, 1000, range = range, random = TRUE)
 #' head(pts)
@@ -248,6 +248,7 @@ addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' finalize3D()
 #'
 #' ## Other p
+#' p <- 10
 #' cent <- rep(0,p)
 #' r <- 100
 #' pts <- genSample(p, 100000, argsSphere = list(center = cent, radius = r, below = NULL))
@@ -270,9 +271,11 @@ addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #'
 #' pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxRand"))
 #' plot(pts)
-#' pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6)))
+#' pts <- genSample(2, 1000, range = range, box = TRUE,
+#'                  argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6)))
 #' points(pts, pch = 3, col = "red")
-#' pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxRand", prHigh = c(0,0)))
+#' pts <- genSample(2, 1000, range = range, box = TRUE,
+#'                  argsBox = list(cor = "idxRand", prHigh = c(0,0)))
 #' points(pts, pch = 4, col = "blue")
 #'
 #' pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxSplit"))
@@ -280,26 +283,28 @@ addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #'
 #' ## p = 3
 #' range <- matrix(c(1,100, 1,200, 1,50), ncol = 2, byrow = TRUE )
-#' ini3D(argsPlot3d = list(box = T, axes = T))
+#' ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
 #' pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxAlt"))
 #' head(pts)
 #' Rfast::colMinsMaxs(as.matrix(pts))
 #' plotPoints3D(pts)
 #' finalize3D()
 #'
-#' ini3D(argsPlot3d = list(box = T, axes = T))
-#' pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxAlt", intervals = 6))
+#' ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
+#' pts <- genSample(3, 1000, range = range, box = TRUE, ,
+#'                  argsBox = list(cor = "idxAlt", intervals = 6))
 #' plotPoints3D(pts)
 #' finalize3D()
 #'
-#' ini3D(argsPlot3d = list(box = T, axes = T))
+#' ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
 #' pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxRand"))
 #' plotPoints3D(pts)
-#' pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6,0.1)))
+#' pts <- genSample(3, 1000, range = range, box = TRUE, ,
+#'                  argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6,0.1)))
 #' plotPoints3D(pts, argsPlot3d = list(col="red"))
 #' finalize3D()
 #'
-#' ini3D(argsPlot3d = list(box = T, axes = T))
+#' ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
 #' pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxSplit"))
 #' plotPoints3D(pts)
 #' finalize3D()
@@ -318,7 +323,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
    if (random) {
       sphere = FALSE
       argsRandom <- mergeLists(list(), args$argsRandom)
-      set <- apply(range, 1, function(x) sample(x[1]:x[2], n, replace = T) )
+      set <- apply(range, 1, function(x) sample(x[1]:x[2], n, replace = TRUE) )
    }
 
    if (sphere) {
@@ -334,18 +339,15 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
          argsSphere$plane <- c(argsSphere$center, -sum(argsSphere$center ^ 2))
       if (!is.null(argsSphere$below)) n1 <- floor(n * argsSphere$factor) else n1 <- n # increase so have n points below/above
 
-      # generate points https://math.stackexchange.com/questions/87230/picking-random-points-in-the-volume-of-sphere-with-uniform-probability
-      pts <- matrix(rnorm(p*n1), nrow = p)  # sample
+      # generate points https://math.stackexchange.com/questions/87230/
+      #                 picking-random-points-in-the-volume-of-sphere-with-uniform-probability
+      pts <- matrix(stats::rnorm(p*n1), nrow = p)  # sample
       pts <- t(apply(pts, 2, function(x){x * argsSphere$radius/sqrt(sum(x^2))}))
-      # print(apply(pts,1, function(x){sqrt(sum(x^2))})) # test should be equal to radius)
-      # print(argsSphere$center)
-      # print(argsSphere$radius)
       # old method
       # sp <- sphereplot::pointsphere(n,c(0,360),c(-90,90),c(argsSphere$radius,argsSphere$radius))
       # pts <- sphereplot::sph2car(sp, deg = TRUE)
 
-      pts <- pts + matrix(rep(argsSphere$center, dim(pts)[1]), byrow = T, ncol=p)  # shift center
-      # print(dim(pts))
+      pts <- pts + matrix(rep(argsSphere$center, dim(pts)[1]), byrow = TRUE, ncol=p)  # shift center
       if (!is.null(argsSphere$below)) {
          set <- matrix(rep(0,p), nrow = 1)
          if(argsSphere$below) {
@@ -379,12 +381,12 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
       invLength <- ceiling((range[,2]-range[,1])/argsBox$intervals)
       rngL <- cbind(range[,1], range[,1] + invLength)
       rngH <- cbind(range[,2] - invLength, range[,2])
-      ptsH <- apply(rngH, 1, function(x) sample(x[1]:x[2], n, replace = T) )
-      ptsL <- apply(rngL, 1, function(x) sample(x[1]:x[2], n, replace = T) )
+      ptsH <- apply(rngH, 1, function(x) sample(x[1]:x[2], n, replace = TRUE) )
+      ptsL <- apply(rngL, 1, function(x) sample(x[1]:x[2], n, replace = TRUE) )
       ptsL <- split(ptsL, seq(nrow(ptsL)))
       ptsH <- split(ptsH, seq(nrow(ptsH)))
       if (argsBox$cor == "idxAlt") {
-         high <- rbinom(n, 1, 0.5)
+         high <- stats::rbinom(n, 1, 0.5)
          high <- lapply(high, function(x) rep(c(x,!x),times = p)[1:p])
       }
       if (argsBox$cor == "idxRand") {

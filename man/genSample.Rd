@@ -86,7 +86,7 @@ plotPoints3D(pts)
 finalize3D()
 
 ## other p
-p <- 20
+p <- 10
 range <- c(1,100)
 pts <- genSample(p, 1000, range = range, random = TRUE)
 head(pts)
@@ -151,6 +151,7 @@ plotPoints3D(pts)
 finalize3D()
 
 ## Other p
+p <- 10
 cent <- rep(0,p)
 r <- 100
 pts <- genSample(p, 100000, argsSphere = list(center = cent, radius = r, below = NULL))
@@ -173,9 +174,11 @@ plot(pts)
 
 pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxRand"))
 plot(pts)
-pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6)))
+pts <- genSample(2, 1000, range = range, box = TRUE,
+                 argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6)))
 points(pts, pch = 3, col = "red")
-pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxRand", prHigh = c(0,0)))
+pts <- genSample(2, 1000, range = range, box = TRUE,
+                 argsBox = list(cor = "idxRand", prHigh = c(0,0)))
 points(pts, pch = 4, col = "blue")
 
 pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxSplit"))
@@ -183,26 +186,28 @@ plot(pts)
 
 ## p = 3
 range <- matrix(c(1,100, 1,200, 1,50), ncol = 2, byrow = TRUE )
-ini3D(argsPlot3d = list(box = T, axes = T))
+ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
 pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxAlt"))
 head(pts)
 Rfast::colMinsMaxs(as.matrix(pts))
 plotPoints3D(pts)
 finalize3D()
 
-ini3D(argsPlot3d = list(box = T, axes = T))
-pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxAlt", intervals = 6))
+ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
+pts <- genSample(3, 1000, range = range, box = TRUE, ,
+                 argsBox = list(cor = "idxAlt", intervals = 6))
 plotPoints3D(pts)
 finalize3D()
 
-ini3D(argsPlot3d = list(box = T, axes = T))
+ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
 pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxRand"))
 plotPoints3D(pts)
-pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6,0.1)))
+pts <- genSample(3, 1000, range = range, box = TRUE, ,
+                 argsBox = list(cor = "idxRand", prHigh = c(0.1,0.6,0.1)))
 plotPoints3D(pts, argsPlot3d = list(col="red"))
 finalize3D()
 
-ini3D(argsPlot3d = list(box = T, axes = T))
+ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
 pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxSplit"))
 plotPoints3D(pts)
 finalize3D()
