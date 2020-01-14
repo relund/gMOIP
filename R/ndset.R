@@ -37,9 +37,29 @@ addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
    iP$nD[1] <- TRUE  # upper left point
    p1 <- iP$z1[1]; p2 <- iP$z2[1]  # current non dom point (due to sorting will p2 always be larger than or equal to current)
    for (r in 2:length(iP$z1)) { # current point under consideration
-      if (abs(p2-iP$z2[r])<tol & abs(p1-iP$z1[r])<tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
-      if (crit=="max" & p2-iP$z2[r]>tol & iP$z1[r]>p1+tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
-      if (crit=="min" & iP$z2[r]-p2>tol & iP$z1[r]<p1-tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
+      if (abs(p2 - iP$z2[r]) < tol &
+          abs(p1 - iP$z1[r]) < tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
+      if (crit == "max" &
+          p2 - iP$z2[r] > tol &
+          iP$z1[r] > p1 + tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
+      if (crit == "min" &
+          iP$z2[r] - p2 > tol &
+          iP$z1[r] < p1 - tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
    }
    # iP$nD <- TRUE
    # for (i in 2:nrow(iP)) { # remove non-dom z2
@@ -390,7 +410,9 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
          high <- lapply(high, function(x) rep(c(x,!x),times = p)[1:p])
       }
       if (argsBox$cor == "idxRand") {
-         high <- sapply(argsBox$prHigh, function(pr) sample(0:1, n, replace = TRUE, prob = c(1-pr, pr)))
+         high <-
+            sapply(argsBox$prHigh, function(pr)
+               sample(0:1, n, replace = TRUE, prob = c(1 - pr, pr)))
          high <- split(high, seq(nrow(high)))
       }
       if (argsBox$cor == "idxSplit") {
@@ -459,7 +481,16 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' plotPoints3D(pts[!pts$dom,], argsPlot3d = list(col = "red", size = 10))
 #' rgl::planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
 #' finalize3D()
-genNDSet <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box = FALSE, keep = FALSE, ...) {
+genNDSet <-
+   function(p,
+            n,
+            range = c(1, 100),
+            random = FALSE,
+            sphere = TRUE,
+            box = FALSE,
+            keep = FALSE,
+            ...) {
+
    if (p!=3) stop("Currently only works for p = 3!")
    set <- genSample(p, n , range = range, random = random, sphere = sphere, box = box, ...)
    set <- set[order(set[,1],set[,2],set[,3]),]

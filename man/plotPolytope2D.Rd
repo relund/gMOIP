@@ -49,8 +49,8 @@ only one is shown) and add the iso profit line.}
 
 \item{latex}{If \code{True} make latex math labels for TikZ.}
 
-\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-coordinates to the points. Otherwise number all points from one.}
+\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
+'coord' add coordinates to the points. Otherwise number all points from one.}
 
 \item{...}{If 2D arguments passed to the \link{aes_string} function in
 \link{geom_point} or \link{geom_line}.}

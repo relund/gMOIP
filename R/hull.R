@@ -182,7 +182,11 @@ inHull <- function(pts, vertices, hull=NULL,
       nrmls <- matrix(NA, nt, p)         # predefine each nrml as NA, degenerate
       degenflag <- matrix(TRUE, nt, 1)
       for (i in  1:nt) {
-         nullsp <- t(MASS::Null(t(vertices[hull[i, -1], ] - matrix(vertices[hull[i, 1], ], p - 1, p, byrow =TRUE))))
+         nullsp <-
+            t(MASS::Null(t(
+               vertices[hull[i,-1],] - matrix(vertices[hull[i, 1],], p - 1, p, byrow =
+                                                 TRUE)
+            )))
          if (dim(nullsp)[1] == 1) {
             nrmls[i, ] <- nullsp
             degenflag[i] <- FALSE
@@ -228,7 +232,11 @@ inHull <- function(pts, vertices, hull=NULL,
          }
          if (dS != p) {
             idx <- as.integer(row.names(pt))
-            warning("Using PCA to transform. Results for index ", paste(idx, collapse = ","), " might not be accurate!")
+            warning(
+               "Using PCA to transform. Results for index ",
+               paste(idx, collapse = ","),
+               " might not be accurate!"
+            )
             set <- stats::princomp(set)
             idx <- which(set$sdev > tol)
             set <- stats::predict(set)[,idx]
@@ -272,7 +280,11 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
    nrmls <- matrix(NA, nt, p)         # predefine each nrml as NA, degenerate
    degenflag <- matrix(TRUE, nt, 1)
    for (i in  1:nt) {
-      nullsp <- t(MASS::Null(t(vertices[hull[i, -1], ] - matrix(vertices[hull[i, 1], ], p - 1, p, byrow =TRUE))))
+      nullsp <-
+         t(MASS::Null(t(
+            vertices[hull[i,-1],] - matrix(vertices[hull[i, 1],], p - 1, p, byrow =
+                                              TRUE)
+         )))
       if (dim(nullsp)[1] == 1) {
          nrmls[i, ] <- nullsp
          degenflag[i] <- FALSE

@@ -48,9 +48,12 @@ plotPolytope <- function(A,
       if (length(type)!=ncol(A)) stop("Arg. 'type' must be same length as columns in A!")
       if (length(faces)!=ncol(A)) stop("Arg. 'faces' must be same length as columns in A!")
       if (!is.null(obj))
-         if (length(obj)!=ncol(A)) stop("Arg. 'obj' must have the same columns as in A and be a single criterion!")
-      if (ncol(A)==2) return(plotPolytope2D(A, b, obj, type, nonneg, crit, faces, plotFaces, plotFeasible, plotOptimum, latex, labels, ...))
-      if (ncol(A)==3) return(plotPolytope3D(A, b, obj, type, nonneg, crit, faces, plotFaces, plotFeasible, plotOptimum, latex, labels, ...))
+         if (length(obj)!=ncol(A))
+            stop("Arg. 'obj' must have the same columns as in A and be a single criterion!")
+      if (ncol(A)==2) return(plotPolytope2D(A, b, obj, type, nonneg, crit, faces, plotFaces,
+                                            plotFeasible, plotOptimum, latex, labels, ...))
+      if (ncol(A)==3) return(plotPolytope3D(A, b, obj, type, nonneg, crit, faces, plotFaces,
+                                            plotFeasible, plotOptimum, latex, labels, ...))
       stop("Only 2 or 3 variables supported!")
    }
 
@@ -75,22 +78,34 @@ plotPolytope <- function(A,
 #' @param plotOptimum Show the optimum corner solution point (if alternative solutions
 #'   only one is shown) and add the iso profit line.
 #' @param latex If \code{True} make latex math labels for TikZ.
-#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-#'   coordinates to the points. Otherwise number all points from one.
+#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
+#'   'coord' add coordinates to the points. Otherwise number all points from one.
 #' @param ... If 2D arguments passed to the \link{aes_string} function in
 #'   \link{geom_point} or \link{geom_line}.
 #'
 #' @return A ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import ggplot2
-plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)),
-                         crit="max", faces = rep("c", ncol(A)), plotFaces = TRUE, plotFeasible = TRUE,
-                         plotOptimum = FALSE, latex = FALSE, labels = NULL, ...)
-{
-   if (!is.null(obj) & (!is.vector(obj) | !length(obj)==ncol(A))) stop("Arg. obj must be a vector of same length as the number of columns in A.")
-   #if (is.null(points) & is.null(rangePoints) & is.null(cPoints)) stop("Arguments cPoints, points or rangePoints must be specified!")
-   # Set Custom theme
-   myTheme <- theme_bw()
+plotPolytope2D <-
+   function(A,
+            b,
+            obj = NULL,
+            type = rep("c", ncol(A)),
+            nonneg = rep(TRUE, ncol(A)),
+            crit = "max",
+            faces = rep("c", ncol(A)),
+            plotFaces = TRUE,
+            plotFeasible = TRUE,
+            plotOptimum = FALSE,
+            latex = FALSE,
+            labels = NULL,
+            ...)
+   {
+      if (!is.null(obj) & (!is.vector(obj) | !length(obj) == ncol(A)))
+         stop("Arg. obj must be a vector of same length as the number of columns in A.")
+      #if (is.null(points) & is.null(rangePoints) & is.null(cPoints)) stop("Arguments cPoints, points or rangePoints must be specified!")
+      # Set Custom theme
+      myTheme <- theme_bw()
    myTheme <- myTheme + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                               panel.border = element_blank(),
                               #axis.line = element_blank(),
@@ -113,8 +128,8 @@ plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = re
       cPoints = cornerPoints(A, b, faces, nonneg)
       idx <- grDevices::chull(cPoints)
       cPoints <- cPoints[idx,]
-      p <- p + geom_polygon(data = as.data.frame(cPoints), aes_string(x = 'x1', y = 'x2'), fill="gray90", size = 0.5,
-                            linetype = 1, color="gray")
+      p <- p + geom_polygon(data = as.data.frame(cPoints), aes_string(x = 'x1', y = 'x2'),
+                            fill="gray90", size = 0.5, linetype = 1, color="gray")
    }
 
    # find feasible points
@@ -177,11 +192,12 @@ plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = re
          p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=tmp)
          nudgeS=-(max(tmp$x1)-min(tmp$x1))/100
          if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) > 0)
-            p <- p + ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, size=3,
-                                              colour = "gray50")
+            p <- p + ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'),
+                                              data=tmp, size=3, colour = "gray50")
          if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) == 0)
-            p <- p + geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, nudge_x = nudgeS,
-                               nudge_y = nudgeS, hjust=1, size=3, colour = "gray50")
+            p <- p + geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp,
+                               nudge_x = nudgeS, nudge_y = nudgeS, hjust=1, size=3,
+                               colour = "gray50")
       }
    }
 
@@ -201,7 +217,8 @@ plotPolytope2D<-function(A, b, obj = NULL, type = rep("c", ncol(A)), nonneg = re
          } else {
             p <- p + geom_vline(xintercept = tmp$x1[i], lty="dashed")
          }
-         p <- p + geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,], nudge_x = 1.0)
+         p <- p + geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,],
+                             nudge_x = 1.0)
       }
    }
    p <- p + myTheme
@@ -397,8 +414,8 @@ mergeLists <- function (a,b) {
 #' @param addHull Add the convex hull and the rays.
 #' @param plotFeasible If \code{True} then plot the criterion points/slices.
 #' @param latex If true make latex math labels for TikZ.
-#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-#'   coordinates to the points. Otherwise number all points from one.
+#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
+#'   'coord' add coordinates to the points. Otherwise number all points from one.
 #'
 #' @note Currently only points are checked for dominance. That is, for MILP
 #'   models some nondominated points may in fact be dominated by a segment.
@@ -541,19 +558,38 @@ plotCriterion2D <- function(A,
       if (length(tmp$z1)>1) { # triangles
          for (r in 1:(dim(tmp)[1] - 1)) {
             p <- p +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray") +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r],yend=tmp$z2[r+1], colour="gray") +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r+1],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray")
+               geom_segment(
+                  x = tmp$z1[r],
+                  y = tmp$z2[r],
+                  xend = tmp$z1[r + 1],
+                  yend = tmp$z2[r + 1],
+                  colour = "gray"
+               ) +
+               geom_segment(
+                  x = tmp$z1[r],
+                  y = tmp$z2[r],
+                  xend = tmp$z1[r],
+                  yend = tmp$z2[r + 1],
+                  colour = "gray"
+               ) +
+               geom_segment(
+                  x = tmp$z1[r],
+                  y = tmp$z2[r + 1],
+                  xend = tmp$z1[r + 1],
+                  yend = tmp$z2[r + 1],
+                  colour = "gray"
+               )
          }
       }
    }
 
    nudgeC=-(max(points$z1)-min(points$z1))/100
    if (!is.null(labels) & anyDuplicated(round(cbind(points$z1,points$z2),10), MARGIN = 1) > 0)
-      p <- p + ggrepel::geom_text_repel(aes_string(label = 'lbl'), size=3, colour = "gray50", data=points)
+      p <- p + ggrepel::geom_text_repel(aes_string(label = 'lbl'), size=3,
+                                        colour = "gray50", data=points)
    if (!is.null(labels) & anyDuplicated(round(cbind(points$z1,points$z2),10), MARGIN = 1) == 0)
-      p <- p + geom_text(aes_string(label = 'lbl'), nudge_x = nudgeC, nudge_y = nudgeC, hjust=1, size=3,
-                         colour = "gray50", data=points)
+      p <- p + geom_text(aes_string(label = 'lbl'), nudge_x = nudgeC, nudge_y = nudgeC,
+                         hjust=1, size=3, colour = "gray50", data=points)
    p <- p + myTheme
    return(p)
 }
@@ -644,8 +680,8 @@ loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE
 #'   points.
 #' @param addHull Add the convex hull and the rays.
 #' @param latex If true make latex math labels for TikZ.
-#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-#'   coordinates to the points. Otherwise number all points from one.
+#' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
+#'   'coord' add coordinates to the points. Otherwise number all points from one.
 #'
 #' @note Currently only points are checked for dominance. That is, for MILP
 #'   models some nondominated points may in fact be dominated by a segment.
@@ -654,9 +690,9 @@ loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE
 #' @export
 #' @examples
 #' dat <- data.frame(z1=c(12,14,16,18,18,18,14,15,15), z2=c(18,16,12,4,2,6,14,14,16))
-#' points <- addNDSet(dat, crit = "min", keepDom = TRUE)
+#' points <- addNDSet2D(dat, crit = "min", keepDom = TRUE)
 #' plotNDSet2D(points, crit = "min", addTriangles = TRUE)
-#' points <- addNDSet(dat, crit = "max", keepDom = TRUE)
+#' points <- addNDSet2D(dat, crit = "max", keepDom = TRUE)
 #' plotNDSet2D(points, crit = "max", addTriangles = TRUE)
 plotNDSet2D <- function(points,
                         crit,
@@ -720,9 +756,27 @@ plotNDSet2D <- function(points,
       if (length(tmp$z1)>1) { # triangles
          for (r in 1:(dim(tmp)[1] - 1)) {
             p <- p +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray") +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r],xend=tmp$z1[r],yend=tmp$z2[r+1], colour="gray") +
-               geom_segment(x=tmp$z1[r],y=tmp$z2[r+1],xend=tmp$z1[r+1],yend=tmp$z2[r+1], colour="gray")
+               geom_segment(
+                  x = tmp$z1[r],
+                  y = tmp$z2[r],
+                  xend = tmp$z1[r + 1],
+                  yend = tmp$z2[r + 1],
+                  colour = "gray"
+               ) +
+               geom_segment(
+                  x = tmp$z1[r],
+                  y = tmp$z2[r],
+                  xend = tmp$z1[r],
+                  yend = tmp$z2[r + 1],
+                  colour = "gray"
+               ) +
+               geom_segment(
+                  x = tmp$z1[r],
+                  y = tmp$z2[r + 1],
+                  xend = tmp$z1[r + 1],
+                  yend = tmp$z2[r + 1],
+                  colour = "gray"
+               )
          }
       }
    }
@@ -732,11 +786,27 @@ plotNDSet2D <- function(points,
       scale_colour_grey(start = 0.6, end = 0)
 
    nudgeC=-(max(points$z1)-min(points$z1))/100
-   if (!is.null(labels) & anyDuplicated(round(cbind(points$z1,points$z2),10), MARGIN = 1) > 0)
-      p <- p + ggrepel::geom_text_repel(aes_string(label = 'lbl'), size=3, colour = "gray50", data=points)
-   if (!is.null(labels) & anyDuplicated(round(cbind(points$z1,points$z2),10), MARGIN = 1) == 0)
-      p <- p + geom_text(aes_string(label = 'lbl'), nudge_x = nudgeC, nudge_y = nudgeC, hjust=1, size=3,
-                         colour = "gray50", data=points)
+   if (!is.null(labels) &
+       anyDuplicated(round(cbind(points$z1, points$z2), 10), MARGIN = 1) > 0)
+      p <-
+      p + ggrepel::geom_text_repel(
+         aes_string(label = 'lbl'),
+         size = 3,
+         colour = "gray50",
+         data = points
+      )
+   if (!is.null(labels) &
+       anyDuplicated(round(cbind(points$z1, points$z2), 10), MARGIN = 1) == 0)
+      p <-
+      p + geom_text(
+         aes_string(label = 'lbl'),
+         nudge_x = nudgeC,
+         nudge_y = nudgeC,
+         hjust = 1,
+         size = 3,
+         colour = "gray50",
+         data = points
+      )
    p <- p + myTheme
    return(p)
 }
@@ -816,8 +886,14 @@ plotRectangle3D <- function(a, b, ...) {
 #' plotCones3D(c(1,1,1), reverse = TRUE, rectangle = TRUE)
 #' plotCones3D(matrix(c(3,3,3,2,2,2), ncol = 3, byrow = TRUE))
 #' finalize3D()
-plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE, rectangle = FALSE, ...) {
-   args <- list(...)
+plotCones3D <-
+   function(pts,
+            drawPoint = TRUE,
+            drawLines = TRUE,
+            reverse = FALSE,
+            rectangle = FALSE,
+            ...) {
+      args <- list(...)
    argsPlot3d <- mergeLists(list(), args$argsPlot3d)
    argsSegments3d <- mergeLists(list(lwd = 1, col = "grey40"), args$argsSegments3d)
    argsPolygon3d <- mergeLists(list(), args$argsPolygon3d)
@@ -829,18 +905,28 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
    p1 <- c(limits[2], limits[4], limits[6])
    p2 <- c(limits[1], limits[3], limits[5])
    for (i in 1:dim(pts)[1]) {
-      p <- as.vector(pts[i,])
+      p <- as.vector(pts[i, ])
       if (!(limits[1] < p[1] && p[1] < limits[2] &&
             limits[3] < p[2] && p[2] < limits[4] &&
-            limits[5] < p[3] && p[3] < limits[6])){
+            limits[5] < p[3] && p[3] < limits[6])) {
          stop("The cone will not be in the interior of the current bounding box. Resize your axes.")
       }
       if (reverse) {
-         if (rectangle) do.call(plotRectangle3D, args = c(list(p,p2), list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)))
-         else x <- matrix(c(p,p2), ncol=3, byrow = TRUE)
+         if (rectangle)
+            do.call(plotRectangle3D, args = c(
+               list(p, p2),
+               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)
+            ))
+         else
+            x <- matrix(c(p, p2), ncol = 3, byrow = TRUE)
       } else {
-         if (rectangle) do.call(plotRectangle3D, args = c(list(p,p1), list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)))
-         else x <- matrix(c(p,p1), ncol=3, byrow = TRUE)
+         if (rectangle)
+            do.call(plotRectangle3D, args = c(
+               list(p, p1),
+               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)
+            ))
+         else
+            x <- matrix(c(p, p1), ncol = 3, byrow = TRUE)
       }
       if (!rectangle) {
          x <- expand.grid(x=c(x[1,1],x[2,1]), y=c(x[1,2],x[2,2]), z=c(x[1,3],x[2,3]))
@@ -854,11 +940,21 @@ plotCones3D <- function(pts, drawPoint = TRUE, drawLines = TRUE, reverse = FALSE
             do.call(rgl::segments3d, args = c(list(x[c(1,3),]), argsSegments3d) )
             do.call(rgl::segments3d, args = c(list(x[c(1,2),]), argsSegments3d) )
          }
-         do.call(plotHull3D, args = c(list(face1, drawLines = FALSE), list(argsPolygon3d = argsPolygon3d)) )
-         do.call(plotHull3D, args = c(list(face2, drawLines = FALSE), list(argsPolygon3d = argsPolygon3d)) )
-         do.call(plotHull3D, args = c(list(face3, drawLines = FALSE), list(argsPolygon3d = argsPolygon3d)) )
+         do.call(plotHull3D, args = c(
+            list(face1, drawLines = FALSE),
+            list(argsPolygon3d = argsPolygon3d)
+         ))
+         do.call(plotHull3D, args = c(
+            list(face2, drawLines = FALSE),
+            list(argsPolygon3d = argsPolygon3d)
+         ))
+         do.call(plotHull3D, args = c(
+            list(face3, drawLines = FALSE),
+            list(argsPolygon3d = argsPolygon3d)
+         ))
       }
-      if (drawPoint) do.call(plotPoints3D, args = c(list(pts[i,,drop= FALSE]), list(argsPlot3d = argsPlot3d)) )
+      if (drawPoint)
+         do.call(plotPoints3D, args = c(list(pts[i, , drop = FALSE]), list(argsPlot3d = argsPlot3d)))
    }
    return(invisible(NULL))
 }
@@ -1045,7 +1141,9 @@ plotHull3D <- function(pts,
                idx<-which(!idx)
                if (length(idx)==3) coords <- 1:2 else coords <- idx
                # plotHull3D(p[tri,1:3])
-               do.call(rgl::polygon3d, args = c(list(p[tri,1], p[tri,2], p[tri,3], fill= TRUE, coords = coords), argsPolygon3d) )
+               do.call(rgl::polygon3d, args = c(list(
+                  p[tri, 1], p[tri, 2], p[tri, 3], fill = TRUE, coords = coords
+               ), argsPolygon3d))
             }
          }
       }
@@ -1202,7 +1300,14 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, ...) {
 #' finalize3D()
 ini3D <- function(new = FALSE, clear = TRUE, ...){
    args <- list(...)
-   argsPlot3d <- mergeLists(list(xlab = '', ylab = '', zlab = '', box = F, axes = F), args$argsPlot3d)
+   argsPlot3d <-
+      mergeLists(list(
+         xlab = '',
+         ylab = '',
+         zlab = '',
+         box = F,
+         axes = F
+      ), args$argsPlot3d)
    argsAspect3d <- mergeLists(list(x = "iso"), args$argsAspect3d)
 
    if (new) rgl::open3d()

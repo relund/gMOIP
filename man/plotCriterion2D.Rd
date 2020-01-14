@@ -42,8 +42,8 @@ points.}
 
 \item{latex}{If true make latex math labels for TikZ.}
 
-\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If 'coord' add
-coordinates to the points. Otherwise number all points from one.}
+\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
+'coord' add coordinates to the points. Otherwise number all points from one.}
 }
 \value{
 The ggplot2 object.

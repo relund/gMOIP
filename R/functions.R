@@ -40,9 +40,29 @@ criterionPoints<-function(points, obj, crit, labels = "coord") {
    iP$nD[1] <- TRUE  # upper left point
    p1 <- iP$z1[1]; p2 <- iP$z2[1]  # current non dom point (due to sorting will p2 always be larger than or equal to current)
    for (r in 2:length(iP$x1)) { # current point under consideration
-      if (abs(p2-iP$z2[r])<tol & abs(p1-iP$z1[r])<tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
-      if (crit=="max" & p2-iP$z2[r]>tol & iP$z1[r]>p1+tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
-      if (crit=="min" & iP$z2[r]-p2>tol & iP$z1[r]<p1-tol) {iP$nD[r] <- TRUE; p1 <- iP$z1[r]; p2 <- iP$z2[r]; next}
+      if (abs(p2 - iP$z2[r]) < tol &
+          abs(p1 - iP$z1[r]) < tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
+      if (crit == "max" &
+          p2 - iP$z2[r] > tol &
+          iP$z1[r] > p1 + tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
+      if (crit == "min" &
+          iP$z2[r] - p2 > tol &
+          iP$z1[r] < p1 - tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
    }
    # classify extreme supported
    idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
