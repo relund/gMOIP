@@ -1111,27 +1111,30 @@ plotHull3D <- function(pts,
    hull <- convexHull3D(set[,1:3], classify = TRUE, addR3 = addR3)
    set <- hull$pts
    d <- dimFace(set[,1:3, drop = FALSE])
-   if (d==3) {
+   if (d==3) { # then poly define facets
       poly <- hull$hull
       for (i in 1:dim(poly)[1]) {
          tri <- poly[i,!is.na(poly[i,])]
          p <- set[tri,1:4]
-         tri <- convexHull3D(p[,1:3])
-         tri1 <- NULL
-         for (j in 2:length(tri)){
-            if (!(p[tri[j-1],4] == 0 && p[tri[j],4] == 0))
-               tri1 <- c(tri1,NA,tri[j-1],tri[j])
-         }
-         if (!(p[tri[1], 4] == 0 && p[tri[length(tri)], 4] == 0)) {
-            tri1 <- c(tri1, NA, tri[1], tri[length(tri)])
-         }
+         tri <- 1:nrow(p)
          if (drawLines) {
+            if (length(tri)>3) { # then have to find the vertex sequence
+               tri <- convexHull3D(p[,1:3])
+            }
+            tri1 <- NULL # use tri1 to include the addR3=T case
+            for (j in 2:length(tri)){
+               if (!(p[tri[j-1],4] == 0 && p[tri[j],4] == 0))
+                  tri1 <- c(tri1,NA,tri[j-1],tri[j])
+            }
+            if (!(p[tri[1], 4] == 0 && p[tri[length(tri)], 4] == 0)) {
+               tri1 <- c(tri1, NA, tri[1], tri[length(tri)])
+            }
             do.call(rgl::polygon3d, args = c(list(p[tri1, 1], p[tri1, 2], p[tri1, 3], fill = FALSE),
                     argsSegments3d))
          }
          if (drawPolygons) {
             if (length(tri)==3) {
-               do.call(rgl::triangles3d, args = c(list(p[tri,1], p[tri,2], p[tri,3]), argsPolygon3d) )
+               do.call(rgl::triangles3d, args = c(list(x = p[,1:3]), argsPolygon3d) )
             } else if (length(tri)==4){
                obj <- rgl::qmesh3d(t(p[,1:3]),tri, homogeneous = FALSE)
                do.call(rgl::shade3d, args = c(list(obj), argsPolygon3d))

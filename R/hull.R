@@ -349,6 +349,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #'
 #' ini3D(argsPlot3d = list(xlim = c(0,3), ylim = c(0,3), zlim = c(0,3)))
 #' pts<-matrix(c(1,1,1,2,2,1,2,1,1,1,1,2), ncol = 3, byrow = TRUE)
+#' plotPoints3D(pts)
 #' plotHull3D(pts, argsPolygon3d = list(color = "red"))
 #' convexHull3D(pts, classify = TRUE, addR3 = FALSE)
 #' plotHull3D(pts, addR3 = TRUE)
@@ -386,15 +387,32 @@ convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE) {
       # hull <- geometry::convhulln(set, options = "QJ")
       hull <- geometry::convhulln(set[,1:3], return.non.triangulated.facets = TRUE)
    }
-   if (d==2 || d==1) {
+   if (d==2) {
       l <- dim(set)[1]
-      n <- dim(set)[2]
+      n <- dim(set)[2]-1
+      comb <- t(utils::combn(n,2))
+      for (i in 1:dim(comb)[1]) {  # simple projection down on each axis (keep the projection with highest number of vertices)
+         p <- unique(set[,comb[i,]])
+         iL <- 0
+         if (l == dim(p)[1]) {
+            hull <- grDevices::chull(p)
+            if (length(hull)>iL) {
+               iL <- length(hull)
+               hB <- hull
+            }
+         }
+      }
+      hull <- hB
+   }
+   if (d==1) {
+      l <- dim(set)[1]
+      n <- dim(set)[2]-1
       comb <- t(utils::combn(n,2))
       for (i in 1:dim(comb)[1]) {  # simple projection down on each axis
          p <- unique(set[,comb[i,]])
          if (l == dim(p)[1]) {
-            hull <- grDevices::chull(set[,comb[i,]])
-            break
+            hull <- grDevices::chull(p)
+            if (length(hull)==2) break
          }
       }
    }

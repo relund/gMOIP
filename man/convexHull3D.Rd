@@ -42,6 +42,7 @@ convexHull3D(pts)
 
 ini3D(argsPlot3d = list(xlim = c(0,3), ylim = c(0,3), zlim = c(0,3)))
 pts<-matrix(c(1,1,1,2,2,1,2,1,1,1,1,2), ncol = 3, byrow = TRUE)
+plotPoints3D(pts)
 plotHull3D(pts, argsPolygon3d = list(color = "red"))
 convexHull3D(pts, classify = TRUE, addR3 = FALSE)
 plotHull3D(pts, addR3 = TRUE)
