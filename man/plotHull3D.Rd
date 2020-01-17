@@ -24,7 +24,7 @@ plotHull3D(
 \item{drawPolygons}{Fill the facets.}
 
 \item{addText}{Add text to the points. Currently \code{coord} (coordinates), \code{rownames} (rownames)
-and \code{both} supported.}
+and \code{both} supported or a vector with text.}
 
 \item{addR3}{Plot the hull of the points + R3+.}
 
@@ -88,7 +88,7 @@ plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addR3
 finalize3D()
 
 \donttest{
-pts <- genNDSet()
+pts <- genNDSet(3, 100)
 pts <- as.data.frame(pts)
 
 ini3D(argsPlot3d = list(

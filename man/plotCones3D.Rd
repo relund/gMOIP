@@ -8,6 +8,7 @@ plotCones3D(
   pts,
   drawPoint = TRUE,
   drawLines = TRUE,
+  drawPolygons = TRUE,
   reverse = FALSE,
   rectangle = FALSE,
   ...
@@ -19,6 +20,8 @@ plotCones3D(
 \item{drawPoint}{Draw the points defining the cone.}
 
 \item{drawLines}{Draw lines of the cone.}
+
+\item{drawPolygons}{Draw polygons of the cone.}
 
 \item{reverse}{Cones are defined as the point minus R3+}
 

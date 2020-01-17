@@ -352,7 +352,6 @@ plotPolytope3D <-
          if (is.null(obj)) stop("You need to specify the objective coefficients when using argument plotOption = TRUE.")
          vertices <- cornerPoints(A, b, type, nonneg) #points3d(vertices[,1:3], col="blue", size = 10)
          val <- vertices[,1:3] %*% as.matrix(obj)
-         #print(cbind(vertices,val))
          idx <- which.max(val)
          val <- vertices[idx,1:3]
          points3d(val[1], val[2], val[3], col="red", size = 14)
@@ -547,7 +546,6 @@ plotCriterion2D <- function(A,
             )
          ) + scale_fill_identity()
          points$co <- points$ext | points$nonExt
-         #print(points)
          p <- p + geom_point(aes_string(colour = 'co', shape = 'ext'), data = points) +
             scale_colour_grey(start = 0.8, end = 0)
       }
@@ -866,6 +864,7 @@ plotRectangle3D <- function(a, b, ...) {
 #' @param pts A matrix with a point in each row.
 #' @param drawPoint Draw the points defining the cone.
 #' @param drawLines Draw lines of the cone.
+#' @param drawPolygons Draw polygons of the cone.
 #' @param reverse Cones are defined as the point minus R3+
 #' @param rectangle Draw the cone as a rectangle.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
@@ -890,10 +889,11 @@ plotCones3D <-
    function(pts,
             drawPoint = TRUE,
             drawLines = TRUE,
+            drawPolygons = TRUE,
             reverse = FALSE,
             rectangle = FALSE,
             ...) {
-      args <- list(...)
+   args <- list(...)
    argsPlot3d <- mergeLists(list(), args$argsPlot3d)
    argsSegments3d <- mergeLists(list(lwd = 1, col = "grey40"), args$argsSegments3d)
    argsPolygon3d <- mergeLists(list(), args$argsPolygon3d)
@@ -915,7 +915,8 @@ plotCones3D <-
          if (rectangle)
             do.call(plotRectangle3D, args = c(
                list(p, p2),
-               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)
+               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d,
+                    drawPoint = drawPoint, drawLines = drawLines, drawPolygons = drawPolygons)
             ))
          else
             x <- matrix(c(p, p2), ncol = 3, byrow = TRUE)
@@ -923,7 +924,8 @@ plotCones3D <-
          if (rectangle)
             do.call(plotRectangle3D, args = c(
                list(p, p1),
-               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d)
+               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d,
+                    drawPoint = drawPoint, drawLines = drawLines, drawPolygons = drawPolygons)
             ))
          else
             x <- matrix(c(p, p1), ncol = 3, byrow = TRUE)
@@ -931,7 +933,6 @@ plotCones3D <-
       if (!rectangle) {
          x <- expand.grid(x=c(x[1,1],x[2,1]), y=c(x[1,2],x[2,2]), z=c(x[1,3],x[2,3]))
          x <- as.matrix(x)
-         # text3d(x, texts = paste(x[,1],x[,2],x[,3], "r", 1:dim(x)[1]))
          face1 <- matrix( c(x[1,], x[2,], x[6,], x[5,]), ncol = 3, byrow = TRUE)
          face2 <- matrix( c(x[1,], x[3,], x[7,], x[5,]), ncol = 3, byrow = TRUE)
          face3 <- matrix( c(x[1,], x[3,], x[4,], x[2,]), ncol = 3, byrow = TRUE)
@@ -940,18 +941,20 @@ plotCones3D <-
             do.call(rgl::segments3d, args = c(list(x[c(1,3),]), argsSegments3d) )
             do.call(rgl::segments3d, args = c(list(x[c(1,2),]), argsSegments3d) )
          }
-         do.call(plotHull3D, args = c(
-            list(face1, drawLines = FALSE),
-            list(argsPolygon3d = argsPolygon3d)
-         ))
-         do.call(plotHull3D, args = c(
-            list(face2, drawLines = FALSE),
-            list(argsPolygon3d = argsPolygon3d)
-         ))
-         do.call(plotHull3D, args = c(
-            list(face3, drawLines = FALSE),
-            list(argsPolygon3d = argsPolygon3d)
-         ))
+         if (drawPolygons) {
+            do.call(plotHull3D, args = c(
+               list(face1, drawLines = FALSE),
+               list(argsPolygon3d = argsPolygon3d)
+            ))
+            do.call(plotHull3D, args = c(
+               list(face2, drawLines = FALSE),
+               list(argsPolygon3d = argsPolygon3d)
+            ))
+            do.call(plotHull3D, args = c(
+               list(face3, drawLines = FALSE),
+               list(argsPolygon3d = argsPolygon3d)
+            ))
+         }
       }
       if (drawPoint)
          do.call(plotPoints3D, args = c(list(pts[i, , drop = FALSE]), list(argsPlot3d = argsPlot3d)))
@@ -1002,7 +1005,7 @@ plotCones3D <-
 #' @param drawLines Draw lines of the facets.
 #' @param drawPolygons Fill the facets.
 #' @param addText Add text to the points. Currently `coord` (coordinates), `rownames` (rownames)
-#'   and `both` supported.
+#'   and `both` supported or a vector with text.
 #' @param addR3 Plot the hull of the points + R3+.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
@@ -1060,7 +1063,7 @@ plotCones3D <-
 #' finalize3D()
 #'
 #' \donttest{
-#' pts <- genNDSet()
+#' pts <- genNDSet(3, 100)
 #' pts <- as.data.frame(pts)
 #'
 #' ini3D(argsPlot3d = list(
@@ -1106,7 +1109,7 @@ plotHull3D <- function(pts,
                                args$argsPolygon3d)
    argsText3d <- mergeLists(list(), args$argsText3d)
 
-   if (is.vector(pts)) pts <- t(as.matrix(pts))
+   if (is.vector(pts)) pts <- matrix(pts, ncol = 3, byrow = TRUE)
    set<- as.matrix(unique(pts[,1:3, drop = FALSE]))
    hull <- convexHull3D(set[,1:3], classify = TRUE, addR3 = addR3)
    set <- hull$pts
@@ -1136,11 +1139,11 @@ plotHull3D <- function(pts,
             if (length(tri)==3) {
                do.call(rgl::triangles3d, args = c(list(x = p[,1:3]), argsPolygon3d) )
             } else if (length(tri)==4){
+               tri <- convexHull3D(p[,1:3]) # then have to find the vertex sequence
                obj <- rgl::qmesh3d(t(p[,1:3]),tri, homogeneous = FALSE)
                do.call(rgl::shade3d, args = c(list(obj), argsPolygon3d))
             } else {
                idx <- apply(p[,1:3], 2, function(x) {return(length(unique(x))==1)})
-               # print(idx)
                idx<-which(!idx)
                if (length(idx)==3) coords <- 1:2 else coords <- idx
                # plotHull3D(p[tri,1:3])
@@ -1177,18 +1180,26 @@ plotHull3D <- function(pts,
       }
    }
    if (drawPoints) do.call(plotPoints3D, args = c(list(pts), list(argsPlot3d = argsPlot3d)))
-   if (addText == TRUE | addText == "coord") {
-      text <- paste0("(",pts[,1],",",pts[,2],",",pts[,3],")")
-      do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
-   }
-   if (addText == "rownames") {
-      text <- rownames(as.data.frame(pts))
-      do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
-   }
-   if (addText == "both") {
-      text <- paste0("(",pts[,1],",",pts[,2],",",pts[,3],")")
-      text <- paste(text,rownames(as.data.frame(pts)))
-      do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
+
+
+   if (length(addText) > 1) {
+      if (length(addText) == nrow(pts)) {
+         do.call(rgl::text3d, args = c(list(x = pts, texts = addText), argsText3d) )
+      }
+   } else if (length(addText) == 1) {
+      if (addText == TRUE | addText == "coord") {
+         text <- paste0("(",pts[,1],",",pts[,2],",",pts[,3],")")
+         do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
+      } else if (addText == "rownames") {
+         text <- rownames(as.data.frame(pts))
+         do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
+      } else if (addText == "both") {
+         text <- paste0("(",pts[,1],",",pts[,2],",",pts[,3],")")
+         text <- paste(text,rownames(as.data.frame(pts)))
+         do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
+      } else if (addText != FALSE & length(addText) == nrow(pts)) {
+         do.call(rgl::text3d, args = c(list(x = pts, texts = addText), argsText3d) )
+      }
    }
    #if (drawCoordinates) rgl::text3d(pts, texts = paste0("(",pts[,1],",",pts[,2],",",pts[,3],")"))
    return(invisible(hull))
@@ -1200,7 +1211,7 @@ plotHull3D <- function(pts,
 #'
 #' @param pts A vector or matrix with the points.
 #' @param addText Add text to the points. Currently `coord` (coordinates), `rownames` (rownames)
-#'   and `both` supported.
+#'   and `both` supported or a vector with the text.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
@@ -1234,18 +1245,24 @@ plotPoints3D <- function(pts, addText = F, ...) {
    if (is.null(args$argsPch3d)) do.call(rgl::plot3d, args = c(list(p, add= TRUE), argsPlot3d) )
    if (!is.null(args$argsPch3d)) do.call(rgl::pch3d, args = c(list(p), argsPch3d) )
 
-   if (addText == TRUE | addText == "coord") {
-      text <- paste0("(",p[,1],",",p[,2],",",p[,3],")")
-      do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
-   }
-   if (addText == "rownames") {
-      text <- rownames(as.data.frame(p))
-      do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
-   }
-   if (addText == "both") {
-      text <- paste0("(",p[,1],",",p[,2],",",p[,3],")")
-      text <- paste(text,rownames(as.data.frame(p)))
-      do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
+   if (length(addText) > 1) {
+      if (length(addText) == nrow(p)) {
+         do.call(rgl::text3d, args = c(list(x = p, texts = addText), argsText3d) )
+      }
+   } else if (length(addText) == 1) {
+      if (addText == TRUE | addText == "coord") {
+         text <- paste0("(",p[,1],",",p[,2],",",p[,3],")")
+         do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
+      } else if (addText == "rownames") {
+         text <- rownames(as.data.frame(p))
+         do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
+      } else if (addText == "both") {
+         text <- paste0("(",p[,1],",",p[,2],",",p[,3],")")
+         text <- paste(text,rownames(as.data.frame(p)))
+         do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
+      } else if (addText != FALSE & length(addText) == nrow(p)) {
+         do.call(rgl::text3d, args = c(list(x = p, texts = addText), argsText3d) )
+      }
    }
    return(invisible(NULL))
 }
@@ -1345,5 +1362,6 @@ finalize3D <- function(...){
 
    do.call(rgl::axes3d, args = argsAxes3d)
    do.call(rgl::title3d, args = argsTitle3d)
+   rgl.bringtotop()
    # return(invisible(NULL))
 }

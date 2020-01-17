@@ -10,7 +10,7 @@ plotPoints3D(pts, addText = F, ...)
 \item{pts}{A vector or matrix with the points.}
 
 \item{addText}{Add text to the points. Currently \code{coord} (coordinates), \code{rownames} (rownames)
-and \code{both} supported.}
+and \code{both} supported or a vector with the text.}
 
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
