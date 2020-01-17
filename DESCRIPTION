@@ -32,5 +32,6 @@ Suggests:
     gridExtra,
     knitr,
     rmarkdown,
-    roxygen2
+    roxygen2,
+    testthat (>= 2.1.0)
 VignetteBuilder: knitr
