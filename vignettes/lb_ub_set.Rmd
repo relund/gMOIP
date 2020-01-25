@@ -543,6 +543,18 @@ x <- y <- z <- 2
 plot3d(x, y, z, type = "s", add = T, radius = 0.25)
 x <- y <- z <- 3
 plot3d(x, y, z, type = "s", add = T)
+## Ex5 (work)
+open3d()
+x <- y <- z <- c(0,1,4)
+plot3d(x, y ,z, size = 10)
+d <- -3
+planes3d(a, b, c, d)
+## Ex6 (don't work)
+open3d()
+x <- y <- z <- c(0,1,3)
+plot3d(x, y ,z, size = 10)
+d <- -3
+planes3d(a, b, c, d)
 ```
 
 
