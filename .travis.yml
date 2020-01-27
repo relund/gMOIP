@@ -11,4 +11,4 @@ matrix:
   include:
     - os: osx
     - os: linux
-      before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libcurl-dev
+      before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev
