@@ -9,9 +9,9 @@ r_check_args: "--as-cran"
 
 matrix:
   include:
-    - os: osx
     - os: linux
       dist: xenial
       before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev
     - dist: bionic
       before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev
+    - os: osx
