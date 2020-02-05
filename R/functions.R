@@ -385,3 +385,30 @@ slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
 }
 
 
+
+#' Check if point input is okay
+#'
+#' @param pts Point input.
+#' @param p Desired dimension of points.
+#'
+#' @return Point input converted to a matrix.
+.checkPts <- function(pts, p = NULL, warn = FALSE) {
+   if (is.vector(pts)) {
+      if (warn) warning("Point specified as a vector. Converting to a matrix with a single row!")
+      pts <- t(matrix(pts))
+   }
+   nr <- nrow(pts)
+   set <- as.matrix(unique(pts[,, drop = FALSE]))
+   if (nrow(pts) != nrow(set)) {
+      stop("Points specified should be unique!")
+   }
+
+   if (is.data.frame(pts)) {
+      if (warn) warning("Points specified as a data frame. Converting to a matrix!")
+   }
+   if (!is.null(p))
+      if (ncol(set) != p) {
+      stop("The dimension of the poins should be ", p, "!")
+   }
+   return(set)
+}

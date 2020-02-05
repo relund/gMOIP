@@ -8,7 +8,7 @@ inHull(
   pts,
   vertices,
   hull = NULL,
-  tol = mean(mean(abs(vertices))) * sqrt(.Machine$double.eps)
+  tol = mean(mean(abs(as.matrix(vertices)))) * sqrt(.Machine$double.eps)
 )
 }
 \arguments{
