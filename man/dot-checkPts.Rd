@@ -10,6 +10,8 @@
 \item{pts}{Point input.}
 
 \item{p}{Desired dimension of points.}
+
+\item{warn}{Output warnings.}
 }
 \value{
 Point input converted to a matrix.

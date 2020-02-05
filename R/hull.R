@@ -108,7 +108,7 @@ dimFace<-function(pts, dim = NULL) {
 #' vertices <- matrix(c(2,2,2, 4,4,4), ncol = 3, byrow = TRUE)
 #' ini3D()
 #' plotHull3D(vertices)
-#' pt <- matrix(c(1,1,1, 2,2,2, 3,3,3, 4,4,4, 3,3,2, 4,4,4), ncol = 3, byrow = TRUE)
+#' pt <- matrix(c(1,1,1, 2,2,2, 3,3,3, 4,4,4, 3,3,2), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pt, addText = TRUE)
 #' finalize3D()
 #' inHull(pt, vertices)
@@ -337,7 +337,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #' addRays(pts, dir = c(-1,-1,1), m = c(0,0,0), M = c(100,100,100))
 #' pts <- genSample(5,20)
 #' addRays(pts)
-addRays <- function(pts, m = apply(pts,2,min), M = apply(pts,2,max), direction = rep(1, ncol(pts))) {
+addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, direction = rep(1, ncol(pts))) {
    if (is.vector(pts)) pts <- t(as.matrix(pts))
    pts <- as.matrix(unique(pts[,, drop=FALSE]))
    pts <- as.data.frame(pts)
@@ -364,7 +364,11 @@ addRays <- function(pts, m = apply(pts,2,min), M = apply(pts,2,max), direction =
 #'
 #' @param pts A matrix with a point in each row.
 #' @param classify If true, a classification the input points are given (a column)
-#' @param addR3 Add the positive cone to the hull
+#' @param addR3 Add the positive cone to the hull.
+#' @param useRGLBBox Use the RGL bounding box.
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
+#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of the `pts` minus a value greather than on equal zero (maximize objective $i$).
 #'
 #' @return If \code{classify = FALSE}, a vector/matrix with row indices of the vertices defining
 #'   each facet in the hull \code{pts}; Otherwise, a list with \code{hull} equal the same result as
@@ -374,7 +378,7 @@ addRays <- function(pts, m = apply(pts,2,min), M = apply(pts,2,max), direction =
 #' @export
 #'
 #' @examples
-#' pts<-matrix(c(1,1,1, 1,1,1), ncol = 3, byrow = TRUE)
+#' pts<-matrix(c(1,1,1), ncol = 3, byrow = TRUE)
 #' dimFace(pts) # a point
 #' convexHull3D(pts)
 #' pts<-matrix(c(0,0,0,1,1,1,2,2,2,3,3,3), ncol = 3, byrow = TRUE)
@@ -503,8 +507,12 @@ convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE, useRGLBBox = FALS
 #' Find the convex hull of a set of points.
 #'
 #' @param pts A matrix with a point in each row.
-#' @param classify If true, a classification the input points are given (a column)
-#' @param addR3 Add the positive cone to the hull
+#' @param addRays Add the ray defined by `direction`.
+#' @param useRGLBBox Use the RGL bounding box.
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
+#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of the `pts` minus a value greather than on equal zero (maximize objective $i$).
+#' @param tol Tolerance on std. dev. if using PCA.
 #'
 #' @return If \code{classify = FALSE}, a vector/matrix with row indices of the vertices defining
 #'   each facet in the hull \code{pts}; Otherwise, a list with \code{hull} equal the same result as
@@ -515,7 +523,7 @@ convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE, useRGLBBox = FALS
 #'
 #' @examples
 #' ## 1D
-#' pts<-matrix(c(1,1, 2,3), ncol = 1, byrow = TRUE)
+#' pts<-matrix(c(1,2,3), ncol = 1, byrow = TRUE)
 #' dimFace(pts) # a line
 #' convexHull(pts)
 #'
@@ -530,7 +538,7 @@ convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE, useRGLBBox = FALS
 #' convexHull(pts)
 #'
 #' ## 3D
-#' pts<-matrix(c(1,1,1, 1,1,1), ncol = 3, byrow = TRUE)
+#' pts<-matrix(c(1,1,1), ncol = 3, byrow = TRUE)
 #' dimFace(pts) # a point
 #' convexHull(pts)
 #' pts<-matrix(c(0,0,0,1,1,1,2,2,2,3,3,3), ncol = 3, byrow = TRUE)
@@ -565,7 +573,7 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
       if (!rgl::rgl.cur() & useRGLBBox) {
          limits <- rgl::par3d()$bbox
          for (i in 1:dim(pts)[1]) {
-            pt <- as.vector(ptts[i,])
+            pt <- as.vector(pts[i,])
             if (!(limits[1] < pt[1] && pt[1] < limits[2] &&
                   limits[3] < pt[2] && pt[2] < limits[4] &&
                   limits[5] < pt[3] && pt[3] < limits[6])){

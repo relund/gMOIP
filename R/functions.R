@@ -390,6 +390,7 @@ slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
 #'
 #' @param pts Point input.
 #' @param p Desired dimension of points.
+#' @param warn Output warnings.
 #'
 #' @return Point input converted to a matrix.
 .checkPts <- function(pts, p = NULL, warn = FALSE) {

@@ -9,9 +9,13 @@ classifyNDSet(pts, direction = 1)
 \arguments{
 \item{pts}{A set of non-dominated points. It is assumed that \code{ncol(pts)} equals the number of
 objectives ($p$).}
+
+\item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of the \code{pts}
+plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of the \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
 }
 \value{
-
+The ND set with classification columns.
 }
 \description{
 The classification is supported (true/false), extreme (true/false), supported non-extreme
@@ -25,7 +29,7 @@ pts <- genNDSet(3,50)
 ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
   ylim = c(0,max(pts$y)+2),
   zlim = c(0,max(pts$z)+2)))
-plotHull3D(pts, addR3 = T, argsPolygon3d = list(alpha = 0.5))
+plotHull3D(pts, addR3 = TRUE, argsPolygon3d = list(alpha = 0.5))
 pts <- classifyNDSet(pts[,1:3])
 plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
 plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))

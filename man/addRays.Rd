@@ -6,8 +6,8 @@
 \usage{
 addRays(
   pts,
-  m = apply(pts, 2, min),
-  M = apply(pts, 2, max),
+  m = apply(pts, 2, min) - 5,
+  M = apply(pts, 2, max) + 5,
   direction = rep(1, ncol(pts))
 )
 }

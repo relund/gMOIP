@@ -15,9 +15,15 @@ convexHull(
 \arguments{
 \item{pts}{A matrix with a point in each row.}
 
-\item{classify}{If true, a classification the input points are given (a column)}
+\item{addRays}{Add the ray defined by \code{direction}.}
 
-\item{addR3}{Add the positive cone to the hull}
+\item{useRGLBBox}{Use the RGL bounding box.}
+
+\item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of the \code{pts}
+plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of the \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+
+\item{tol}{Tolerance on std. dev. if using PCA.}
 }
 \value{
 If \code{classify = FALSE}, a vector/matrix with row indices of the vertices defining
@@ -31,7 +37,7 @@ Find the convex hull of a set of points.
 }
 \examples{
 ## 1D
-pts<-matrix(c(1,1, 2,3), ncol = 1, byrow = TRUE)
+pts<-matrix(c(1,2,3), ncol = 1, byrow = TRUE)
 dimFace(pts) # a line
 convexHull(pts)
 
@@ -46,7 +52,7 @@ convexHull(pts, addRays = TRUE, direction = c(1,1))
 convexHull(pts)
 
 ## 3D
-pts<-matrix(c(1,1,1, 1,1,1), ncol = 3, byrow = TRUE)
+pts<-matrix(c(1,1,1), ncol = 3, byrow = TRUE)
 dimFace(pts) # a point
 convexHull(pts)
 pts<-matrix(c(0,0,0,1,1,1,2,2,2,3,3,3), ncol = 3, byrow = TRUE)

@@ -518,11 +518,13 @@ genNDSet <-
 #'
 #' @param pts A set of non-dominated points. It is assumed that `ncol(pts)` equals the number of
 #'   objectives ($p$).
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
+#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of the `pts` minus a value greather than on equal zero (maximize objective $i$).
 #'
 #' @note It is assumed that `pts` are nondominated.
 #'
-#' @return
-#' @import dplyr
+#' @return The ND set with classification columns.
 #' @export
 #'
 #' @examples
@@ -530,7 +532,7 @@ genNDSet <-
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
 #'   ylim = c(0,max(pts$y)+2),
 #'   zlim = c(0,max(pts$z)+2)))
-#' plotHull3D(pts, addR3 = T, argsPolygon3d = list(alpha = 0.5))
+#' plotHull3D(pts, addR3 = TRUE, argsPolygon3d = list(alpha = 0.5))
 #' pts <- classifyNDSet(pts[,1:3])
 #' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
 #' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
@@ -565,14 +567,16 @@ classifyNDSet <- function(pts, direction = 1) {
    # idx <- idx[!is.na(idx)]
    # idx <- sort(idx)
    # set <- as.data.frame(pts)
-   set <- dplyr::mutate(set, se = ifelse(vtx,TRUE,FALSE))
+   set <- dplyr::mutate(set, se = dplyr::if_else(.data$vtx,TRUE,FALSE))
    set <- dplyr::mutate(set, sne = FALSE, us = FALSE, id = 1:nrow(set))
-   chk <- set %>% dplyr::filter(!vtx)
+   chk <- set %>% dplyr::filter(!.data$vtx)
    if (nrow(chk) != 0) {
       val <- inHull(chk[,1:p], set[set$vtx,1:p])
       set$us[chk$id[which(val == 1)]] <- TRUE
       set$sne[chk$id[which(val == 0)]] <- TRUE
    }
-   set <- set %>% dplyr::mutate(cls = if_else(se, "se", if_else(sne, "sne", "us")))
-   return(set %>% dplyr::filter(pt == 1) %>% dplyr::select(1:p, c("se", "sne", "us", "cls")))
+   set <-
+      set %>%
+      dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us")))
+   return(set %>% dplyr::filter(.data$pt == 1) %>% dplyr::select(1:p, c("se", "sne", "us", "cls")))
 }

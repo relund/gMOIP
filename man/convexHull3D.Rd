@@ -17,7 +17,13 @@ convexHull3D(
 
 \item{classify}{If true, a classification the input points are given (a column)}
 
-\item{addR3}{Add the positive cone to the hull}
+\item{addR3}{Add the positive cone to the hull.}
+
+\item{useRGLBBox}{Use the RGL bounding box.}
+
+\item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of the \code{pts}
+plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of the \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
 }
 \value{
 If \code{classify = FALSE}, a vector/matrix with row indices of the vertices defining
@@ -30,7 +36,7 @@ vertex in the hull.
 Find the convex hull of a set of points in 3D.
 }
 \examples{
-pts<-matrix(c(1,1,1, 1,1,1), ncol = 3, byrow = TRUE)
+pts<-matrix(c(1,1,1), ncol = 3, byrow = TRUE)
 dimFace(pts) # a point
 convexHull3D(pts)
 pts<-matrix(c(0,0,0,1,1,1,2,2,2,3,3,3), ncol = 3, byrow = TRUE)

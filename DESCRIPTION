@@ -21,11 +21,13 @@ Imports:
     ggplot2,
     rgl,
     MASS,
-    plyr,
     Matrix,
     grDevices,
     stats,
-    Rfast
+    Rfast,
+    plyr,
+    purrr,
+    dplyr
 Suggests: 
     tikzDevice,
     grid,
