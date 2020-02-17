@@ -1,7 +1,5 @@
 ## Functions related to the convex hull
 
-
-
 #' Return the dimension of the convex hull of a set of points.
 #'
 #' @param pts A matrix/data frame/vector that can be converted to a matrix with a row for each
@@ -403,106 +401,108 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
 #' plotHull3D(pts, addR3 = TRUE)
 #' convexHull3D(pts, classify = TRUE, addR3 = TRUE)
 #' finalize3D()
-convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE, useRGLBBox = FALSE, direction = 1) {
-   if (is.vector(pts)) pts <- t(as.matrix(pts[1:3]))
-   pts <- as.matrix(unique(pts[,1:3, drop=FALSE]))
-   set <- cbind(pts, pt = 1) # point in (1=original set, 0=artificial)
-   if (length(direction) != 3) direction = rep(direction[1],3)
-   # print(set)
-   if (addR3) {
-      if (!rgl::rgl.cur() & useRGLBBox) {
-         limits <- rgl::par3d()$bbox
-         for (i in 1:dim(pts)[1]) {
-            p <- as.vector(pts[i,])
-            if (!(limits[1] < p[1] && p[1] < limits[2] &&
-                  limits[3] < p[2] && p[2] < limits[4] &&
-                  limits[5] < p[3] && p[3] < limits[6])){
-               stop("The point is not in the interior of the current bounding box. Resize your axes.")
-            }
-         }
-         m <- c(limits[1], limits[3], limits[5])
-         M <- c(limits[2], limits[4], limits[6])
-         set <- addRays(pts, m, M, direction)
-      } else set <- addRays(pts, direction = direction)
-      # if (!rgl::rgl.cur()) stop("An rgl window must be open when specifying addR3 = TRUE!")
-      # limits <- rgl::par3d()$bbox
-      # pMin <- apply(pts,2,min)
-      # pMax <- c(limits[2], limits[4], limits[6])
-      # for (i in 1:dim(pts)[1]) {
-      #    p <- as.vector(pts[i,])
-      #    if (!(limits[1] < p[1] && p[1] < limits[2] &&
-      #          limits[3] < p[2] && p[2] < limits[4] &&
-      #          limits[5] < p[3] && p[3] < limits[6])){
-      #       stop("The point is not in the interior of the current bounding box. Resize your axes.")
-      #    }
-      #    x <- matrix(c(p,pMax), ncol=3, byrow = TRUE)
-      #    x <- expand.grid(x=c(x[1,1],x[2,1]), y=c(x[1,2],x[2,2]), z=c(x[1,3],x[2,3]), pt = 0)
-      #    x <- as.matrix(x)
-      #    set <- rbind(set,x)
-      # }
-   }
-   rownames(set) <- 1:dim(set)[1]
-   set <- set[rownames(unique(set[,1:3,drop=FALSE])),, drop=FALSE]
-   rownames(set) <- NULL
-   d <- dimFace(set[,1:3, drop = FALSE])
-   # cat("Object of dimension",d,"\n")
-   if (d==3) {
-      # hull <- geometry::convhulln(set, options = "QJ")
-      hull <- geometry::convhulln(set[,1:3], return.non.triangulated.facets = TRUE)
-   }
-   if (d==2) {
-      l <- dim(set)[1]
-      n <- dim(set)[2]-1
-      comb <- t(utils::combn(n,2))
-      for (i in 1:dim(comb)[1]) {  # simple projection down on each axis (keep the projection with highest number of vertices)
-         p <- unique(set[,comb[i,]])
-         iL <- 0
-         if (l == dim(p)[1]) {
-            hull <- grDevices::chull(p)
-            if (length(hull)>iL) {
-               iL <- length(hull)
-               hB <- hull
-            }
-         }
-      }
-      hull <- hB
-   }
-   if (d==1) {
-      l <- dim(set)[1]
-      n <- dim(set)[2]-1
-      comb <- t(utils::combn(n,2))
-      for (i in 1:dim(comb)[1]) {  # simple projection down on each axis
-         p <- unique(set[,comb[i,]])
-         if (l == dim(p)[1]) {
-            hull <- grDevices::chull(p)
-            if (length(hull)==2) break
-         }
-      }
-   }
-   if (d==0) hull <- 1
-   if (classify) {
-      idx <- unique(as.vector(hull))
-      idx <- idx[!is.na(idx)]
-      idx <- sort(idx)
-      set <- as.data.frame(set)
-      set$vtx <- FALSE
-      set$vtx[idx] <- TRUE
-      set$oldIdx <- 1:nrow(set)
-      set <- set[set$pt == 1 | set$vtx,]
+NULL
 
-      toNewId <- function(old) {
-         if (is.na(old)) return(NA)
-         return(which(set$oldIdx == old))
-      }
-
-      if (d==3) hull <- apply(hull, c(1,2), FUN = toNewId) else hull <- sapply(hull, FUN = toNewId)
-      rownames(set) <- NULL
-      set$oldIdx <- NULL
-      return(list(hull = hull, pts = set))
-   }
-   return(hull)
-   stop("Cannot find the vertices!")
-}
+# convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE, useRGLBBox = FALSE, direction = 1) {
+#    if (is.vector(pts)) pts <- t(as.matrix(pts[1:3]))
+#    pts <- as.matrix(unique(pts[,1:3, drop=FALSE]))
+#    set <- cbind(pts, pt = 1) # point in (1=original set, 0=artificial)
+#    if (length(direction) != 3) direction = rep(direction[1],3)
+#    # print(set)
+#    if (addR3) {
+#       if (!rgl::rgl.cur() & useRGLBBox) {
+#          limits <- rgl::par3d()$bbox
+#          for (i in 1:dim(pts)[1]) {
+#             p <- as.vector(pts[i,])
+#             if (!(limits[1] < p[1] && p[1] < limits[2] &&
+#                   limits[3] < p[2] && p[2] < limits[4] &&
+#                   limits[5] < p[3] && p[3] < limits[6])){
+#                stop("The point is not in the interior of the current bounding box. Resize your axes.")
+#             }
+#          }
+#          m <- c(limits[1], limits[3], limits[5])
+#          M <- c(limits[2], limits[4], limits[6])
+#          set <- addRays(pts, m, M, direction)
+#       } else set <- addRays(pts, direction = direction)
+#       # if (!rgl::rgl.cur()) stop("An rgl window must be open when specifying addR3 = TRUE!")
+#       # limits <- rgl::par3d()$bbox
+#       # pMin <- apply(pts,2,min)
+#       # pMax <- c(limits[2], limits[4], limits[6])
+#       # for (i in 1:dim(pts)[1]) {
+#       #    p <- as.vector(pts[i,])
+#       #    if (!(limits[1] < p[1] && p[1] < limits[2] &&
+#       #          limits[3] < p[2] && p[2] < limits[4] &&
+#       #          limits[5] < p[3] && p[3] < limits[6])){
+#       #       stop("The point is not in the interior of the current bounding box. Resize your axes.")
+#       #    }
+#       #    x <- matrix(c(p,pMax), ncol=3, byrow = TRUE)
+#       #    x <- expand.grid(x=c(x[1,1],x[2,1]), y=c(x[1,2],x[2,2]), z=c(x[1,3],x[2,3]), pt = 0)
+#       #    x <- as.matrix(x)
+#       #    set <- rbind(set,x)
+#       # }
+#    }
+#    rownames(set) <- 1:dim(set)[1]
+#    set <- set[rownames(unique(set[,1:3,drop=FALSE])),, drop=FALSE]
+#    rownames(set) <- NULL
+#    d <- dimFace(set[,1:3, drop = FALSE])
+#    # cat("Object of dimension",d,"\n")
+#    if (d==3) {
+#       # hull <- geometry::convhulln(set, options = "QJ")
+#       hull <- geometry::convhulln(set[,1:3], return.non.triangulated.facets = TRUE)
+#    }
+#    if (d==2) {
+#       l <- dim(set)[1]
+#       n <- dim(set)[2]-1
+#       comb <- t(utils::combn(n,2))
+#       for (i in 1:dim(comb)[1]) {  # simple projection down on each axis (keep the projection with highest number of vertices)
+#          p <- unique(set[,comb[i,]])
+#          iL <- 0
+#          if (l == dim(p)[1]) {
+#             hull <- grDevices::chull(p)
+#             if (length(hull)>iL) {
+#                iL <- length(hull)
+#                hB <- hull
+#             }
+#          }
+#       }
+#       hull <- hB
+#    }
+#    if (d==1) {
+#       l <- dim(set)[1]
+#       n <- dim(set)[2]-1
+#       comb <- t(utils::combn(n,2))
+#       for (i in 1:dim(comb)[1]) {  # simple projection down on each axis
+#          p <- unique(set[,comb[i,]])
+#          if (l == dim(p)[1]) {
+#             hull <- grDevices::chull(p)
+#             if (length(hull)==2) break
+#          }
+#       }
+#    }
+#    if (d==0) hull <- 1
+#    if (classify) {
+#       idx <- unique(as.vector(hull))
+#       idx <- idx[!is.na(idx)]
+#       idx <- sort(idx)
+#       set <- as.data.frame(set)
+#       set$vtx <- FALSE
+#       set$vtx[idx] <- TRUE
+#       set$oldIdx <- 1:nrow(set)
+#       set <- set[set$pt == 1 | set$vtx,]
+#
+#       toNewId <- function(old) {
+#          if (is.na(old)) return(NA)
+#          return(which(set$oldIdx == old))
+#       }
+#
+#       if (d==3) hull <- apply(hull, c(1,2), FUN = toNewId) else hull <- sapply(hull, FUN = toNewId)
+#       rownames(set) <- NULL
+#       set$oldIdx <- NULL
+#       return(list(hull = hull, pts = set))
+#    }
+#    return(hull)
+#    stop("Cannot find the vertices!")
+# }
 
 
 #' Find the convex hull of a set of points.
