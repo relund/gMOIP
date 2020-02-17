@@ -410,6 +410,7 @@ slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
    if (!is.null(p))
       if (ncol(set) != p) {
       stop("The dimension of the poins should be ", p, "!")
-   }
+      }
+   if (is.null(rownames(set))) rownames(set) <- 1:nrow(set)
    return(set)
 }

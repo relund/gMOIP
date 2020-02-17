@@ -326,6 +326,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #'   plus a value greather than on equal zero. If negative, consider the i'th column of the `pts`
 #'   minus a value greather than on equal zero.
 #'
+#' @note Assume that `pts` has been checked using [.checkPts].
 #' @return The points merged with the points on the bounding box. The column `pt` equals 1 if
 #'   points from pts and zero otherwise.
 #' @export
@@ -337,25 +338,25 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #' addRays(pts, dir = c(-1,-1,1), m = c(0,0,0), M = c(100,100,100))
 #' pts <- genSample(5,20)
 #' addRays(pts)
-addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, direction = rep(1, ncol(pts))) {
-   if (is.vector(pts)) pts <- t(as.matrix(pts))
-   pts <- as.matrix(unique(pts[,, drop=FALSE]))
+addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, direction = 1) {
    pts <- as.data.frame(pts)
    p <- ncol(pts)
+   if (length(direction) != p) direction = rep(direction[1],p)
    v <- purrr::map_dbl(1:p, function(i) if (sign(direction[i]) > 0) M[i] else m[i])
    names(v) <- colnames(pts)
    set <- cbind(pts, pt = 1) # point in (1=original set, 0=artificial)
 
    for (i in 1:nrow(pts)) {
-      x <- dplyr::bind_rows(pts[i,],v)
+      x <- dplyr::bind_rows(pts[i,,drop=FALSE],v)
       x <- as.list(x)
       x <- expand.grid(x)
       x$pt <- 0
       set <- rbind(set,x)
    }
-   rownames(set) <- 1:dim(set)[1]
-   set <- set[rownames(unique(set[,1:3,drop=FALSE])),, drop=FALSE]
-   rownames(set) <- NULL
+   # dplyr::distinct(set, V1, .keep_all = TRUE)
+   # rownames(set) <- 1:dim(set)[1]
+   set <- set[rownames(unique(set[,1:p,drop=FALSE])),, drop=FALSE]
+   rownames(set)[set$pt==0] <- (nrow(pts)+1):nrow(set)
    return(set)
 }
 
@@ -509,16 +510,15 @@ convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE, useRGLBBox = FALS
 #' @param pts A matrix with a point in each row.
 #' @param addRays Add the ray defined by `direction`.
 #' @param useRGLBBox Use the RGL bounding box.
-#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
 #'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-#'   i'th column of the `pts` minus a value greather than on equal zero (maximize objective $i$).
+#'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
 #' @param tol Tolerance on std. dev. if using PCA.
 #'
-#' @return If \code{classify = FALSE}, a vector/matrix with row indices of the vertices defining
-#'   each facet in the hull \code{pts}; Otherwise, a list with \code{hull} equal the same result as
-#'   under \code{classify = FALSE} and \code{pts} equal the input points with two additional rows:
-#'   \code{pt}, true if a point in the original input; false otherwise. \code{vtx}, TRUE if a
-#'   vertex in the hull.
+#' @return A list with \code{hull} equal a matrix with row indices of the vertices defining each
+#'   facet in the hull and \code{pts} equal the input points (and dummy points) and columns:
+#'   \code{pt}, true if a point in the original input; false if a dummy point (a point on a ray).
+#'   \code{vtx}, TRUE if a vertex in the hull.
 #' @export
 #'
 #' @examples
@@ -526,16 +526,21 @@ convexHull3D <- function(pts, classify = FALSE, addR3 = FALSE, useRGLBBox = FALS
 #' pts<-matrix(c(1,2,3), ncol = 1, byrow = TRUE)
 #' dimFace(pts) # a line
 #' convexHull(pts)
+#' convexHull(pts, addRays = TRUE)
 #'
 #' ## 2D
 #' pts<-matrix(c(1,1, 2,2), ncol = 2, byrow = TRUE)
 #' dimFace(pts) # a line
 #' convexHull(pts)
+#' plotHull2D(pts, drawPoints = TRUE)
+#' convexHull(pts, addRays = TRUE)
+#' plotHull2D(pts, addRays = TRUE, drawPoints = TRUE)
 #' pts<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
 #' dimFace(pts) # a polygon
 #' convexHull(pts)
-#' convexHull(pts, addRays = TRUE, direction = c(1,1))
-#' convexHull(pts)
+#' plotHull2D(pts, drawPoints = TRUE)
+#' convexHull(pts, addRays = TRUE, direction = c(-1,1))
+#' plotHull2D(pts, addRays = TRUE, direction = c(-1,1), addText = "coord")
 #'
 #' ## 3D
 #' pts<-matrix(c(1,1,1), ncol = 3, byrow = TRUE)
@@ -566,7 +571,6 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
                        tol = mean(mean(abs(pts)))*sqrt(.Machine$double.eps)*2) {
    pts <- .checkPts(pts)
    p <- ncol(pts)
-   set <- cbind(pts, pt = 1) # point in (1=original set, 0=artificial)
    if (length(direction) != p) direction = rep(direction[1],p)
    # print(set)
    if (addRays) {
@@ -584,10 +588,9 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
          M <- c(limits[2], limits[4], limits[6])
          set <- addRays(pts, m, M, direction)
       } else set <- addRays(pts, direction = direction)
+   } else {
+      set <- cbind(pts, pt = 1) # point in (1=original set, 0=artificial)
    }
-   rownames(set) <- 1:nrow(set)
-   set <- set[rownames(unique(set[,1:p,drop=FALSE])),, drop=FALSE]
-   rownames(set) <- 1:nrow(set)
    d <- dimFace(set[,1:p, drop = FALSE])
    # cat("Object of dimension",d,"\n")
 
@@ -596,7 +599,8 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
    if (d==0) { # a point
       hull <- 1
    } else if (d==p) { # same dimension as space
-      if (p < 3) hull <- grDevices::chull(set[,1:p])
+      if (p == 1) hull <- grDevices::chull(cbind(set[,1:p],0))
+      if (p == 2) hull <- grDevices::chull(set[,1:p])
       if (p > 2) hull <- geometry::convhulln(set[,1:p], return.non.triangulated.facets = TRUE)
    } else if (d==1) { # a line (d<p)
       l <- nrow(set)
