@@ -8,7 +8,7 @@ addRays(
   pts,
   m = apply(pts, 2, min) - 5,
   M = apply(pts, 2, max) + 5,
-  direction = rep(1, ncol(pts))
+  direction = 1
 )
 }
 \arguments{
@@ -28,6 +28,9 @@ points from pts and zero otherwise.
 }
 \description{
 Add all points on the bounding box hit by the rays.
+}
+\note{
+Assume that \code{pts} has been checked using \link{.checkPts}.
 }
 \examples{
 pts <- genNDSet(3,10)

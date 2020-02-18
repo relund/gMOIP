@@ -532,7 +532,7 @@ genNDSet <-
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
 #'   ylim = c(0,max(pts$y)+2),
 #'   zlim = c(0,max(pts$z)+2)))
-#' plotHull3D(pts, addR3 = TRUE, argsPolygon3d = list(alpha = 0.5))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
 #' pts <- classifyNDSet(pts[,1:3])
 #' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
 #' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
@@ -548,7 +548,7 @@ classifyNDSet <- function(pts, direction = 1) {
    d <- dimFace(pts)
    if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
 
-   set <- convexHull3D(pts, classify = TRUE, addR3 = TRUE, direction = direction)
+   set <- convexHull(pts, addRays = TRUE, direction = direction)
    hull <- set$hull
    set <- set$pts
 

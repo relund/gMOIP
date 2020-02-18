@@ -19,18 +19,17 @@ convexHull(
 
 \item{useRGLBBox}{Use the RGL bounding box.}
 
-\item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of the \code{pts}
+\item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
 plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-i'th column of the \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
 
 \item{tol}{Tolerance on std. dev. if using PCA.}
 }
 \value{
-If \code{classify = FALSE}, a vector/matrix with row indices of the vertices defining
-each facet in the hull \code{pts}; Otherwise, a list with \code{hull} equal the same result as
-under \code{classify = FALSE} and \code{pts} equal the input points with two additional rows:
-\code{pt}, true if a point in the original input; false otherwise. \code{vtx}, TRUE if a
-vertex in the hull.
+A list with \code{hull} equal a matrix with row indices of the vertices defining each
+facet in the hull and \code{pts} equal the input points (and dummy points) and columns:
+\code{pt}, true if a point in the original input; false if a dummy point (a point on a ray).
+\code{vtx}, TRUE if a vertex in the hull.
 }
 \description{
 Find the convex hull of a set of points.
@@ -40,16 +39,21 @@ Find the convex hull of a set of points.
 pts<-matrix(c(1,2,3), ncol = 1, byrow = TRUE)
 dimFace(pts) # a line
 convexHull(pts)
+convexHull(pts, addRays = TRUE)
 
 ## 2D
 pts<-matrix(c(1,1, 2,2), ncol = 2, byrow = TRUE)
 dimFace(pts) # a line
 convexHull(pts)
+plotHull2D(pts, drawPoints = TRUE)
+convexHull(pts, addRays = TRUE)
+plotHull2D(pts, addRays = TRUE, drawPoints = TRUE)
 pts<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
 dimFace(pts) # a polygon
 convexHull(pts)
-convexHull(pts, addRays = TRUE, direction = c(1,1))
-convexHull(pts)
+plotHull2D(pts, drawPoints = TRUE)
+convexHull(pts, addRays = TRUE, direction = c(-1,1))
+plotHull2D(pts, addRays = TRUE, direction = c(-1,1), addText = "coord")
 
 ## 3D
 pts<-matrix(c(1,1,1), ncol = 3, byrow = TRUE)
@@ -61,9 +65,10 @@ convexHull(pts)
 pts<-matrix(c(0,0,0,0,1,1,0,2,2,0,0,2), ncol = 3, byrow = TRUE)
 dimFace(pts) # a polygon
 convexHull(pts)
+convexHull(pts, addRays = TRUE)
 pts<-matrix(c(1,0,0,1,1,1,1,2,2,3,1,1), ncol = 3, byrow = TRUE)
 dimFace(pts) # a polygon
-convexHull3D(pts, classify = TRUE) # a polyhedron
+convexHull(pts) # a polyhedron
 pts<-matrix(c(1,1,1,2,2,1,2,1,1,1,1,2), ncol = 3, byrow = TRUE)
 dimFace(pts) # a polytope (polyhedron)
 convexHull(pts)

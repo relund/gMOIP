@@ -5,7 +5,7 @@
 #' @param pts A matrix with a point in each row.
 #' @param drawPoints Draw the points.
 #' @param drawLines Draw lines of the facets.
-#' @param drawPolygons Fill the facets.
+#' @param drawPolygons Fill the hull.
 #' @param addText Add text to the points. Currently `coord` (coordinates), `rownames` (rownames)
 #'   and `both` supported or a vector with text.
 #' @param addRays Add the ray defined by `direction`.
@@ -16,10 +16,10 @@
 #' @param ... Further arguments passed on the the ggplot plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
-#'   * `argsGeom_point`: A list of arguments for [`ggplot::geom_point`].
-#'   * `argsGeom_path`: A list of arguments for [`ggplot::geom_path`].
-#'   * `argsGeom_polygon`: A list of arguments for [`ggplot::geom_polygon`].
-#'   * `argsGeom_label`: A list of arguments for [`ggplot::geom_label].
+#'   * `argsGeom_point`: A list of arguments for [`ggplot2::geom_point`].
+#'   * `argsGeom_path`: A list of arguments for [`ggplot2::geom_path`].
+#'   * `argsGeom_polygon`: A list of arguments for [`ggplot2::geom_polygon`].
+#'   * `argsGeom_label`: A list of arguments for [`ggplot2::geom_label`].
 #'
 #' @return The ggplot.
 #' @export
@@ -35,10 +35,12 @@
 #' plotHull2D(pts, drawPoints = TRUE, addText = "coord")
 #' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, addText = "coord")
 #' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
+#'
+#' @importFrom rlang .data
 plotHull2D <- function(pts,
                        drawPoints = FALSE,
                        drawLines = TRUE,
-                       drawPolygon = TRUE,
+                       drawPolygons = TRUE,
                        addText = FALSE,
                        addRays = FALSE,
                        direction = 1,
@@ -75,9 +77,8 @@ plotHull2D <- function(pts,
    if (latex) plt <- plt + xlab("$x_1$") + ylab("$x_2$")
    if (!latex) plt <- plt + xlab(expression(x[1])) + ylab(expression(x[2]))
 
-
    if (d > 1) { # a polygon
-      if (drawPolygon) {
+      if (drawPolygons) {
          ptsT <- set[hull,]
          plt <- plt +
             do.call(geom_polygon, args = c(list(data = ptsT), argsGeom_polygon))
@@ -101,12 +102,12 @@ plotHull2D <- function(pts,
       }
    }
    if (drawPoints | d == 0) {
-      ptsT <- dplyr::filter(set, pt == 1)
+      ptsT <- dplyr::filter(set, .data$pt == 1)
       plt <- plt +
          do.call(geom_point, args = c(list(data = ptsT), argsGeom_point))
    }
 
-   ptsT <- dplyr::filter(set, pt == 1)
+   ptsT <- dplyr::filter(set, .data$pt == 1)
    if (length(addText) > 1) {
       if (length(addText) == nrow(ptsT)) {
          plt <- plt +
@@ -1249,7 +1250,7 @@ plotHull3D <- function(pts,
                                args$argsPolygon3d)
    argsText3d <- mergeLists(list(), args$argsText3d)
 
-   pts <- .checkPts(pts, p = 3, warn = TRUE)
+   pts <- .checkPts(pts, p = 3)
    hull <- convexHull(pts, addRays = addRays, direction = direction)
    set <- hull$pts
    hull <- hull$hull
@@ -1258,44 +1259,44 @@ plotHull3D <- function(pts,
 
    # if (is.vector(pts)) pts <- matrix(pts, ncol = 3, byrow = TRUE)
    # set<- as.matrix(unique(pts[,1:3, drop = FALSE]))
-   # hull <- convexHull3D(set[,1:3], classify = TRUE, addR3 = addR3)
+   # hull <- convexHull(set[,1:3], classify = TRUE, addR3 = addR3)
    # set <- hull$pts
    # d <- dimFace(set[,1:3, drop = FALSE])
    if (d==3) { # then poly define facets
       poly <- hull
       for (i in 1:dim(poly)[1]) {
          tri <- poly[i,!is.na(poly[i,])]
-         p <- set[tri,1:4]
-         tri <- 1:nrow(p)
+         pt <- set[tri,1:4]
+         tri <- 1:nrow(pt)
          if (drawLines) {
             if (length(tri)>3) { # then have to find the vertex sequence
-               tri <- convexHull3D(p[,1:3])
+               tri <- convexHull(pt[,1:3])$hull
             }
             tri1 <- NULL # use tri1 to include the addR3=T case
             for (j in 2:length(tri)){
-               if (!(p[tri[j-1],4] == 0 && p[tri[j],4] == 0))
+               if (!(pt[tri[j-1],4] == 0 && pt[tri[j],4] == 0))
                   tri1 <- c(tri1,NA,tri[j-1],tri[j])
             }
-            if (!(p[tri[1], 4] == 0 && p[tri[length(tri)], 4] == 0)) {
+            if (!(pt[tri[1], 4] == 0 && pt[tri[length(tri)], 4] == 0)) {
                tri1 <- c(tri1, NA, tri[1], tri[length(tri)])
             }
-            do.call(rgl::polygon3d, args = c(list(p[tri1, 1], p[tri1, 2], p[tri1, 3], fill = FALSE),
+            do.call(rgl::polygon3d, args = c(list(pt[tri1, 1], pt[tri1, 2], pt[tri1, 3], fill = FALSE),
                     argsSegments3d))
          }
          if (drawPolygons) {
             if (length(tri)==3) {
-               do.call(rgl::triangles3d, args = c(list(x = p[,1:3]), argsPolygon3d) )
+               do.call(rgl::triangles3d, args = c(list(x = pt[,1:3]), argsPolygon3d) )
             } else if (length(tri)==4){
-               tri <- convexHull3D(p[,1:3]) # then have to find the vertex sequence
-               obj <- rgl::qmesh3d(t(p[,1:3]),tri, homogeneous = FALSE)
+               tri <- convexHull(pt[,1:3])$hull # then have to find the vertex sequence
+               obj <- rgl::qmesh3d(t(pt[,1:3]),tri, homogeneous = FALSE)
                do.call(rgl::shade3d, args = c(list(obj), argsPolygon3d))
             } else {
-               idx <- apply(p[,1:3], 2, function(x) {return(length(unique(x))==1)})
+               idx <- apply(pt[,1:3], 2, function(x) {return(length(unique(x))==1)})
                idx<-which(!idx)
                if (length(idx)==3) coords <- 1:2 else coords <- idx
-               # plotHull3D(p[tri,1:3])
+               # plotHull3D(pt[tri,1:3])
                do.call(rgl::polygon3d, args = c(list(
-                  p[tri, 1], p[tri, 2], p[tri, 3], fill = TRUE, coords = coords
+                  pt[tri, 1], pt[tri, 2], pt[tri, 3], fill = TRUE, coords = coords
                ), argsPolygon3d))
             }
          }

@@ -10,7 +10,8 @@ plotHull3D(
   drawLines = TRUE,
   drawPolygons = TRUE,
   addText = FALSE,
-  addR3 = FALSE,
+  addRays = FALSE,
+  direction = 1,
   ...
 )
 }
@@ -26,7 +27,11 @@ plotHull3D(
 \item{addText}{Add text to the points. Currently \code{coord} (coordinates), \code{rownames} (rownames)
 and \code{both} supported or a vector with text.}
 
-\item{addR3}{Plot the hull of the points + R3+.}
+\item{addRays}{Add the ray defined by \code{direction}.}
+
+\item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
+plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
 
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
