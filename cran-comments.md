@@ -2,7 +2,6 @@
 * Ubuntu (xenial on Travis CI), R (release)
 * Ubuntu (bionic on Travis CI), R (release)
 * Mac OSX (newest stable version on Travis CI), R (release)
-* Rhub (windows-x86_64-release)
 * Win-builder (check_win_release)
 
 
