@@ -528,6 +528,34 @@ genNDSet <-
 #' @export
 #'
 #' @examples
+#' pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
+#' ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+2),
+#'   ylim = c(min(pts[,2])-2,max(pts[,2])+2),
+#'   zlim = c(min(pts[,3])-2,max(pts[,3])+2)))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5), useRGLBBox = TRUE)
+#' pts <- classifyNDSet(pts[,1:3])
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' plotCones3D(pts[,1:3], rectangle = TRUE, argsPolygon3d = list(alpha = 1))
+#' finalize3D()
+#' pts
+#'
+#' pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.2,0.1,0.1, 0.1,0.45,0.45), ncol = 3, byrow = TRUE)
+#' di <- -1 # maximize
+#' ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-1,max(pts[,1])+1),
+#'   ylim = c(min(pts[,2])-1,max(pts[,2])+1),
+#'   zlim = c(min(pts[,3])-1,max(pts[,3])+1)))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5), direction = di,
+#'            addText = "coord")
+#' pts <- classifyNDSet(pts[,1:3], direction = di)
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' plotCones3D(pts[,1:3], rectangle = TRUE, argsPolygon3d = list(alpha = 1), direction = di)
+#' finalize3D()
+#' pts
+#'
 #' pts <- genNDSet(3,50)
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
 #'   ylim = c(0,max(pts$y)+2),
@@ -538,35 +566,20 @@ genNDSet <-
 #' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
 #' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
 #' finalize3D()
-#'
+#' pts
 classifyNDSet <- function(pts, direction = 1) {
    pts <- .checkPts(pts)
-   # if (nrow(pts) == 1) return(cbind(pts))
-
+   if (nrow(pts) == 1) {
+      pts <- as.data.frame(pts)
+      return(cbind(pts, se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
+   }
    p <- ncol(pts)
    if (length(direction) != p) direction = rep(direction[1],p)
-   d <- dimFace(pts)
-   if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
-
    set <- convexHull(pts, addRays = TRUE, direction = direction)
    hull <- set$hull
    set <- set$pts
-
-
-   # set <- addRays(set, direction = direction)
-
-   # ## Find extra dummy vertex
-   # z <- dplyr::bind_rows(purrr::map_dfc(pts, min), purrr::map_dfc(pts, max))
-   # idx <- purrr::map_dbl(obj, function(x) if (x == "min") 2 else 1)
-   # z <- purrr::map_dbl(1:p, function(j) as.numeric(z[idx[j],j]))
-   # pts <- rbind(pts,z)
-
-
-   # hull <- geometry::convhulln(pts)
-   # idx <- unique(as.vector(hull))
-   # idx <- idx[!is.na(idx)]
-   # idx <- sort(idx)
-   # set <- as.data.frame(pts)
+   d <- dimFace(set[,1:p])
+   if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
    set <- dplyr::mutate(set, se = dplyr::if_else(.data$vtx,TRUE,FALSE))
    set <- dplyr::mutate(set, sne = FALSE, us = FALSE, id = 1:nrow(set))
    chk <- set %>% dplyr::filter(!.data$vtx)

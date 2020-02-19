@@ -363,7 +363,7 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
 #'
 #' @param pts A matrix with a point in each row.
 #' @param addRays Add the ray defined by `direction`.
-#' @param useRGLBBox Use the RGL bounding box.
+#' @param useRGLBBox Use the RGL bounding box when add rays.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
 #'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
 #'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
@@ -429,7 +429,7 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
    if (length(direction) != p) direction = rep(direction[1],p)
    # print(set)
    if (addRays) {
-      if (!rgl::rgl.cur() & useRGLBBox) {
+      if (rgl::rgl.cur() > 0 & useRGLBBox) {
          limits <- rgl::par3d()$bbox
          for (i in 1:dim(pts)[1]) {
             pt <- as.vector(pts[i,])

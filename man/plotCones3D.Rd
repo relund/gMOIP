@@ -9,8 +9,9 @@ plotCones3D(
   drawPoint = TRUE,
   drawLines = TRUE,
   drawPolygons = TRUE,
-  reverse = FALSE,
+  direction = 1,
   rectangle = FALSE,
+  useRGLBBox = TRUE,
   ...
 )
 }
@@ -23,9 +24,13 @@ plotCones3D(
 
 \item{drawPolygons}{Draw polygons of the cone.}
 
-\item{reverse}{Cones are defined as the point minus R3+}
+\item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
+plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
 
 \item{rectangle}{Draw the cone as a rectangle.}
+
+\item{useRGLBBox}{Use the RGL bounding box as ray limits for the cone.}
 
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
@@ -34,6 +39,8 @@ lists (see examples). Currently the following arguments are supported:
 \item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:points3d]{rgl::segments3d}}.
 \item \code{argsPolygon3d}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}}.
 }}
+
+\item{reverse}{Cones are defined as the point minus R3+}
 }
 \value{
 NULL (invisible)
@@ -46,7 +53,14 @@ ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
 plotCones3D(c(4,4,4), drawLines = FALSE, drawPoint = TRUE,
            argsPlot3d = list(col = "red", size = 10),
            argsPolygon3d = list(alpha = 1), rectangle = TRUE)
-plotCones3D(c(1,1,1), reverse = TRUE, rectangle = TRUE)
+plotCones3D(c(1,1,1), rectangle = FALSE)
 plotCones3D(matrix(c(3,3,3,2,2,2), ncol = 3, byrow = TRUE))
+finalize3D()
+
+ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
+plotCones3D(c(4,4,4), direction = 1)
+plotCones3D(c(2,2,2), direction = -1)
+plotCones3D(c(4,2,2), direction = c(1,-1,-1))
+plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 finalize3D()
 }

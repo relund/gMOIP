@@ -1002,8 +1002,11 @@ plotRectangle3D <- function(a, b, ...) {
 #' @param drawPoint Draw the points defining the cone.
 #' @param drawLines Draw lines of the cone.
 #' @param drawPolygons Draw polygons of the cone.
-#' @param reverse Cones are defined as the point minus R3+
 #' @param rectangle Draw the cone as a rectangle.
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
+#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
+#' @param useRGLBBox Use the RGL bounding box as ray limits for the cone.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
@@ -1019,83 +1022,102 @@ plotRectangle3D <- function(a, b, ...) {
 #' plotCones3D(c(4,4,4), drawLines = FALSE, drawPoint = TRUE,
 #'            argsPlot3d = list(col = "red", size = 10),
 #'            argsPolygon3d = list(alpha = 1), rectangle = TRUE)
-#' plotCones3D(c(1,1,1), reverse = TRUE, rectangle = TRUE)
+#' plotCones3D(c(1,1,1), rectangle = FALSE)
 #' plotCones3D(matrix(c(3,3,3,2,2,2), ncol = 3, byrow = TRUE))
+#' finalize3D()
+#'
+#' ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
+#' plotCones3D(c(4,4,4), direction = 1)
+#' plotCones3D(c(2,2,2), direction = -1)
+#' plotCones3D(c(4,2,2), direction = c(1,-1,-1))
+#' plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 #' finalize3D()
 plotCones3D <-
    function(pts,
             drawPoint = TRUE,
             drawLines = TRUE,
             drawPolygons = TRUE,
-            reverse = FALSE,
+            direction = 1,
             rectangle = FALSE,
+            useRGLBBox = TRUE,
             ...) {
    args <- list(...)
    argsPlot3d <- mergeLists(list(), args$argsPlot3d)
    argsSegments3d <- mergeLists(list(lwd = 1, col = "grey40"), args$argsSegments3d)
    argsPolygon3d <- mergeLists(list(), args$argsPolygon3d)
 
-   if (is.vector(pts)) pts <- t(as.matrix(pts))
-   eps <- 0.00001
-   pts <- as.matrix(pts)
-   limits <- rgl::par3d()$bbox
-   p1 <- c(limits[2], limits[4], limits[6])
-   p2 <- c(limits[1], limits[3], limits[5])
+   pts <- .checkPts(pts, p = 3)
    for (i in 1:dim(pts)[1]) {
-      p <- as.vector(pts[i, ])
-      if (!(limits[1] < p[1] && p[1] < limits[2] &&
-            limits[3] < p[2] && p[2] < limits[4] &&
-            limits[5] < p[3] && p[3] < limits[6])) {
-         stop("The cone will not be in the interior of the current bounding box. Resize your axes.")
-      }
-      if (reverse) {
-         if (rectangle)
-            do.call(plotRectangle3D, args = c(
-               list(p, p2),
-               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d,
-                    drawPoint = drawPoint, drawLines = drawLines, drawPolygons = drawPolygons)
-            ))
-         else
-            x <- matrix(c(p, p2), ncol = 3, byrow = TRUE)
-      } else {
-         if (rectangle)
-            do.call(plotRectangle3D, args = c(
-               list(p, p1),
-               list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d,
-                    drawPoint = drawPoint, drawLines = drawLines, drawPolygons = drawPolygons)
-            ))
-         else
-            x <- matrix(c(p, p1), ncol = 3, byrow = TRUE)
-      }
-      if (!rectangle) {
-         x <- expand.grid(x=c(x[1,1],x[2,1]), y=c(x[1,2],x[2,2]), z=c(x[1,3],x[2,3]))
-         x <- as.matrix(x)
-         face1 <- matrix( c(x[1,], x[2,], x[6,], x[5,]), ncol = 3, byrow = TRUE)
-         face2 <- matrix( c(x[1,], x[3,], x[7,], x[5,]), ncol = 3, byrow = TRUE)
-         face3 <- matrix( c(x[1,], x[3,], x[4,], x[2,]), ncol = 3, byrow = TRUE)
-         if (drawLines) {
-            do.call(rgl::segments3d, args = c(list(x[c(1,5),]), argsSegments3d) )
-            do.call(rgl::segments3d, args = c(list(x[c(1,3),]), argsSegments3d) )
-            do.call(rgl::segments3d, args = c(list(x[c(1,2),]), argsSegments3d) )
-         }
-         if (drawPolygons) {
-            do.call(plotHull3D, args = c(
-               list(face1, drawLines = FALSE),
-               list(argsPolygon3d = argsPolygon3d)
-            ))
-            do.call(plotHull3D, args = c(
-               list(face2, drawLines = FALSE),
-               list(argsPolygon3d = argsPolygon3d)
-            ))
-            do.call(plotHull3D, args = c(
-               list(face3, drawLines = FALSE),
-               list(argsPolygon3d = argsPolygon3d)
-            ))
-         }
-      }
-      if (drawPoint)
-         do.call(plotPoints3D, args = c(list(pts[i, , drop = FALSE]), list(argsPlot3d = argsPlot3d)))
+      pt <- as.vector(pts[i, ])
+      plotHull3D(pt, drawPoints = drawPoint,
+                   drawLines = drawLines, drawPolygons = drawPolygons,
+                   addRays = TRUE, direction = direction, drawBBoxHull = rectangle,
+                   useRGLBBox = useRGLBBox,
+                   argsPlot3d = argsPlot3d, argsSegments3d = argsSegments3d,
+                   argsPolygon3d = argsPolygon3d
+                 )
    }
+   # # if (is.vector(pts)) pts <- t(as.matrix(pts))
+   # # eps <- 0.00001
+   # # pts <- as.matrix(pts)
+   # limits <- rgl::par3d()$bbox
+   # p1 <- c(limits[2], limits[4], limits[6])
+   # p2 <- c(limits[1], limits[3], limits[5])
+   # for (i in 1:dim(pts)[1]) {
+   #    p <- as.vector(pts[i, ])
+   #    if (!(limits[1] < p[1] && p[1] < limits[2] &&
+   #          limits[3] < p[2] && p[2] < limits[4] &&
+   #          limits[5] < p[3] && p[3] < limits[6])) {
+   #       stop("The cone will not be in the interior of the current bounding box. Resize your axes.")
+   #    }
+   #    if (reverse) {
+   #       if (rectangle)
+   #          do.call(plotRectangle3D, args = c(
+   #             list(p, p2),
+   #             list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d,
+   #                  drawPoint = drawPoint, drawLines = drawLines, drawPolygons = drawPolygons)
+   #          ))
+   #       else
+   #          x <- matrix(c(p, p2), ncol = 3, byrow = TRUE)
+   #    } else {
+   #       if (rectangle)
+   #          do.call(plotRectangle3D, args = c(
+   #             list(p, p1),
+   #             list(argsPolygon3d = argsPolygon3d, argsSegments3d = argsSegments3d,
+   #                  drawPoint = drawPoint, drawLines = drawLines, drawPolygons = drawPolygons)
+   #          ))
+   #       else
+   #          x <- matrix(c(p, p1), ncol = 3, byrow = TRUE)
+   #    }
+   #    if (!rectangle) {
+   #       x <- expand.grid(x=c(x[1,1],x[2,1]), y=c(x[1,2],x[2,2]), z=c(x[1,3],x[2,3]))
+   #       x <- as.matrix(x)
+   #       face1 <- matrix( c(x[1,], x[2,], x[6,], x[5,]), ncol = 3, byrow = TRUE)
+   #       face2 <- matrix( c(x[1,], x[3,], x[7,], x[5,]), ncol = 3, byrow = TRUE)
+   #       face3 <- matrix( c(x[1,], x[3,], x[4,], x[2,]), ncol = 3, byrow = TRUE)
+   #       if (drawLines) {
+   #          do.call(rgl::segments3d, args = c(list(x[c(1,5),]), argsSegments3d) )
+   #          do.call(rgl::segments3d, args = c(list(x[c(1,3),]), argsSegments3d) )
+   #          do.call(rgl::segments3d, args = c(list(x[c(1,2),]), argsSegments3d) )
+   #       }
+   #       if (drawPolygons) {
+   #          do.call(plotHull3D, args = c(
+   #             list(face1, drawLines = FALSE),
+   #             list(argsPolygon3d = argsPolygon3d)
+   #          ))
+   #          do.call(plotHull3D, args = c(
+   #             list(face2, drawLines = FALSE),
+   #             list(argsPolygon3d = argsPolygon3d)
+   #          ))
+   #          do.call(plotHull3D, args = c(
+   #             list(face3, drawLines = FALSE),
+   #             list(argsPolygon3d = argsPolygon3d)
+   #          ))
+   #       }
+   #    }
+   #    if (drawPoint)
+   #       do.call(plotPoints3D, args = c(list(pts[i, , drop = FALSE]), list(argsPlot3d = argsPlot3d)))
+   # }
    return(invisible(NULL))
 }
 # Old implementation using subscenes
@@ -1144,9 +1166,11 @@ plotCones3D <-
 #' @param addText Add text to the points. Currently `coord` (coordinates), `rownames` (rownames)
 #'   and `both` supported or a vector with text.
 #' @param addRays Add the ray defined by `direction`.
+#' @param useRGLBBox Use the RGL bounding box when add rays.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
 #'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
 #'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
+#' @param drawBBoxHull If addRays then draw the hull areas hitting the bounding box also.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
@@ -1171,19 +1195,20 @@ plotCones3D <-
 #' plotHull3D(pts, argsPolygon3d = list(alpha=0.9), argsSegments3d = list(color="red"))
 #' finalize3D()
 #'
-#' ## Using addR3
+#' ## Using addRays
 #' pts <- data.frame(x = c(1,3), y = c(1,3), z = c(1,3))
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
 #'   ylim = c(0,max(pts$y)+10),
 #'   zlim = c(0,max(pts$z)+10)))
-#' plotHull3D(pts, drawPoints = TRUE, addR3 = TRUE)
+#' plotHull3D(pts, drawPoints = TRUE, addRays = TRUE, , drawBBoxHull = FALSE)
+#' plotHull3D(c(4,4,4), drawPoints = TRUE, addRays = TRUE)
 #' finalize3D()
 #'
 #' pts <- data.frame(x = c(4,2.5,1), y = c(1,2.5,4), z = c(1,2.5,4))
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
 #'   ylim = c(0,max(pts$y)+10),
 #'   zlim = c(0,max(pts$z)+10)))
-#' plotHull3D(pts, drawPoints = TRUE, addR3 = TRUE)
+#' plotHull3D(pts, drawPoints = TRUE, addRays = TRUE)
 #' finalize3D()
 #'
 #' pts <- matrix(c(
@@ -1199,7 +1224,8 @@ plotCones3D <-
 #' ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
 #'   ylim = c(min(pts[,2])-2,max(pts[,2])+10),
 #'   zlim = c(min(pts[,3])-2,max(pts[,3])+10)))
-#' plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addR3 = TRUE)
+#' plotHull3D(pts, drawPoints = TRUE, addText = "coord")
+#' plotHull3D(pts, addRays = TRUE)
 #' finalize3D()
 #'
 #' \donttest{
@@ -1210,26 +1236,26 @@ plotCones3D <-
 #'   xlim = c(0,max(pts$x)+10),
 #'   ylim = c(0,max(pts$y)+10),
 #'   zlim = c(0,max(pts$z)+10)))
-#' plotHull3D(pts, drawPoints = TRUE, addR3 = TRUE)
+#' plotHull3D(pts, drawPoints = TRUE, addRays = TRUE)
 #' finalize3D()
 #'
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts[,1])+10),
 #'   ylim = c(0,max(pts[,2])+10),
 #'   zlim = c(0,max(pts[,3])+10)))
-#' plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addR3 = TRUE)
+#' plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addRays = TRUE)
 #' finalize3D()
 #'
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
 #'   ylim = c(0,max(pts$y)+10),
 #'   zlim = c(0,max(pts$z)+10)))
 #' plotHull3D(pts, drawPoints = TRUE, drawLines = FALSE,
-#'   argsPolygon3d = list(alpha = 1), addR3 = TRUE)
+#'   argsPolygon3d = list(alpha = 1), addRays = TRUE)
 #' finalize3D()
 #'
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
 #'   ylim = c(0,max(pts$y)+2),
 #'   zlim = c(0,max(pts$z)+2)))
-#' plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addR3 = TRUE)
+#' plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addRays = TRUE)
 #' plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 #' finalize3D()
 #' }
@@ -1239,7 +1265,9 @@ plotHull3D <- function(pts,
                        drawPolygons = TRUE,
                        addText = FALSE,
                        addRays = FALSE,
+                       useRGLBBox = TRUE,
                        direction = 1,
+                       drawBBoxHull = TRUE,
                        ...)
 {
    args <- list(...)
@@ -1251,19 +1279,15 @@ plotHull3D <- function(pts,
    argsText3d <- mergeLists(list(), args$argsText3d)
 
    pts <- .checkPts(pts, p = 3)
-   hull <- convexHull(pts, addRays = addRays, direction = direction)
+   if (length(direction) != 3) direction = rep(direction[1],3)
+   hull <- convexHull(pts, addRays = addRays, direction = direction, useRGLBBox = useRGLBBox)
    set <- hull$pts
    hull <- hull$hull
    d <- dimFace(set[,1:3, drop = FALSE])
-
-
-   # if (is.vector(pts)) pts <- matrix(pts, ncol = 3, byrow = TRUE)
-   # set<- as.matrix(unique(pts[,1:3, drop = FALSE]))
-   # hull <- convexHull(set[,1:3], classify = TRUE, addR3 = addR3)
-   # set <- hull$pts
-   # d <- dimFace(set[,1:3, drop = FALSE])
    if (d==3) { # then poly define facets
       poly <- hull
+      pN <- purrr::map_dfc(1:3, function(i) if (sign(direction[i]) > 0) max(set[,i]) else min(set[,i]))
+      colnames(pN) <- colnames(set[,1:3])
       for (i in 1:dim(poly)[1]) {
          tri <- poly[i,!is.na(poly[i,])]
          pt <- set[tri,1:4]
@@ -1272,32 +1296,40 @@ plotHull3D <- function(pts,
             if (length(tri)>3) { # then have to find the vertex sequence
                tri <- convexHull(pt[,1:3])$hull
             }
-            tri1 <- NULL # use tri1 to include the addR3=T case
+            tri1 <- NULL # use tri1 to include the addRays=T case
             for (j in 2:length(tri)){
-               if (!(pt[tri[j-1],4] == 0 && pt[tri[j],4] == 0))
+               if (!(pt[tri[j-1],4] == 0 && pt[tri[j],4] == 0)) #  && !drawBBoxHull
                   tri1 <- c(tri1,NA,tri[j-1],tri[j])
             }
-            if (!(pt[tri[1], 4] == 0 && pt[tri[length(tri)], 4] == 0)) {
+            if (!(pt[tri[1], 4] == 0 && pt[tri[length(tri)], 4] == 0)) {  #  && !drawBBoxHull
                tri1 <- c(tri1, NA, tri[1], tri[length(tri)])
             }
             do.call(rgl::polygon3d, args = c(list(pt[tri1, 1], pt[tri1, 2], pt[tri1, 3], fill = FALSE),
                     argsSegments3d))
          }
          if (drawPolygons) {
-            if (length(tri)==3) {
-               do.call(rgl::triangles3d, args = c(list(x = pt[,1:3]), argsPolygon3d) )
-            } else if (length(tri)==4){
-               tri <- convexHull(pt[,1:3])$hull # then have to find the vertex sequence
-               obj <- rgl::qmesh3d(t(pt[,1:3]),tri, homogeneous = FALSE)
-               do.call(rgl::shade3d, args = c(list(obj), argsPolygon3d))
-            } else {
-               idx <- apply(pt[,1:3], 2, function(x) {return(length(unique(x))==1)})
-               idx<-which(!idx)
-               if (length(idx)==3) coords <- 1:2 else coords <- idx
-               # plotHull3D(pt[tri,1:3])
-               do.call(rgl::polygon3d, args = c(list(
-                  pt[tri, 1], pt[tri, 2], pt[tri, 3], fill = TRUE, coords = coords
-               ), argsPolygon3d))
+            if (drawBBoxHull | (!drawBBoxHull & nrow(dplyr::intersect(pt[,1:3],pN)) == 0)) {
+               if (length(tri)==3) {
+                  do.call(rgl::triangles3d, args = c(list(x = pt[,1:3]), argsPolygon3d) )
+               } else if (length(tri)==4){
+                  tri <- convexHull(pt[,1:3])$hull # then have to find the vertex sequence
+                  obj <- rgl::qmesh3d(t(pt[,1:3]),tri, homogeneous = FALSE)
+                  do.call(rgl::shade3d, args = c(list(obj), argsPolygon3d))
+               } else {
+                  # idx <- apply(pt[,1:3], 2, function(x) {return(length(unique(x))==1)})
+                  # idx<-which(!idx)
+                  # if (length(idx)==3) coords <- 1:2 else coords <- idx
+                  #plotHull3D(pt[tri,1:3])
+                  tri <- convexHull(pt[,1:3])$hull
+                  comb <- t(utils::combn(3,2))
+                  for (j in 1:3) {
+                     res <- try(
+                        do.call(rgl::polygon3d, args = c(list(
+                        pt[tri, 1], pt[tri, 2], pt[tri, 3], fill = TRUE, coords = comb[j,]
+                     ), argsPolygon3d)), silent = TRUE)
+                     if (!inherits(res, "try-error")) break #else {cat(i, " ", j, " ")}
+                  }
+               }
             }
          }
       }
@@ -1349,8 +1381,7 @@ plotHull3D <- function(pts,
          do.call(rgl::text3d, args = c(list(x = pts, texts = addText), argsText3d) )
       }
    }
-   #if (drawCoordinates) rgl::text3d(pts, texts = paste0("(",pts[,1],",",pts[,2],",",pts[,3],")"))
-   return(list(hull = hull, pts = set))
+   return(invisible(list(hull = hull, pts = set)))
    stop("Error in plotHull3D")
 }
 

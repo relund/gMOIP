@@ -11,7 +11,9 @@ plotHull3D(
   drawPolygons = TRUE,
   addText = FALSE,
   addRays = FALSE,
+  useRGLBBox = TRUE,
   direction = 1,
+  drawBBoxHull = TRUE,
   ...
 )
 }
@@ -29,9 +31,13 @@ and \code{both} supported or a vector with text.}
 
 \item{addRays}{Add the ray defined by \code{direction}.}
 
+\item{useRGLBBox}{Use the RGL bounding box when add rays.}
+
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
 plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
 i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+
+\item{drawBBoxHull}{If addRays then draw the hull areas hitting the bounding box also.}
 
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
@@ -61,19 +67,20 @@ pts<-matrix(c(5,5,5,10,10,5,10,5,5,5,5,10), ncol = 3, byrow = TRUE)
 plotHull3D(pts, argsPolygon3d = list(alpha=0.9), argsSegments3d = list(color="red"))
 finalize3D()
 
-## Using addR3
+## Using addRays
 pts <- data.frame(x = c(1,3), y = c(1,3), z = c(1,3))
 ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
   ylim = c(0,max(pts$y)+10),
   zlim = c(0,max(pts$z)+10)))
-plotHull3D(pts, drawPoints = TRUE, addR3 = TRUE)
+plotHull3D(pts, drawPoints = TRUE, addRays = TRUE, , drawBBoxHull = FALSE)
+plotHull3D(c(4,4,4), drawPoints = TRUE, addRays = TRUE)
 finalize3D()
 
 pts <- data.frame(x = c(4,2.5,1), y = c(1,2.5,4), z = c(1,2.5,4))
 ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
   ylim = c(0,max(pts$y)+10),
   zlim = c(0,max(pts$z)+10)))
-plotHull3D(pts, drawPoints = TRUE, addR3 = TRUE)
+plotHull3D(pts, drawPoints = TRUE, addRays = TRUE)
 finalize3D()
 
 pts <- matrix(c(
@@ -89,7 +96,8 @@ pts <- matrix(c(
 ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
   ylim = c(min(pts[,2])-2,max(pts[,2])+10),
   zlim = c(min(pts[,3])-2,max(pts[,3])+10)))
-plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addR3 = TRUE)
+plotHull3D(pts, drawPoints = TRUE, addText = "coord")
+plotHull3D(pts, addRays = TRUE)
 finalize3D()
 
 \donttest{
@@ -100,26 +108,26 @@ ini3D(argsPlot3d = list(
   xlim = c(0,max(pts$x)+10),
   ylim = c(0,max(pts$y)+10),
   zlim = c(0,max(pts$z)+10)))
-plotHull3D(pts, drawPoints = TRUE, addR3 = TRUE)
+plotHull3D(pts, drawPoints = TRUE, addRays = TRUE)
 finalize3D()
 
 ini3D(argsPlot3d = list(xlim = c(0,max(pts[,1])+10),
   ylim = c(0,max(pts[,2])+10),
   zlim = c(0,max(pts[,3])+10)))
-plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addR3 = TRUE)
+plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addRays = TRUE)
 finalize3D()
 
 ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
   ylim = c(0,max(pts$y)+10),
   zlim = c(0,max(pts$z)+10)))
 plotHull3D(pts, drawPoints = TRUE, drawLines = FALSE,
-  argsPolygon3d = list(alpha = 1), addR3 = TRUE)
+  argsPolygon3d = list(alpha = 1), addRays = TRUE)
 finalize3D()
 
 ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
   ylim = c(0,max(pts$y)+2),
   zlim = c(0,max(pts$z)+2)))
-plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addR3 = TRUE)
+plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addRays = TRUE)
 plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 finalize3D()
 }

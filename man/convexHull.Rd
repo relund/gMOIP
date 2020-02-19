@@ -17,7 +17,7 @@ convexHull(
 
 \item{addRays}{Add the ray defined by \code{direction}.}
 
-\item{useRGLBBox}{Use the RGL bounding box.}
+\item{useRGLBBox}{Use the RGL bounding box when add rays.}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
 plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
