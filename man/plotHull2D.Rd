@@ -31,8 +31,8 @@ and \code{both} supported or a vector with text.}
 \item{addRays}{Add the ray defined by \code{direction}.}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
-plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
 \item{latex}{If \code{True} make latex math labels for TikZ.}
 

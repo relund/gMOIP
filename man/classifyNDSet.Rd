@@ -11,8 +11,8 @@ classifyNDSet(pts, direction = 1)
 objectives ($p$).}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of the \code{pts}
-plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-i'th column of the \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of the \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 }
 \value{
 The ND set with classification columns.

@@ -34,8 +34,8 @@ and \code{both} supported or a vector with text.}
 \item{useRGLBBox}{Use the RGL bounding box when add rays.}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
-plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
 \item{drawBBoxHull}{If addRays then draw the hull areas hitting the bounding box also.}
 

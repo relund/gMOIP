@@ -321,8 +321,8 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #' @param m Minimum values of the bounding box.
 #' @param M Maximum vlaues of the bounding box.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
-#'   plus a value greather than on equal zero. If negative, consider the i'th column of the `pts`
-#'   minus a value greather than on equal zero.
+#'   plus a value greater than on equal zero. If negative, consider the i'th column of the `pts`
+#'   minus a value greater than on equal zero.
 #'
 #' @note Assume that `pts` has been checked using [.checkPts].
 #' @return The points merged with the points on the bounding box. The column `pt` equals 1 if
@@ -365,8 +365,8 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
 #' @param addRays Add the ray defined by `direction`.
 #' @param useRGLBBox Use the RGL bounding box when add rays.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
-#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-#'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param tol Tolerance on std. dev. if using PCA.
 #'
 #' @return A list with \code{hull} equal a matrix with row indices of the vertices defining each

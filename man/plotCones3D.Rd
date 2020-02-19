@@ -25,8 +25,8 @@ plotCones3D(
 \item{drawPolygons}{Draw polygons of the cone.}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
-plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
 \item{rectangle}{Draw the cone as a rectangle.}
 

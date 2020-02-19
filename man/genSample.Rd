@@ -37,13 +37,13 @@ lists (see examples). Currently the following arguments are supported:
 \item \code{plane}: The plane used.
 \item \code{below}: Either true (generate points below the plane), false (generate points above the
 plane) or \code{NULL} (generated on the whole sphere).
-\item \code{factor}: If using af plane. Then the factor multiply \code{n} with so generate enough points
+\item \code{factor}: If using a plane. Then the factor multiply \code{n} with so generate enough points
 below/above the plane.
 }
 \item \code{argsBox}: A list of arguments for generating points inside boxes:
 \itemize{
 \item \code{intervals}: Number of intervals to split the length of the range into. That is, each
-range is divided into \code{intervals} (sub)intervals and only the lowest/higest
+range is divided into \code{intervals} (sub)intervals and only the lowest/highest
 subrange is used.
 \item \code{cor}: How to correlate indices. If \code{'idxAlt'} then alternate the intervals (high/low)
 for each dimension. For instance if \code{p = 3} and the first dimension is in the high
@@ -52,7 +52,7 @@ high interval range again. If \code{idxRand} then choose the low/high interval r
 for each dimension based on \code{prHigh}. If \code{idxSplit} then select
 \code{floor(p/2):ceiling(p/2)} dimensions for the high interval range and the other for
 the low interval range.
-\item \code{prHigh}: Probablity for choosing the high interval range in each dimension.
+\item \code{prHigh}: Probability for choosing the high interval range in each dimension.
 }
 }}
 }
@@ -64,7 +64,7 @@ Generate a sample of points in dimension $p$.
 }
 \details{
 Note having ranges with different length when using the sphere method, doesn't make
-sense. The best option is proberly to use a center and radius here. Moreover, as for higher
+sense. The best option is properly to use a center and radius here. Moreover, as for higher
 \code{p} you may have to use a larger radius than half of the desired interval range.
 }
 \examples{

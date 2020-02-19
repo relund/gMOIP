@@ -20,8 +20,8 @@ convexHull(
 \item{useRGLBBox}{Use the RGL bounding box when add rays.}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of \code{pts}
-plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-i'th column of \code{pts} minus a value greather than on equal zero (maximize objective $i$).}
+plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
 \item{tol}{Tolerance on std. dev. if using PCA.}
 }

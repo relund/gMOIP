@@ -162,11 +162,11 @@ addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #'      - `plane`: The plane used.
 #'      - `below`: Either true (generate points below the plane), false (generate points above the
 #'                 plane) or `NULL` (generated on the whole sphere).
-#'      - `factor`: If using af plane. Then the factor multiply `n` with so generate enough points
+#'      - `factor`: If using a plane. Then the factor multiply `n` with so generate enough points
 #'                  below/above the plane.
 #'   * `argsBox`: A list of arguments for generating points inside boxes:
 #'      - `intervals`: Number of intervals to split the length of the range into. That is, each
-#'                     range is divided into `intervals` (sub)intervals and only the lowest/higest
+#'                     range is divided into `intervals` (sub)intervals and only the lowest/highest
 #'                     subrange is used.
 #'      - `cor`: How to correlate indices. If `'idxAlt'` then alternate the intervals (high/low)
 #'               for each dimension. For instance if `p = 3` and the first dimension is in the high
@@ -175,10 +175,10 @@ addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #'               for each dimension based on `prHigh`. If `idxSplit` then select
 #'               `floor(p/2):ceiling(p/2)` dimensions for the high interval range and the other for
 #'               the low interval range.
-#'      - `prHigh`: Probablity for choosing the high interval range in each dimension.
+#'      - `prHigh`: Probability for choosing the high interval range in each dimension.
 #'
 #' @details Note having ranges with different length when using the sphere method, doesn't make
-#'   sense. The best option is proberly to use a center and radius here. Moreover, as for higher
+#'   sense. The best option is properly to use a center and radius here. Moreover, as for higher
 #'   `p` you may have to use a larger radius than half of the desired interval range.
 #'
 #' @return A data frame with `p` columns
@@ -519,8 +519,8 @@ genNDSet <-
 #' @param pts A set of non-dominated points. It is assumed that `ncol(pts)` equals the number of
 #'   objectives ($p$).
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
-#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-#'   i'th column of the `pts` minus a value greather than on equal zero (maximize objective $i$).
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of the `pts` minus a value greater than on equal zero (maximize objective $i$).
 #'
 #' @note It is assumed that `pts` are nondominated.
 #'

@@ -19,8 +19,8 @@ addRays(
 \item{M}{Maximum vlaues of the bounding box.}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of the \code{pts}
-plus a value greather than on equal zero. If negative, consider the i'th column of the \code{pts}
-minus a value greather than on equal zero.}
+plus a value greater than on equal zero. If negative, consider the i'th column of the \code{pts}
+minus a value greater than on equal zero.}
 }
 \value{
 The points merged with the points on the bounding box. The column \code{pt} equals 1 if

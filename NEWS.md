@@ -4,7 +4,7 @@
 
 # gMOIP 1.4.2
 
-* Classification of non dominated points.
+* Classification of nondominated points.
 
 # gMOIP 1.4.0
 

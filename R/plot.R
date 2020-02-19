@@ -10,8 +10,8 @@
 #'   and `both` supported or a vector with text.
 #' @param addRays Add the ray defined by `direction`.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
-#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-#'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param latex If \code{True} make latex math labels for TikZ.
 #' @param ... Further arguments passed on the the ggplot plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
@@ -1004,8 +1004,8 @@ plotRectangle3D <- function(a, b, ...) {
 #' @param drawPolygons Draw polygons of the cone.
 #' @param rectangle Draw the cone as a rectangle.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
-#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-#'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param useRGLBBox Use the RGL bounding box as ray limits for the cone.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
@@ -1072,8 +1072,8 @@ plotCones3D <-
 #' @param addRays Add the ray defined by `direction`.
 #' @param useRGLBBox Use the RGL bounding box when add rays.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
-#'   plus a value greather than on equal zero (minimize objective $i$). If negative, consider the
-#'   i'th column of `pts` minus a value greather than on equal zero (maximize objective $i$).
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param drawBBoxHull If addRays then draw the hull areas hitting the bounding box also.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
