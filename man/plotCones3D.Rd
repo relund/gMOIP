@@ -39,8 +39,6 @@ lists (see examples). Currently the following arguments are supported:
 \item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:points3d]{rgl::segments3d}}.
 \item \code{argsPolygon3d}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}}.
 }}
-
-\item{reverse}{Cones are defined as the point minus R3+}
 }
 \value{
 NULL (invisible)

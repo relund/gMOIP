@@ -1,3 +1,11 @@
+# gMOIP 1.4.3
+
+* Added support for rays in different directions.
+
+# gMOIP 1.4.2
+
+* Classification of non dominated points.
+
 # gMOIP 1.4.0
 
 * Added support for plotting rectangles, points, planes, hulls in 3D. 
