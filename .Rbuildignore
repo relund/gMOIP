@@ -11,4 +11,4 @@
 vignettes/lb_ub_set.Rmd$
 vignettes/.*cache.*$
 ^.*\.log$
-^test.*$
+tests/testTex/$

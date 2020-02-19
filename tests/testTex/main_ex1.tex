@@ -1,0 +1,14 @@
+% !TeX spellcheck = en_GB
+\documentclass{article}
+\usepackage{a4wide}
+\usepackage[pdftex]{graphicx}
+\usepackage{asymptote}
+\parindent0pt
+%% Must run pdflatex -> asy -> pdflatex
+\begin{document}
+Ex 1:
+\resizebox{\linewidth}{!}{\input{fig1}} % will generate an error first time you run the seq
+\newpage
+Ex 2:
+\asyinclude[width=\linewidth]{fig2}
+\end{document}
