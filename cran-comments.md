@@ -8,7 +8,15 @@
 
 ## R CMD check results
 R CMD check results
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+Checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Lars Relund Nielsen <lars@relund.dk>'
+
+New maintainer:
+  Lars Relund Nielsen <lars@relund.dk>
+Old maintainer(s):
+  Lars Relund <lars@relund.dk>
 
 R CMD check succeeded
 
