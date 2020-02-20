@@ -14,5 +14,8 @@ matrix:
       before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev libgsl0-dev
     - dist: bionic
       before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev
-      r: [release, devel]
+      r: release
+    - dist: bionic
+      before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev
+      r: devel
     - os: osx
