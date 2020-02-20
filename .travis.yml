@@ -1,4 +1,9 @@
 language: R
+
+r:
+  - release
+  - devel
+
 latex: false
 cache: packages
 

@@ -27,8 +27,9 @@ R CMD check succeeded
 ## Steps for releasing to CRAN
 devtools::spell_check()
 devtools::check(run_dont_test = TRUE)
-devtools::check_rhub(platforms = "windows-x86_64-release", interactive = F)
+devtools::check_rhub(platforms = c("windows-x86_64-release", "windows-x86_64-devel"), interactive = F)
 devtools::check_win_release(quiet = TRUE)
+devtools::check_win_devel(quiet = TRUE)
  # Push files to GitHub for TravisCI
 devtools::release()
 
