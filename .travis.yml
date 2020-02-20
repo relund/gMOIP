@@ -15,7 +15,7 @@ matrix:
   include:
     - os: linux
       dist: xenial
-      before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev gsl-bin
+      before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev libgsl0-dev
     - dist: bionic
       before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev
     - os: osx
