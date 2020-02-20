@@ -1,6 +1,6 @@
 ## Test environments
 * Windows 10 (local), R (release)
-* Ubuntu (xenial on Travis CI), R (release, devel)
+* Ubuntu (xenial on Travis CI), R (release)
 * Ubuntu (bionic on Travis CI), R (release, devel)
 * Mac OSX (newest stable version on Travis CI), R (release)
 * RHub (windows-x86_64-release, windows-x86_64-devel)
