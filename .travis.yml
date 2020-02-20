@@ -1,6 +1,6 @@
 language: R
 latex: false
-cache: package
+cache: packages
 
 env:
   global: RGL_USE_NULL=TRUE
