@@ -1,10 +1,6 @@
 language: R
-
-r:
-  - release
-  - devel
-
 latex: false
+cache: package
 
 env:
   global: RGL_USE_NULL=TRUE
@@ -18,4 +14,7 @@ matrix:
       before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev libgsl0-dev
     - dist: bionic
       before_install: sudo apt-get install -y libx11-dev mesa-common-dev libglu1-mesa-dev libgsl-dev
+      r:
+        - release
+        - devel
     - os: osx
