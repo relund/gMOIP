@@ -1,7 +1,9 @@
 ## Test environments
-* Ubuntu (xenial on Travis CI), R (release)
-* Ubuntu (bionic on Travis CI), R (release)
+* Windows 10 (local), R (release)
+* Ubuntu (xenial on Travis CI), R (release, devel)
+* Ubuntu (bionic on Travis CI), R (release, devel)
 * Mac OSX (newest stable version on Travis CI), R (release)
+* RHub (windows-x86_64-release, windows-x86_64-devel)
 * Win-builder (check_win_release)
 
 
@@ -29,7 +31,6 @@ devtools::spell_check()
 devtools::check(run_dont_test = TRUE)
 devtools::check_rhub(platforms = c("windows-x86_64-release", "windows-x86_64-devel"), interactive = F)
 devtools::check_win_release(quiet = TRUE)
-devtools::check_win_devel(quiet = TRUE)
  # Push files to GitHub for TravisCI
 devtools::release()
 

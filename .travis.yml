@@ -5,7 +5,6 @@ r:
   - devel
 
 latex: false
-cache: packages
 
 env:
   global: RGL_USE_NULL=TRUE
