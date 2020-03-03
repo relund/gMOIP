@@ -270,6 +270,35 @@ integerPoints<-function(A, b, nonneg = rep(TRUE, ncol(A))) {
 }
 
 
+#' Binary (0-1) points in the feasible region (Ax<=b).
+#'
+#' @param A Constraint matrix.
+#' @param b Right hand side.
+#'
+#' @return A data frame with all binary points inside the feasible region.
+#' @note Do a simple enumeration of all binary points. Will not work if `ncol(A)` large.
+#' @author Lars Relund \email{lars@@relund.dk}.
+#' @export
+#' @examples
+#' A <- matrix( c(3,-2, 1, 2, 4,-2,-3, 2, 1), nc = 3, byrow = TRUE)
+#' b <- c(10, 12, 3)
+#' binaryPoints(A, b)
+#'
+#' A <- matrix(c(9, 10, 2, 4, -3, 2), ncol = 2, byrow = TRUE)
+#' b <- c(90, 27, 3)
+#' binaryPoints(A, b)
+binaryPoints<-function(A, b) {
+   iPoints <- rep(list(0:1), ncol(A))
+   iPoints <- expand.grid(iPoints)
+   tmp <- A %*% t(iPoints)
+   idx <- which(apply(tmp, 2, function(x) all(x <= b + 1e-6)) )
+   iPoints <- iPoints[idx,]
+   colnames(iPoints) <- paste0("x",1:ncol(A))
+   rownames(iPoints) <- NULL
+   return(as.matrix(iPoints))
+}
+
+
 #' Convert each row to a string.
 #'
 #' @param df Data frame.
