@@ -12,6 +12,9 @@ editor_options:
 ```{r, include = FALSE}
 library(knitr)
 library(rgl)
+options(rgl.useNULL=TRUE)
+options(rgl.printRglwidget=FALSE)
+rgl::setupKnitr()
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -299,7 +302,7 @@ plotTeX3D <- function (x, y, z, tex, cex = par("cex"), fixedSize = FALSE, size =
 
 We define the sets $\mathbb{R}_{>} = \{ z\in \mathbb{R} \mid z > 0\}$, $\mathbb{R}_{\geqq} = \{ z\in \mathbb{R} \mid z \geqq 0\}$ and $\mathbb{R}_{\geqslant} = \{ z\in \mathbb{R} \mid z \geqslant 0\}$.
 
-```{r, webgl = TRUE, cache=T}
+```{r, webgl = TRUE}
 # loadView(v = view)
 rgl::mfrow3d(nr = 1, nc = 3, sharedMouse = TRUE)
 ## Set R^3_>=
