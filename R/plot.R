@@ -1356,10 +1356,13 @@ plotPoints3D <- function(pts, addText = F, ...) {
 #' @param normal Normal to the plane.
 #' @param point A point on the plane.
 #' @param offset The offset of the plane (only used if `point = NULL`).
+#' @param usePersp3d Use [rgl::persp3d] to draw the plane (draw wireframes as default).
+#' @param lines If `usePersp3d` then lines specify the number of lines in the wireframe.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
 #'   * `argsPlanes3d`: A list of arguments for [rgl::planes3d].
+#'   * `argsPersp3d`: A list of arguments for [rgl::persp3d].
 #'
 #' @return NULL (invisible)
 #' @export
@@ -1373,14 +1376,34 @@ plotPoints3D <- function(pts, addText = F, ...) {
 #' plotPlane3D(c(2,1,1), offset = -6, argsPlanes3d = list(col="blue"))
 #' plotPlane3D(c(2,1,1), argsPlanes3d = list(col="green"))
 #' finalize3D()
-plotPlane3D <- function(normal, point = NULL, offset = 0, ...) {
+plotPlane3D <- function(normal, point = NULL, offset = 0, usePersp3d = FALSE, lines = 30, ...) {
    args <- list(...)
    argsPlanes3d <- mergeLists(list(col = "grey100", alpha = 0.5), args$argsPlanes3d)
+   argsPersp3d <- mergeLists(list(back = 'line', front = 'line', add = TRUE), args$argsPersp3d)
 
    if (!is.null(point)) offset <- -sum(normal * point)
-   do.call(rgl::planes3d, args = c(list(normal, d = offset), argsPlanes3d) )
+   if (!usePersp3d) {
+      do.call(rgl::planes3d, args = c(list(normal, d = offset), argsPlanes3d) )
+   } else {
+      limits <- rgl::par3d()$bbox
+      m <- c(limits[1], limits[3], limits[5])
+      M <- c(limits[2], limits[4], limits[6])
+      # A way to do a mesh
+      x <- seq(m[1], M[1], length.out = lines)
+      y <- seq(m[2], M[2], length.out = lines)
+      # val <- expand.grid(x = x, y = y)
+      f <- function(x,y){-(normal[1]/normal[3])*x - (normal[2]/normal[3])*y - offset/normal[3]}
+      z <- outer(x,y,f)
+      z[z < m[3] | z > M[3]] <- NA
+      # val$z <- f(val$x, val$y)
+      # val <- val %>% dplyr::filter(z >= m[3] & z <= M[3]) %>% dplyr::arrange(x,y,z)
+      # val <- as.matrix(val)
+      do.call(rgl::persp3d, args = c(list(x, y, z), argsPersp3d) )
+      rgl::planes3d(normal, d = offset, back = 'lines', front = 'lines')
+   }
    return(invisible(NULL))
 }
+
 
 
 #' Initialize the rgl window.
@@ -1418,7 +1441,7 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
    if (clear) rgl::clear3d()
    do.call(rgl::plot3d, args = c(list(x = c(1,1), y = c(1,1), z = c(1,1), type = 'n'), argsPlot3d))
    do.call(rgl::aspect3d, args = argsAspect3d)
-   # return(invisible(NULL))
+   return(invisible(NULL))
 }
 
 #' Finalize the rgl window.
@@ -1440,11 +1463,11 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
 finalize3D <- function(...){
    args <- list(...)
    argsAxes3d <- mergeLists(list(edges = c('x', 'y', 'z')), args$argsAxes3d)
-   argsTitle3d <- mergeLists(list(xlab = expression(italic(x)[1]), ylab = expression(italic(x)[2]),
-                                  zlab = expression(italic(x)[3])), args$argsTitle3d)
+   argsTitle3d <- mergeLists(list(xlab = expression(italic(z)[1]), ylab = expression(italic(z)[2]),
+                                  zlab = expression(italic(z)[3])), args$argsTitle3d)
 
    do.call(rgl::axes3d, args = argsAxes3d)
    do.call(rgl::title3d, args = argsTitle3d)
    rgl.bringtotop()
-   # return(invisible(NULL))
+   return(invisible(NULL))
 }
