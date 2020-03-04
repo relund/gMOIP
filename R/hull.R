@@ -351,10 +351,11 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
       x$pt <- 0
       set <- rbind(set,x)
    }
+   # colnames(set)[1:p] <- paste0("z",1:p)
    # dplyr::distinct(set, V1, .keep_all = TRUE)
    # rownames(set) <- 1:dim(set)[1]
    set <- set[rownames(unique(set[,1:p,drop=FALSE])),, drop=FALSE]
-   rownames(set)[set$pt==0] <- (nrow(pts)+1):nrow(set)
+   # rownames(set)[set$pt==0][6] <- (nrow(pts)+1):nrow(set)  # may give error if number in first rows
    return(set)
 }
 
@@ -509,7 +510,7 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
    set$vtx[idx] <- TRUE
    # remove unwarnted dummy points
    set$oldId <- 1:nrow(set)
-   tmp <- dplyr::filter(set, .data$vtx | .data$pt)
+   tmp <- dplyr::filter(set, .data$vtx | .data$pt, .preserve = TRUE)
    if (nrow(set) != nrow(tmp)) {
       tmp$newId <- 1:nrow(tmp)
       mch <- dplyr::left_join(set, tmp, by = 'oldId') %>% dplyr::select(.data$newId)
