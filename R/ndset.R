@@ -1,8 +1,388 @@
+## Functions related to multi-objective optimization
+
+
+#' Calculate the criterion points of a set of points and ranges to find the set
+#' of non-dominated points (Pareto points) and classify them into extreme
+#' supported, non-extreme supported, non-supported.
+#'
+#' @param pts A data frame with a column for each variable in the solution
+#'   space (can also be a rangePoints).
+#' @param obj A p x n matrix(one row for each criterion).
+#' @param crit Either max or min.
+#' @param labels If \code{NULL} or "n" don't add any labels (empty string). If
+#'   'coord' labels are the solution space coordinates. Otherwise number all
+#'   points from one based on the solution space points.
+#'
+#' @return A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
+#'   (non-dominated), ext (extreme), nonExt (non-extreme supported).
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @examples
+#' A <- matrix( c(3, -2, 1, 2, 4, -2, -3, 2, 1), nc = 3, byrow = TRUE)
+#' b <- c(10,12,3)
+#' pts <- integerPoints(A, b)
+#' obj <- matrix( c(1,-3,1,-1,1,-1), byrow = TRUE, ncol = 3 )
+#' criterionPoints(pts, obj, crit = "max", labels = "numb")
+criterionPoints<-function(pts, obj, crit, labels = "coord") {
+   n <- ncol(obj)
+   pts <- .checkPts(pts, stopUnique = FALSE)
+   zVal <- pts %*% t(obj)
+   zVal <- round(zVal,10)
+   colnames(zVal) <- paste0("z", 1:nrow(obj))
+   # rownames(zVal) <- NULL
+   zVal <- classifyNDSet(zVal, direction = ifelse(crit == "min", 1, -1))
+   iP <- cbind(pts,zVal)
+
+
+
+
+#
+#    iP <- as.data.frame(iP)
+#    tol <- 1e-4
+#    iP$oldLbl <- 1:length(iP$x1)
+#    if (crit=="max") iP <- iP[order(-iP$z2,-iP$z1),]
+#    if (crit=="min") iP <- iP[order(iP$z2,iP$z1),]
+#    iP$lbl <- 1:length(iP$x1)  # note use in alg!
+#    # classify non dom
+#    iP$nD <- FALSE
+#    iP$nD[1] <- TRUE  # upper left point
+#    p1 <- iP$z1[1]; p2 <- iP$z2[1]  # current non dom point (due to sorting will p2 always be larger than or equal to current)
+#    for (r in 2:length(iP$x1)) { # current point under consideration
+#       if (abs(p2 - iP$z2[r]) < tol &
+#           abs(p1 - iP$z1[r]) < tol) {
+#          iP$nD[r] <- TRUE
+#          p1 <- iP$z1[r]
+#          p2 <- iP$z2[r]
+#          next
+#       }
+#       if (crit == "max" &
+#           p2 - iP$z2[r] > tol &
+#           iP$z1[r] > p1 + tol) {
+#          iP$nD[r] <- TRUE
+#          p1 <- iP$z1[r]
+#          p2 <- iP$z2[r]
+#          next
+#       }
+#       if (crit == "min" &
+#           iP$z2[r] - p2 > tol &
+#           iP$z1[r] < p1 - tol) {
+#          iP$nD[r] <- TRUE
+#          p1 <- iP$z1[r]
+#          p2 <- iP$z2[r]
+#          next
+#       }
+#    }
+#    # classify extreme supported
+#    idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
+#    iP$ext <- FALSE
+#    iP$ext[idx[1]] <- TRUE
+#    iP$ext[idx[length(idx)]] <- TRUE
+#    if (length(idx)<3) {
+#       iP$nonExt <- FALSE
+#       #return(iP)   # a single extreme
+#    } else {
+#       nD <- iP[idx,]
+#       ul<-1
+#       lr<-length(idx)
+#       while (ul<length(idx)) {
+#          # for (k in 1:1000) {
+#          slope <- (nD$z2[lr]-nD$z2[ul])/(nD$z1[lr]-nD$z1[ul])
+#          nD$val <- nD$z2-slope*nD$z1
+#          #cat("val:",nD$val[ul],"max:",max(nD$val),"min:",min(nD$val),"\n")
+#          if (crit=="max") {
+#             i <- which.max(nD$val)
+#             if (nD$val[ul]<nD$val[i] - tol) {
+#                iP$ext[nD$lbl[i]] <- TRUE
+#                lr <- i
+#             } else {
+#                ul <- lr
+#                lr<-length(idx)
+#             }
+#          }
+#          if (crit=="min") {
+#             i <- which.min(nD$val)
+#             if (nD$val[ul]>nD$val[i] + tol) {
+#                iP$ext[nD$lbl[i]] <- TRUE
+#                lr <- i
+#             } else {
+#                ul <- lr
+#                lr<-length(idx)
+#             }
+#          }
+#       }
+#       # classify nonextreme supported
+#       idxExt <- which(iP$ext)
+#       iP$nonExt <- FALSE
+#       if (length(idxExt)>1) {
+#          for (i in 2:length(idxExt)) {
+#             slope <- (iP$z2[idxExt[i]]-iP$z2[idxExt[i-1]])/(iP$z1[idxExt[i]]-iP$z1[idxExt[i-1]])
+#             nDCand <- iP[idxExt[i-1]:idxExt[i],]
+#             nDCand <- nDCand[nDCand$nD & !duplicated(cbind(nDCand$z1,nDCand$z2), MARGIN = 1),]
+#             nDCand <- nDCand[c(-1,-length(nDCand$nD)),]
+#             if (length(nDCand$nD)==0) next   # no points inbetween
+#             for (j in 1:length(nDCand$nD)) {
+#                slopeCur = (nDCand$z2[j]-iP$z2[idxExt[i-1]])/(nDCand$z1[j]-iP$z1[idxExt[i-1]])
+#                if (abs(slope - slopeCur) < tol) iP$nonExt[nDCand$lbl[j]==iP$lbl] <- TRUE
+#             }
+#          }
+#       }
+#       # classify dublicates
+#       idx <- which(iP$nD)
+#       if (!length(idx)<2) {
+#          for (i in 2:length(idx)) {
+#             if (iP$ext[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
+#                iP$ext[i] = TRUE
+#                next
+#             }
+#             if (iP$nonExt[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
+#                iP$nonExt[i] = TRUE
+#             }
+#          }
+#       }
+#    }
+#    # set correct labels
+#    iP$lbl <- iP$oldLbl
+#    iP$oldLbl <- NULL
+
+
+   if (is.null(labels)) labels <- "n"
+   if (labels == "coord") iP$lbl <- df2String(iP[,1:n])
+   if (labels == "n") iP$lbl <- ""
+
+   return(iP)
+}
+
+
+
+#' Add discrete points to a non-dominated set and classify them into extreme supported, non-extreme
+#' supported, non-supported.
+#'
+#' @param pts A data frame with points to add (a column for each objective).
+#' @param nDSet A data frame with current non-dominated set (NULL is none yet). Column names of the
+#'   p objectives must be z1, ..., z<p>.
+#' @param crit A max or min vector. If length one assume all objectives are optimized in the same
+#'   direction.
+#' @param keepDom Keep dominated points in output.
+#'
+#' @return A data frame with a column for each objective (`z` columns), nD (non-dominated), ext
+#'   (extreme), nonExt (non-extreme supported).
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @export
+#' @examples
+#' nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4))
+#' pts <- data.frame(z1 = c(18,18,14,15,15), z2=c(2,6,14,14,16))
+#' addNDSet(pts, nDSet, crit = "max")
+#' addNDSet(pts, nDSet, crit = "max", keepDom = TRUE)
+#' addNDSet(pts, nDSet, crit = "min")
+#' addNDSet(c(2,2), nDSet, crit = "max")
+#' addNDSet(c(2,2), nDSet, crit = "min")
+#'
+#' addNDSet(c(2,2), crit = "min")
+#'
+#' nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(1,7,0,6))
+#' pts <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(2,2,2,6))
+#' crit = c("min", "min", "max")
+#' di <- .m2direction(crit, 3)
+#' li <- c(-1,20)
+#' ini3D(argsPlot3d = list(xlim = li, ylim = li, zlim = li))
+#' plotCones3D(nDSet, direction = di, argsPolygon3d = list(color = "green", alpha = 1), drawPoint = F)
+#' plotHull3D(nDSet, addRays = T, direction = di)
+#' plotPoints3D(nDSet, argsPlot3d = list(col = "red"), addText = "coord")
+#' plotPoints3D(pts, addText = "coord")
+#' finalize3D()
+#' addNDSet(pts, nDSet, crit, dubND = FALSE)
+#' addNDSet(pts, nDSet, crit, dubND = TRUE)
+#' addNDSet(pts, nDSet, crit, dubND = TRUE, keepDom = TRUE)
+#' addNDSet(pts, nDSet, crit, dubND = TRUE, keepDom = TRUE, classify = FALSE)
+addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FALSE,
+                   classify = TRUE)
+{
+   if (is.data.frame(nDSet))
+      nDSet$nd <- NULL; nDSet$se <- NULL; nDSet$sne <- NULL; nDSet$us <- NULL
+   if (!is.data.frame(pts)) pts <- as.data.frame(.checkPts(pts))
+   p <- ncol(pts)
+   direction <- .m2direction(crit, p)
+   colnames(pts) <- paste0("z",1:p)
+   if (!is.null(nDSet)) {
+      if (ncol(pts)!= ncol(nDSet))
+         stop("Number of columns (not including classification colunms) must be the same!")
+      # pf <- dplyr::if_else(direction == 1, "quo(", "quo(desc(")
+      # sf <- dplyr::if_else(direction == 1, ")", "))")
+      # args <- paste0("list(", paste0(pf, colnames(nDSet), sf, collapse = ", "), ")")
+      # args <- eval(parse(text=args))
+      # nDSet <- nDSet %>% dplyr::arrange(!!!args)
+   } else {
+      if (nrow(pts) == 1)
+         return(mutate(pts, nd = TRUE, se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
+      nDSet <- pts[1,]
+      pts <- pts[-1,]
+   }
+   set <- bind_rows(nDSet, pts)
+   idx <- (nrow(nDSet)+1):nrow(set)
+   set$nd <- TRUE
+   if (dubND) {
+      for (i in idx) {
+         for (j in 1:(i-1)) {
+            less <- set[j,1:p]*direction < set[i,1:p]*direction
+            eq <- set[j,1:p]*direction == set[i,1:p]*direction
+            if (all(less | eq) & !all(eq)) {set$nd[i] <- FALSE; next} # j strict dom i
+            if (all(!less | eq) & !all(eq)) set$nd[j] <- FALSE # i strict dom j
+         }
+      }
+   } else {
+      for (i in idx) {
+         for (j in 1:(i-1)) {
+            less <- set[j,1:p]*direction < set[i,1:p]*direction
+            eq <- set[j,1:p]*direction == set[i,1:p]*direction
+            if (all(less | eq)) {set$nd[i] <- FALSE; next} # j dom i
+            if (all(!less | eq) & !all(eq)) set$nd[j] <- FALSE # i strict dom j
+         }
+      }
+   }
+   if (!keepDom) set <- set %>% filter(nd)
+   if (classify) {
+      set1 <- classifyNDSet(set[set$nd,1:p], direction)
+      set <- set %>% tibble::rownames_to_column(var = "id")
+      set1 <- set1 %>% tibble::add_column(id = set$id[set$nd], .before = 1)
+      set <- left_join(x = set, y = set1, by = c("id", colnames(pts)))
+      if (keepDom) set <- set %>% tidyr::replace_na(list(se = FALSE, sne = FALSE, us = TRUE, cls = "d"))
+      set <- set %>% select(-id)
+   }
+   return(set)
+
+
+
+
+
+   iP = pts
+   colnames(iP)[1:2] <- paste0("z", 1:2)
+   #iP <- round(iP,10)
+   rownames(iP) <- NULL
+   iP <- rbind(iP, nDSet)
+   tol <- 1e-4
+   iP$oldRowIdx <- 1:length(iP$z1)
+   if (crit=="max") iP <- iP[order(-iP$z2,-iP$z1),]
+   if (crit=="min") iP <- iP[order(iP$z2,iP$z1),]
+
+   # classify non dom
+   iP$nD <- FALSE
+   iP$nD[1] <- TRUE  # upper left point
+   p1 <- iP$z1[1]; p2 <- iP$z2[1]  # current non dom point (due to sorting will p2 always be larger than or equal to current)
+   for (r in 2:length(iP$z1)) { # current point under consideration
+      if (abs(p2 - iP$z2[r]) < tol &
+          abs(p1 - iP$z1[r]) < tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
+      if (crit == "max" &
+          p2 - iP$z2[r] > tol &
+          iP$z1[r] > p1 + tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
+      if (crit == "min" &
+          iP$z2[r] - p2 > tol &
+          iP$z1[r] < p1 - tol) {
+         iP$nD[r] <- TRUE
+         p1 <- iP$z1[r]
+         p2 <- iP$z2[r]
+         next
+      }
+   }
+   # iP$nD <- TRUE
+   # for (i in 2:nrow(iP)) { # remove non-dom z2
+   #    if (iP$z2[i-1]==iP$z2[i]) iP$nD[i] <- FALSE
+   # }
+   # if (!keepDom) iP <- iP[iP$nD,]
+   # for (i in 2:nrow(iP)) { # remove non-dom z1
+   #    if (iP$z1[i-1]==iP$z1[i]) iP$nD[i] <- FALSE
+   # }
+   if (!keepDom) iP <- iP[iP$nD,]
+   iP$rowIdx <- 1:nrow(iP)
+   # classify extreme supported
+   idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
+   iP$ext <- FALSE
+   iP$ext[idx[1]] <- TRUE
+   iP$ext[idx[length(idx)]] <- TRUE
+   if (length(idx)<3) {
+      iP$nonExt <- FALSE
+      #return(iP)   # a single extreme
+   } else {
+      nD <- iP[idx,]
+      ul<-1
+      lr<-length(idx)
+      while (ul<length(idx)) {
+         # for (k in 1:1000) {
+         slope <- (nD$z2[lr]-nD$z2[ul])/(nD$z1[lr]-nD$z1[ul])
+         nD$val <- nD$z2-slope*nD$z1
+         #cat("val:",nD$val[ul],"max:",max(nD$val),"min:",min(nD$val),"\n")
+         if (crit=="max") {
+            i <- which.max(nD$val)
+            if (nD$val[ul]<nD$val[i] - tol) {
+               iP$ext[nD$rowIdx[i]] <- TRUE
+               lr <- i
+            } else {
+               ul <- lr
+               lr<-length(idx)
+            }
+         }
+         if (crit=="min") {
+            i <- which.min(nD$val)
+            if (nD$val[ul]>nD$val[i] + tol) {
+               iP$ext[nD$rowIdx[i]] <- TRUE
+               lr <- i
+            } else {
+               ul <- lr
+               lr<-length(idx)
+            }
+         }
+      }
+      # classify nonextreme supported
+      idxExt <- which(iP$ext)
+      iP$nonExt <- FALSE
+      if (length(idxExt)>1) {
+         for (i in 2:length(idxExt)) {
+            slope <- (iP$z2[idxExt[i]]-iP$z2[idxExt[i-1]])/(iP$z1[idxExt[i]]-iP$z1[idxExt[i-1]])
+            nDCand <- iP[idxExt[i-1]:idxExt[i],]
+            nDCand <- nDCand[nDCand$nD & !duplicated(cbind(nDCand$z1,nDCand$z2), MARGIN = 1),]
+            nDCand <- nDCand[c(-1,-length(nDCand$nD)),]
+            if (length(nDCand$nD)==0) next   # no points inbetween
+            for (j in 1:length(nDCand$nD)) {
+               slopeCur = (nDCand$z2[j]-iP$z2[idxExt[i-1]])/(nDCand$z1[j]-iP$z1[idxExt[i-1]])
+               if (abs(slope - slopeCur) < tol) iP$nonExt[nDCand$rowIdx[j]==iP$rowIdx] <- TRUE
+            }
+         }
+      }
+      # classify dublicates
+      idx <- which(iP$nD)
+      if (!length(idx)<2) {
+         for (i in 2:length(idx)) {
+            if (iP$ext[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
+               iP$ext[i] = TRUE
+               next
+            }
+            if (iP$nonExt[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
+               iP$nonExt[i] = TRUE
+            }
+         }
+      }
+   }
+   iP$rowIdx <- NULL
+   iP$oldRowIdx <- NULL
+   return(iP)
+}
+
+
+
 
 #' Add 2D discrete points to a non-dominated set and classify them into extreme
 #' supported, non-extreme supported, non-supported.
 #'
-#' @param points A data frame. It is assumed that z1 and z2 are in the two first columns.
+#' @param pts A data frame. It is assumed that z1 and z2 are in the two first columns.
 #' @param nDSet A data frame with current non-dominated set (NULL is none yet).
 #' @param crit Either max or min.
 #' @param keepDom Keep dominated points.
@@ -13,16 +393,16 @@
 #' @export
 #' @examples
 #' nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4))
-#' points <- data.frame(z1 = c(18,18,14,15,15), z2=c(2,6,14,14,16))
-#' addNDSet2D(points, nDSet, crit = "max")
-#' addNDSet2D(points, nDSet, crit = "max", keepDom = TRUE)
-#' addNDSet2D(points, nDSet, crit = "min")
-addNDSet2D<-function(points, nDSet = NULL, crit = "max", keepDom = FALSE) {
+#' pts <- data.frame(z1 = c(18,18,14,15,15), z2=c(2,6,14,14,16))
+#' addNDSet2D(pts, nDSet, crit = "max")
+#' addNDSet2D(pts, nDSet, crit = "max", keepDom = TRUE)
+#' addNDSet2D(pts, nDSet, crit = "min")
+addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
    nDSet$nD <- NULL; nDSet$ext <- NULL; nDSet$nonExt <- NULL
    if (!is.null(nDSet))
-      if (ncol(points)!=ncol(nDSet))
+      if (ncol(pts)!=ncol(nDSet))
          stop("Number of columns minus classification colunms must be the same!")
-   iP = points
+   iP = pts
    colnames(iP)[1:2] <- paste0("z", 1:2)
    #iP <- round(iP,10)
    rownames(iP) <- NULL
@@ -556,6 +936,9 @@ genNDSet <-
 #' finalize3D()
 #' pts
 #'
+#' pts <- matrix(c(0,0,1, 0,0,1, 0,1,0, 0.5,0.2,0.5, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
+#' classifyNDSet(pts)
+#'
 #' pts <- genNDSet(3,50)
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
 #'   ylim = c(0,max(pts$y)+2),
@@ -568,14 +951,20 @@ genNDSet <-
 #' finalize3D()
 #' pts
 classifyNDSet <- function(pts, direction = 1) {
-   pts <- .checkPts(pts)
+   pts <- .checkPts(pts, stopUnique = FALSE)
+   p <- ncol(pts)
+   colnames(pts) <- paste0("z", 1:p)
+   idx <- duplicated(pts)
+   pts <- pts %>% dplyr::as_tibble() %>% dplyr::mutate(id = 1:nrow(pts)) #%>%  tibble::rownames_to_column(var = "rn")
    if (nrow(pts) == 1) {
       pts <- as.data.frame(pts)
-      return(cbind(pts, se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
+      return(cbind(select(pts,-id), se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
    }
-   p <- ncol(pts)
    if (length(direction) != p) direction = rep(direction[1],p)
-   set <- convexHull(pts, addRays = TRUE, direction = direction)
+
+
+
+   set <- convexHull(pts[!idx,1:p], addRays = TRUE, direction = direction)
    hull <- set$hull
    set <- set$pts
    d <- dimFace(set[,1:p])
@@ -588,8 +977,15 @@ classifyNDSet <- function(pts, direction = 1) {
       set$us[chk$id[which(val == 1)]] <- TRUE
       set$sne[chk$id[which(val == 0)]] <- TRUE
    }
-   set <-
-      set %>%
-      dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us")))
-   return(set %>% dplyr::filter(.data$pt == 1) %>% dplyr::select(1:p, c("se", "sne", "us", "cls")))
+   set <- set %>%
+      dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us"))) %>%
+      dplyr::filter(.data$pt == 1) %>% dplyr::select(all_of(1:p), c("se", "sne", "us", "cls")) %>%
+      dplyr::mutate(id = which(!idx))
+   set <- set %>% dplyr::full_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # handle dublicates
+   set1 <- set %>%
+      dplyr::filter(!is.na(id.y)) %>%
+      dplyr::mutate(id.x = id.y) %>% dplyr::select(z1:id.x)
+   set <- dplyr::bind_rows(set,set1) %>%
+      dplyr::arrange(id.x) %>% dplyr::select(-id.x, -id.y)
+   return(set)
 }

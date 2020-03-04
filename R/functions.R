@@ -1,148 +1,3 @@
-
-
-#' Calculate the criterion points of a set of points and ranges to find the set
-#' of non-dominated points (Pareto points) and classify them into extreme
-#' supported, non-extreme supported, non-supported.
-#'
-#' @param points A data frame with a column for each variable in the solution
-#'   space (can also be a rangePoints).
-#' @param obj A p x n matrix(one row for each criterion).
-#' @param crit Either max or min.
-#' @param labels If \code{NULL} or "n" don't add any labels (empty string). If
-#'   'coord' labels are the solution space coordinates. Otherwise number all
-#'   points from one based on the solution space points.
-#'
-#' @return A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
-#'   (non-dominated), ext (extreme), nonExt (non-extreme supported).
-#' @author Lars Relund \email{lars@@relund.dk}
-#' @export
-#' @examples
-#' A <- matrix( c(3, -2, 1, 2, 4, -2, -3, 2, 1), nc = 3, byrow = TRUE)
-#' b <- c(10,12,3)
-#' points <- integerPoints(A, b)
-#' obj <- matrix( c(1,-3,1,-1,1,-1), byrow = TRUE, ncol = 3 )
-#' criterionPoints(points, obj, crit = "max", labels = "numb")
-criterionPoints<-function(points, obj, crit, labels = "coord") {
-   n <- ncol(obj)
-   zVal <- points %*% t(obj)
-   zVal <- round(zVal,10)
-   colnames(zVal) <- paste0("z", 1:nrow(obj))
-   rownames(zVal) <- NULL
-   iP <- cbind(points,zVal)
-   iP <- as.data.frame(iP)
-   tol <- 1e-4
-   iP$oldLbl <- 1:length(iP$x1)
-   if (crit=="max") iP <- iP[order(-iP$z2,-iP$z1),]
-   if (crit=="min") iP <- iP[order(iP$z2,iP$z1),]
-   iP$lbl <- 1:length(iP$x1)  # note use in alg!
-   # classify non dom
-   iP$nD <- FALSE
-   iP$nD[1] <- TRUE  # upper left point
-   p1 <- iP$z1[1]; p2 <- iP$z2[1]  # current non dom point (due to sorting will p2 always be larger than or equal to current)
-   for (r in 2:length(iP$x1)) { # current point under consideration
-      if (abs(p2 - iP$z2[r]) < tol &
-          abs(p1 - iP$z1[r]) < tol) {
-         iP$nD[r] <- TRUE
-         p1 <- iP$z1[r]
-         p2 <- iP$z2[r]
-         next
-      }
-      if (crit == "max" &
-          p2 - iP$z2[r] > tol &
-          iP$z1[r] > p1 + tol) {
-         iP$nD[r] <- TRUE
-         p1 <- iP$z1[r]
-         p2 <- iP$z2[r]
-         next
-      }
-      if (crit == "min" &
-          iP$z2[r] - p2 > tol &
-          iP$z1[r] < p1 - tol) {
-         iP$nD[r] <- TRUE
-         p1 <- iP$z1[r]
-         p2 <- iP$z2[r]
-         next
-      }
-   }
-   # classify extreme supported
-   idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
-   iP$ext <- FALSE
-   iP$ext[idx[1]] <- TRUE
-   iP$ext[idx[length(idx)]] <- TRUE
-   if (length(idx)<3) {
-      iP$nonExt <- FALSE
-      #return(iP)   # a single extreme
-   } else {
-      nD <- iP[idx,]
-      ul<-1
-      lr<-length(idx)
-      while (ul<length(idx)) {
-         # for (k in 1:1000) {
-         slope <- (nD$z2[lr]-nD$z2[ul])/(nD$z1[lr]-nD$z1[ul])
-         nD$val <- nD$z2-slope*nD$z1
-         #cat("val:",nD$val[ul],"max:",max(nD$val),"min:",min(nD$val),"\n")
-         if (crit=="max") {
-            i <- which.max(nD$val)
-            if (nD$val[ul]<nD$val[i] - tol) {
-               iP$ext[nD$lbl[i]] <- TRUE
-               lr <- i
-            } else {
-               ul <- lr
-               lr<-length(idx)
-            }
-         }
-         if (crit=="min") {
-            i <- which.min(nD$val)
-            if (nD$val[ul]>nD$val[i] + tol) {
-               iP$ext[nD$lbl[i]] <- TRUE
-               lr <- i
-            } else {
-               ul <- lr
-               lr<-length(idx)
-            }
-         }
-      }
-      # classify nonextreme supported
-      idxExt <- which(iP$ext)
-      iP$nonExt <- FALSE
-      if (length(idxExt)>1) {
-         for (i in 2:length(idxExt)) {
-            slope <- (iP$z2[idxExt[i]]-iP$z2[idxExt[i-1]])/(iP$z1[idxExt[i]]-iP$z1[idxExt[i-1]])
-            nDCand <- iP[idxExt[i-1]:idxExt[i],]
-            nDCand <- nDCand[nDCand$nD & !duplicated(cbind(nDCand$z1,nDCand$z2), MARGIN = 1),]
-            nDCand <- nDCand[c(-1,-length(nDCand$nD)),]
-            if (length(nDCand$nD)==0) next   # no points inbetween
-            for (j in 1:length(nDCand$nD)) {
-               slopeCur = (nDCand$z2[j]-iP$z2[idxExt[i-1]])/(nDCand$z1[j]-iP$z1[idxExt[i-1]])
-               if (abs(slope - slopeCur) < tol) iP$nonExt[nDCand$lbl[j]==iP$lbl] <- TRUE
-            }
-         }
-      }
-      # classify dublicates
-      idx <- which(iP$nD)
-      if (!length(idx)<2) {
-         for (i in 2:length(idx)) {
-            if (iP$ext[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
-               iP$ext[i] = TRUE
-               next
-            }
-            if (iP$nonExt[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
-               iP$nonExt[i] = TRUE
-            }
-         }
-      }
-   }
-   # set correct labels
-   iP$lbl <- iP$oldLbl
-   iP$oldLbl <- NULL
-   if (is.null(labels)) labels <- "n"
-   if (labels == "coord") iP$lbl <- df2String(iP[,1:n])
-   if (labels == "n") iP$lbl <- ""
-
-   return(iP)
-}
-
-
 #' Calculate the corner points for the polytope Ax<=b assuming all variables are
 #' continuous.
 #'
@@ -420,27 +275,42 @@ slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
 #' @param pts Point input.
 #' @param p Desired dimension of points.
 #' @param warn Output warnings.
+#' @param stopUnique Stop if rows not are unique.
 #'
 #' @return Point input converted to a matrix.
-.checkPts <- function(pts, p = NULL, warn = FALSE) {
+.checkPts <- function(pts, p = NULL, warn = FALSE, stopUnique = TRUE) {
    if (is.vector(pts)) {
       if (warn) warning("Point specified as a vector. Converting to a matrix with a single row!")
       pts <- t(matrix(pts))
    }
-   nr <- nrow(pts)
-   set <- as.matrix(unique(pts[,, drop = FALSE]))
-   if (nrow(pts) != nrow(set)) {
-      stop("Points specified should be unique!")
+   if (stopUnique) {
+      set <- as.matrix(unique(pts[,, drop = FALSE]))
+      if (nrow(pts) != nrow(set)) {
+         stop("Points specified should be unique!")
+      }
    }
-
    if (is.data.frame(pts)) {
       if (warn) warning("Points specified as a data frame. Converting to a matrix!")
+      pts <- as.matrix(pts)
    }
    if (!is.null(p))
-      if (ncol(set) != p) {
+      if (ncol(pts) != p) {
       stop("The dimension of the poins should be ", p, "!")
       }
-   if (is.null(rownames(set))) rownames(set) <- 1:nrow(set)
-   if (is.null(colnames(set))) colnames(set) <- 1:ncol(set)
-   return(set)
+   if (is.null(rownames(pts))) rownames(pts) <- 1:nrow(pts)
+   if (is.null(colnames(pts))) colnames(pts) <- 1:ncol(pts)
+   return(pts)
+}
+
+
+
+#' Convert min/max to direction (1/-1)
+#'
+#' @param m Min/max vector.
+#' @param p Number of objectives.
+#'
+#' @return A direction vector (min = 1 and max = -1)
+.m2direction <- function(m, p) {
+   if (length(m) != p) m <- rep(m[1],p)
+   return(dplyr::if_else(m == "min", 1, -1))
 }
