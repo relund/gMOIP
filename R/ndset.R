@@ -223,22 +223,25 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
    if (dubND) {
       for (i in idx) {
          for (j in 1:(i-1)) {
+            if (!set$nd[j]) break;  # if j dom don't check against i
             less <- set[j,1:p]*direction < set[i,1:p]*direction
             eq <- set[j,1:p]*direction == set[i,1:p]*direction
-            if (all(less | eq) & !all(eq)) {set$nd[i] <- FALSE; next} # j strict dom i
+            if (all(less | eq) & !all(eq)) {set$nd[i] <- FALSE; break} # j strict dom i
             if (all(!less | eq) & !all(eq)) set$nd[j] <- FALSE # i strict dom j
          }
       }
    } else {
       for (i in idx) {
          for (j in 1:(i-1)) {
+            if (!set$nd[j]) break;  # if j dom don't check against i
             less <- set[j,1:p]*direction < set[i,1:p]*direction
             eq <- set[j,1:p]*direction == set[i,1:p]*direction
-            if (all(less | eq)) {set$nd[i] <- FALSE; next} # j dom i
+            if (all(less | eq)) {set$nd[i] <- FALSE;  break} # j dom i
             if (all(!less | eq) & !all(eq)) set$nd[j] <- FALSE # i strict dom j
          }
       }
    }
+   # purrr::map(idx, function(x) 1:(x-1))
    if (!keepDom) set <- set %>% filter(.data$nd)
    if (classify) {
       set1 <- classifyNDSet(set[set$nd,1:p], direction)
@@ -868,10 +871,12 @@ genNDSet <-
             sphere = TRUE,
             box = FALSE,
             keep = FALSE,
+            crit = "min",
             ...) {
 
-   if (p!=3) stop("Currently only works for p = 3!")
+   # if (p!=3) stop("Currently only works for p = 3!")
    set <- genSample(p, n , range = range, random = random, sphere = sphere, box = box, ...)
+   # set <- addNDSet(set, crit = crit, keepDom = keep, dubND = TRUE, classify = FALSE)
    set <- set[order(set[,1],set[,2],set[,3]),]
    set <- as.data.frame(set)
    colnames(set) <- c("x","y","z")
