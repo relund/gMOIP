@@ -269,6 +269,18 @@ slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
 }
 
 
+#' Convert min/max to direction (1/-1)
+#'
+#' @param m Min/max vector.
+#' @param p Number of objectives.
+#'
+#' @return A direction vector (min = 1 and max = -1)
+#' @keywords internal
+.mToDirection <- function(m, p) {
+   if (length(m) != p) m <- rep(m[1],p)
+   return(dplyr::if_else(m == "min", 1, -1))
+}
+
 
 #' Check if point input is okay
 #'
@@ -276,9 +288,11 @@ slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
 #' @param p Desired dimension of points.
 #' @param warn Output warnings.
 #' @param stopUnique Stop if rows not are unique.
+#' @param asDF Return as data frame otherwise as matrix.
 #'
 #' @return Point input converted to a matrix.
-.checkPts <- function(pts, p = NULL, warn = FALSE, stopUnique = TRUE) {
+#' @keywords internal
+.checkPts <- function(pts, p = NULL, warn = FALSE, stopUnique = TRUE, asDF = FALSE) {
    if (is.vector(pts)) {
       if (warn) warning("Point specified as a vector. Converting to a matrix with a single row!")
       pts <- t(matrix(pts))
@@ -289,28 +303,17 @@ slices<-function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, ncol(A)), c
          stop("Points specified should be unique!")
       }
    }
-   if (is.data.frame(pts)) {
-      if (warn) warning("Points specified as a data frame. Converting to a matrix!")
-      pts <- as.matrix(pts)
-   }
    if (!is.null(p))
       if (ncol(pts) != p) {
-      stop("The dimension of the poins should be ", p, "!")
+         stop("The dimension of the points should be ", p, "!")
       }
+   if (!asDF) {
+      if (is.data.frame(pts)) {
+         if (warn) warning("Points specified as a data frame. Converting to a matrix!")
+         pts <- as.matrix(pts)
+      }
+   } else pts <- as.data.frame(pts)
    if (is.null(rownames(pts))) rownames(pts) <- 1:nrow(pts)
-   if (is.null(colnames(pts))) colnames(pts) <- 1:ncol(pts)
+   if (is.null(colnames(pts))) colnames(pts) <- paste0("p",1:ncol(pts))
    return(pts)
-}
-
-
-
-#' Convert min/max to direction (1/-1)
-#'
-#' @param m Min/max vector.
-#' @param p Number of objectives.
-#'
-#' @return A direction vector (min = 1 and max = -1)
-.m2direction <- function(m, p) {
-   if (length(m) != p) m <- rep(m[1],p)
-   return(dplyr::if_else(m == "min", 1, -1))
 }

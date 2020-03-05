@@ -62,5 +62,4 @@ pts<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
 plotHull2D(pts, drawPoints = TRUE, addText = "coord")
 plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, addText = "coord")
 plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
-
 }

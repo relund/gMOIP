@@ -53,6 +53,10 @@ plotCones3D(pts[,1:3], rectangle = TRUE, argsPolygon3d = list(alpha = 1), direct
 finalize3D()
 pts
 
+pts <- matrix(c(0,0,1, 0,0,1, 0,1,0, 0.5,0.2,0.5, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3,
+              byrow = TRUE)
+classifyNDSet(pts)
+
 pts <- genNDSet(3,50)
 ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
   ylim = c(0,max(pts$y)+2),

@@ -23,6 +23,7 @@
 #'
 #' @return The ggplot.
 #' @export
+#' @importFrom rlang .data
 #'
 #' @examples
 #' pts<-matrix(c(1,1), ncol = 2, byrow = TRUE)
@@ -35,8 +36,6 @@
 #' plotHull2D(pts, drawPoints = TRUE, addText = "coord")
 #' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, addText = "coord")
 #' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
-#'
-#' @importFrom rlang .data
 plotHull2D <- function(pts,
                        drawPoints = FALSE,
                        drawLines = TRUE,
@@ -131,7 +130,7 @@ plotHull2D <- function(pts,
          do.call(geom_label, args = c(list(aes_string(label = 'addText'), data = ptsT), argsGeom_label))
       }
    }
-   plt <- plt + myTheme
+   plt <- plt #+ myTheme
    return(plt)
 }
 
@@ -601,11 +600,15 @@ plotCriterion2D <- function(A,
    }
    points <- criterionPoints(points, obj, crit, labels)
    if (all(type == "c")) { # if cont then no non-ext
-      points$nD[points$nD & !points$ext] <- FALSE
-      points$ext[points$nD & !points$ext] <- FALSE
-      points$nonExt[points$nD & !points$ext] <- FALSE
+      points$nd[points$nd & !points$se] <- FALSE
+      points$se[points$nd & !points$se] <- FALSE
+      points$sne[points$nd & !points$se] <- FALSE
    }
    #dat <<- points  # hack to get data as data frame
+
+   if (crit=="max") points <- points[order(-points$z2,-points$z1),]
+   if (crit=="min") points <- points[order(points$z2,points$z1),]
+
    # Initialize plot
    p <- ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
    if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
@@ -613,7 +616,7 @@ plotCriterion2D <- function(A,
 
    # Add hull plus rays
    if (addHull) {
-      tmp<-points[points$ext & !duplicated(cbind(points$z1,points$z2), MARGIN = 1),]
+      tmp<-points[points$se & !duplicated(cbind(points$z1,points$z2), MARGIN = 1),]
       delta <- max( (max(points$z1)-min(points$z1))/10, (max(points$z2)-min(points$z2))/10 )
       if (crit=="max") {
          tmp<-rbind(tmp[1:2,],tmp,tmp[1,]) # add rows
@@ -642,12 +645,12 @@ plotCriterion2D <- function(A,
          idx <- grDevices::chull(points[,c("z1","z2")])
          p <- p + geom_polygon(data = points[idx,], aes_string(x = 'z1', y = 'z2'),
                                fill=NA, size = 0.5, linetype = 1, col="grey80", alpha=0.6)
-         p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext'), data = points) +
+         p <- p + geom_point(aes_string(colour = 'nd', shape = 'se'), data = points) +
             scale_colour_grey(start = 0.6, end = 0)
       } else if (all(type == "i")) {
          #iPoints <- integerPoints(A, b, nonneg)
          #iPoints <- criterionPoints(iPoints, obj, crit, labels)
-         p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext'), data = points) +
+         p <- p + geom_point(aes_string(colour = 'nd', shape = 'se'), data = points) +
             #    #coord_fixed(ratio = 1) +
             scale_colour_grey(start = 0.6, end = 0)
       } else {
@@ -682,14 +685,14 @@ plotCriterion2D <- function(A,
                group = "g"
             )
          ) + scale_fill_identity()
-         points$co <- points$ext | points$nonExt
-         p <- p + geom_point(aes_string(colour = 'co', shape = 'ext'), data = points) +
+         points$co <- points$se | points$sne
+         p <- p + geom_point(aes_string(colour = 'co', shape = 'se'), data = points) +
             scale_colour_grey(start = 0.8, end = 0)
       }
    }
    # Add triangles
    if (addTriangles) {
-      tmp<-points[points$ext | points$nonExt,]
+      tmp<-points[points$se | points$sne,]
       if (length(tmp$z1)>1) { # triangles
          for (r in 1:(dim(tmp)[1] - 1)) {
             p <- p +
@@ -810,25 +813,27 @@ loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE
 #' Create a plot of a discrete non-dominated set.
 #'
 #' @param points Data frame with non-dominated points.
-#' @param crit Either max or min (only used if add the iso profit line).
-#' @param addTriangles Add search triangles defined by the non-dominated extreme
-#'   points.
+#' @param crit Either max or min (only used if add the iso profit line). A vector is currently not
+#'   supported.
+#' @param addTriangles Add search triangles defined by the non-dominated extreme points.
 #' @param addHull Add the convex hull and the rays.
 #' @param latex If true make latex math labels for TikZ.
 #' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 #'   'coord' add coordinates to the points. Otherwise number all points from one.
 #'
-#' @note Currently only points are checked for dominance. That is, for MILP
-#'   models some nondominated points may in fact be dominated by a segment.
+#' @note Currently only points are checked for dominance. That is, for MILP models some
+#'   nondominated points may in fact be dominated by a segment.
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @examples
 #' dat <- data.frame(z1=c(12,14,16,18,18,18,14,15,15), z2=c(18,16,12,4,2,6,14,14,16))
-#' points <- addNDSet2D(dat, crit = "min", keepDom = TRUE)
+#' points <- addNDSet(dat, crit = "min", keepDom = TRUE)
 #' plotNDSet2D(points, crit = "min", addTriangles = TRUE)
-#' points <- addNDSet2D(dat, crit = "max", keepDom = TRUE)
+#' plotNDSet2D(points, crit = "min", addTriangles = TRUE, addHull = FALSE)
+#' points <- addNDSet(dat, crit = "max", keepDom = TRUE)
 #' plotNDSet2D(points, crit = "max", addTriangles = TRUE)
+#' plotNDSet2D(points, crit = "max", addHull = FALSE)
 plotNDSet2D <- function(points,
                         crit,
                         addTriangles = FALSE,
@@ -855,6 +860,8 @@ plotNDSet2D <- function(points,
          #aspect.ratio=4/3,
          legend.position = "none"
       )
+   if (crit=="max") points <- points[order(-points$z2,-points$z1),]
+   if (crit=="min") points <- points[order(points$z2,points$z1),]
    # Initialize plot
    p <- ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
    if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
@@ -862,32 +869,34 @@ plotNDSet2D <- function(points,
 
    # Add hull plus rays
    if (addHull) {
-      tmp<-points[points$ext & !duplicated(cbind(points$z1,points$z2), MARGIN = 1),]
-      delta <- max( (max(points$z1)-min(points$z1))/10, (max(points$z2)-min(points$z2))/10 )
-      if (crit=="max") {
-         tmp<-rbind(tmp[1:2,],tmp,tmp[1,]) # add rows
-         tmp$z1[1] <- min(points$z1) - delta
-         tmp$z2[1] <- min(points$z2) - delta
-         tmp$z1[2] <- min(points$z1) - delta
-         tmp$z2[2] <- max(points$z2)
-         tmp$z1[length(tmp$z1)] <- max(points$z1)
-         tmp$z2[length(tmp$z1)] <- min(points$z2)- delta
-      }
-      if (crit=="min") {
-         tmp<-rbind(tmp[1,],tmp,tmp[1:2,]) # add rows
-         tmp$z1[1] <- max(points$z1) + delta
-         tmp$z2[1] <- min(points$z2)
-         tmp$z1[length(tmp$z1)-1] <- min(points$z1)
-         tmp$z2[length(tmp$z1)-1] <- max(points$z2) + delta
-         tmp$z1[length(tmp$z1)] <- max(points$z1) + delta
-         tmp$z2[length(tmp$z1)] <- max(points$z2) + delta
-      }
-      p <- p + geom_polygon(fill="gray95", col = NA, data=tmp)
+      di <- .mToDirection(crit, 2)
+      p <- plotHull2D(points[points$nd, 1:2], addRays = TRUE, direction = di)
+   #    tmp<-points[points$se & !duplicated(cbind(points$z1,points$z2), MARGIN = 1),]
+   #    delta <- max( (max(points$z1)-min(points$z1))/10, (max(points$z2)-min(points$z2))/10 )
+   #    if (crit=="max") {
+   #       tmp<-rbind(tmp[1:2,],tmp,tmp[1,]) # add rows
+   #       tmp$z1[1] <- min(points$z1) - delta
+   #       tmp$z2[1] <- min(points$z2) - delta
+   #       tmp$z1[2] <- min(points$z1) - delta
+   #       tmp$z2[2] <- max(points$z2)
+   #       tmp$z1[length(tmp$z1)] <- max(points$z1)
+   #       tmp$z2[length(tmp$z1)] <- min(points$z2)- delta
+   #    }
+   #    if (crit=="min") {
+   #       tmp<-rbind(tmp[1,],tmp,tmp[1:2,]) # add rows
+   #       tmp$z1[1] <- max(points$z1) + delta
+   #       tmp$z2[1] <- min(points$z2)
+   #       tmp$z1[length(tmp$z1)-1] <- min(points$z1)
+   #       tmp$z2[length(tmp$z1)-1] <- max(points$z2) + delta
+   #       tmp$z1[length(tmp$z1)] <- max(points$z1) + delta
+   #       tmp$z2[length(tmp$z1)] <- max(points$z2) + delta
+   #    }
+   #    p <- p + geom_polygon(fill="gray95", col = NA, data=tmp)
    }
 
    # Add triangles
    if (addTriangles) {
-      tmp<-points[points$ext | points$nonExt,]
+      tmp<-points[points$se | points$sne,]
       if (length(tmp$z1)>1) { # triangles
          for (r in 1:(dim(tmp)[1] - 1)) {
             p <- p +
@@ -916,7 +925,7 @@ plotNDSet2D <- function(points,
       }
    }
 
-   p <- p + geom_point(aes_string(colour = 'nD', shape = 'ext'), data = points) +
+   p <- p + geom_point(aes_string(colour = 'nd', shape = 'se'), data = points) +
       #    #coord_fixed(ratio = 1) +
       scale_colour_grey(start = 0.6, end = 0)
 

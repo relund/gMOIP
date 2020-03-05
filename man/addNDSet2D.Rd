@@ -5,10 +5,10 @@
 \title{Add 2D discrete points to a non-dominated set and classify them into extreme
 supported, non-extreme supported, non-supported.}
 \usage{
-addNDSet2D(points, nDSet = NULL, crit = "max", keepDom = FALSE)
+addNDSet2D(pts, nDSet = NULL, crit = "max", keepDom = FALSE)
 }
 \arguments{
-\item{points}{A data frame. It is assumed that z1 and z2 are in the two first columns.}
+\item{pts}{A data frame. It is assumed that z1 and z2 are in the two first columns.}
 
 \item{nDSet}{A data frame with current non-dominated set (NULL is none yet).}
 
@@ -26,10 +26,10 @@ supported, non-extreme supported, non-supported.
 }
 \examples{
 nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4))
-points <- data.frame(z1 = c(18,18,14,15,15), z2=c(2,6,14,14,16))
-addNDSet2D(points, nDSet, crit = "max")
-addNDSet2D(points, nDSet, crit = "max", keepDom = TRUE)
-addNDSet2D(points, nDSet, crit = "min")
+pts <- data.frame(z1 = c(18,18,14,15,15), z2=c(2,6,14,14,16))
+addNDSet2D(pts, nDSet, crit = "max")
+addNDSet2D(pts, nDSet, crit = "max", keepDom = TRUE)
+addNDSet2D(pts, nDSet, crit = "min")
 }
 \author{
 Lars Relund \email{lars@relund.dk}

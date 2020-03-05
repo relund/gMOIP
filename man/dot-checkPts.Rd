@@ -4,7 +4,7 @@
 \alias{.checkPts}
 \title{Check if point input is okay}
 \usage{
-.checkPts(pts, p = NULL, warn = FALSE)
+.checkPts(pts, p = NULL, warn = FALSE, stopUnique = TRUE, asDF = FALSE)
 }
 \arguments{
 \item{pts}{Point input.}
@@ -12,6 +12,10 @@
 \item{p}{Desired dimension of points.}
 
 \item{warn}{Output warnings.}
+
+\item{stopUnique}{Stop if rows not are unique.}
+
+\item{asDF}{Return as data frame otherwise as matrix.}
 }
 \value{
 Point input converted to a matrix.
@@ -19,3 +23,4 @@ Point input converted to a matrix.
 \description{
 Check if point input is okay
 }
+\keyword{internal}

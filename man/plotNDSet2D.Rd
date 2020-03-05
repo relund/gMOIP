@@ -16,10 +16,10 @@ plotNDSet2D(
 \arguments{
 \item{points}{Data frame with non-dominated points.}
 
-\item{crit}{Either max or min (only used if add the iso profit line).}
+\item{crit}{Either max or min (only used if add the iso profit line). A vector is currently not
+supported.}
 
-\item{addTriangles}{Add search triangles defined by the non-dominated extreme
-points.}
+\item{addTriangles}{Add search triangles defined by the non-dominated extreme points.}
 
 \item{addHull}{Add the convex hull and the rays.}
 
@@ -35,15 +35,17 @@ The ggplot2 object.
 Create a plot of a discrete non-dominated set.
 }
 \note{
-Currently only points are checked for dominance. That is, for MILP
-models some nondominated points may in fact be dominated by a segment.
+Currently only points are checked for dominance. That is, for MILP models some
+nondominated points may in fact be dominated by a segment.
 }
 \examples{
 dat <- data.frame(z1=c(12,14,16,18,18,18,14,15,15), z2=c(18,16,12,4,2,6,14,14,16))
-points <- addNDSet2D(dat, crit = "min", keepDom = TRUE)
+points <- addNDSet(dat, crit = "min", keepDom = TRUE)
 plotNDSet2D(points, crit = "min", addTriangles = TRUE)
-points <- addNDSet2D(dat, crit = "max", keepDom = TRUE)
+plotNDSet2D(points, crit = "min", addTriangles = TRUE, addHull = FALSE)
+points <- addNDSet(dat, crit = "max", keepDom = TRUE)
 plotNDSet2D(points, crit = "max", addTriangles = TRUE)
+plotNDSet2D(points, crit = "max", addHull = FALSE)
 }
 \author{
 Lars Relund \email{lars@relund.dk}

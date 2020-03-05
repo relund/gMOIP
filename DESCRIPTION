@@ -28,6 +28,9 @@ Imports:
     stats,
     Rfast,
     plyr,
+    tidyselect,
+    tidyr,
+    tibble,
     purrr,
     dplyr,
     rlang

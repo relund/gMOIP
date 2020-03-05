@@ -8,8 +8,8 @@
 ^cran-comments\.md$
 ^.*\.tex$
 ^CRAN-RELEASE$
-vignettes/lb_ub_set.Rmd$
-vignettes/.*cache.*$
+^vignettes/lb_ub_set.Rmd$
+^vignettes/.*cache.*$
 ^.*\.log$
-tests/testTex/$
-tests/temp/$
+^tests/testTex$
+^tests/temp$
