@@ -1,3 +1,7 @@
+# gMOIP 1.4.4
+
+* Added support for adding non-dominated sets (add/update). 
+
 # gMOIP 1.4.3
 
 * Added support for rays in different directions.
