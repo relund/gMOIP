@@ -330,11 +330,11 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #' @export
 #'
 #' @examples
-#' pts <- genNDSet(3,10)
+#' pts <- genNDSet(3,10)[,1:3]
 #' addRays(pts)
 #' addRays(pts, dir = c(1,-1,1))
 #' addRays(pts, dir = c(-1,-1,1), m = c(0,0,0), M = c(100,100,100))
-#' pts <- genSample(5,20)
+#' pts <- genSample(5,20)[,1:5]
 #' addRays(pts)
 addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, direction = 1) {
    pts <- as.data.frame(pts)

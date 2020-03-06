@@ -57,10 +57,10 @@ pts <- matrix(c(0,0,1, 0,0,1, 0,1,0, 0.5,0.2,0.5, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0
               byrow = TRUE)
 classifyNDSet(pts)
 
-pts <- genNDSet(3,50)
-ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
-  ylim = c(0,max(pts$y)+2),
-  zlim = c(0,max(pts$z)+2)))
+pts <- genNDSet(3,50)[,1:3]
+ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
+  ylim = c(0,max(pts$z2)+2),
+  zlim = c(0,max(pts$z3)+2)))
 plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
 pts <- classifyNDSet(pts[,1:3])
 plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))

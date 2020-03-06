@@ -12,13 +12,15 @@ genNDSet(
   sphere = TRUE,
   box = FALSE,
   keep = FALSE,
+  crit = "min",
+  dubND = TRUE,
   ...
 )
 }
 \arguments{
 \item{p}{Dimension of the points.}
 
-\item{n}{Number of samples generated.}
+\item{n}{Number of samples generated (note only a subset of these will be non-dominated).}
 
 \item{range}{The range of the points in each dimension (a vector or matrix with \code{p} rows).}
 
@@ -30,6 +32,10 @@ genNDSet(
 
 \item{keep}{Keep dominated points also.}
 
+\item{crit}{Criteria used (a vector of min/max).}
+
+\item{dubND}{Should dublicated non-dominated points be considered as non-dominated.}
+
 \item{...}{Further arguments passed on to \code{\link{genSample}}.}
 }
 \value{
@@ -40,12 +46,15 @@ Generate a sample of nondominated points.
 }
 \examples{
 range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
-ini3D()
 pts <- genNDSet(3, 800, range = range, random = TRUE, keep = TRUE)
 head(pts)
 Rfast::colMinsMaxs(as.matrix(pts))
-plotPoints3D(pts)
-plotPoints3D(pts[!pts$dom,], argsPlot3d = list(col = "red", size = 10))
+ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
+  ylim = c(min(pts[,2])-2,max(pts[,2])+10),
+  zlim = c(min(pts[,3])-2,max(pts[,3])+10)))
+plotPoints3D(pts[,1:3])
+plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red", size = 10))
+plotCones3D(pts[pts$nd,1:3], argsPolygon3d = list(alpha = 1))
 finalize3D()
 
 ini3D()
@@ -55,7 +64,7 @@ pts <- genNDSet(3, 800, range = range, sphere = TRUE, keep = TRUE,
        argsSphere = list(center = cent))
 rgl::spheres3d(cent, radius=49.5, color = "grey100", alpha=0.1)
 plotPoints3D(pts)
-plotPoints3D(pts[!pts$dom,], argsPlot3d = list(col = "red", size = 10))
+plotPoints3D(pts[pts$nd,], argsPlot3d = list(col = "red", size = 10))
 rgl::planes3d(cent[1],cent[2],cent[3],-sum(cent^2), alpha = 0.5, col = "red")
 finalize3D()
 
@@ -68,7 +77,7 @@ pts <- genNDSet(3, 100, keep = TRUE,
   argsSphere = list(center = cent, radius = r, below = FALSE, plane = planeC, factor = 6))
 rgl::spheres3d(cent, radius=r, color = "grey100", alpha=0.1)
 plotPoints3D(pts)
-plotPoints3D(pts[!pts$dom,], argsPlot3d = list(col = "red", size = 10))
+plotPoints3D(pts[pts$nd,], argsPlot3d = list(col = "red", size = 10))
 rgl::planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
 finalize3D()
 }
