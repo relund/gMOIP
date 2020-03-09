@@ -1003,6 +1003,115 @@ plotRectangle3D <- function(a, b, ...) {
 }
 
 
+#' Plot a polygon.
+#'
+#' @param pts Vertices.
+#' @param ... Further arguments passed on the rgl plotting functions. This must be done as
+#'   lists (see examples). Currently the following arguments are supported:
+#'
+#'   * `argsPolygon3d`: A list of arguments for [`rgl::polygon3d`].
+#'
+#' @return NULL (invisible)
+#' @export
+#'
+#' @examples
+#' pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
+#'
+#' ini3D()
+#' plotPolygon3D(pts)
+#' finalize3D()
+#'
+#' # Using a texture
+#' fname <- getTexture(pch = 15+i, cex = 10)
+#' ini3D(T)
+#' plotPolygon3D(pts, argsPolygon3d = list(texture = fname)
+#' finalize3D()
+#'
+#' \donttest{
+#' # In general you have to fine tune size and numbers
+#' # Different pch
+#' for (i in 0:3) {
+#'   fname <- getTexture(pch = 15+i, cex = 20)
+#'   ini3D(T)
+#'   plotPolygon3D(pts, argsPolygon3d = list(texture = fname)
+#'   finalize3D()
+#' }
+#'
+#' # Size of pch
+#' for (i in 1:4) {
+#'   fname <- getTexture(pch = 15+i, cex = 5 * i)
+#'   ini3D(T)
+#'   plotPolygon3D(pts, argsPolygon3d = list(texture = fname))
+#'   finalize3D()
+#' }
+#'
+#' # Number of pch
+#' fname <- getTexture(pch = 16, cex = 20)
+#' for (i in 1:4) {
+#'   ini3D(T)
+#'   plotPolygon3D(pts, argsPolygon3d = list(texture = fname, texcoords = rbind(pts$x, pts$y)*5*i))
+#'   finalize3D()
+#' }
+#' }
+plotPolygon3D <- function(pts, ...) {
+   args <- list(...)
+   argsPolygon3d <- mergeLists(list(color = "grey100", col = "grey40",
+                                    lwd = 2, alpha = 0.2,
+                                    texcoords = rbind(pts[,1], pts[,2])*10 ),
+                               args$argsPolygon3d)
+   pts <- .checkPts(pts, p = 3)
+   if (dimFace(pts) != 2) stop("Shape is not a polygon!")
+
+   if (is.null(argsPolygon3d$texture)) {
+      if (nrow(pts) > 3) do.call(rgl::polygon3d, args = c(list(pts), argsPolygon3d))
+      if (nrow(pts) == 3) do.call(rgl::triangles3d, args = c(list(pts), argsPolygon3d))
+   } else {
+      if (nrow(pts) > 3) poly <- do.call(rgl::polygon3d, args = c(list(pts, plot = FALSE), argsPolygon3d))
+      if (nrow(pts) == 3) {
+         # poly <- do.call(rgl::triangles3d, args = c(list(pts, plot = FALSE), argsPolygon3d))
+         poly <- tmesh3d(rbind(pts[,1], pts[,2], pts[,3], 1), indices = 1:3)
+      }
+      poly$texcoords <- argsPolygon3d$texcoords
+      shade3d(poly, col = "white", specular = "black", texture = argsPolygon3d$texture)
+   }
+   return(invisible(NULL))
+}
+
+
+#' Save a pch symbol as a temporary file.
+#'
+#' @param pch Pch number/symbol.
+#' @param cex Pch size
+#' @param ...  Further arguments passed to `plot`.
+#'
+#' @return The file name.
+#' @export
+#'
+#' @examples
+#' # Pch shapes
+#' generateRPointShapes<-function(){
+#'    oldPar<-par()
+#'    par(font=2, mar=c(0.5,0,0,0))
+#'    y=rev(c(rep(1,6),rep(2,5), rep(3,5), rep(4,5), rep(5,5)))
+#'    x=c(rep(1:5,5),6)
+#'    plot(x, y, pch = 0:25, cex=1.5, ylim=c(1,5.5), xlim=c(1,6.5),
+#'         axes=FALSE, xlab="", ylab="", bg="blue")
+#'    text(x, y, labels=0:25, pos=3)
+#'    par(mar=oldPar$mar,font=oldPar$font )
+#' }
+#' generateRPointShapes()
+#'
+#' getTexture()
+getTexture <- function(pch = 16, cex = 10, ...) {
+   filename <- tempfile(fileext = ".png")
+   png(filename = filename)
+   plot(1, 1, pch = pch, cex = cex, axes=FALSE, xlab="", ylab="", ...)
+   dev.off()
+   return(filename)
+}
+
+
+
 #' Plot a cone defined by a point in 3D.
 #'
 #' The cones are defined as the point plus R3+.
