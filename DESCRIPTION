@@ -33,7 +33,8 @@ Imports:
     tibble,
     purrr,
     dplyr,
-    rlang
+    rlang,
+    sp
 Suggests: 
     tikzDevice,
     grid,

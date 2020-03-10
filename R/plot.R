@@ -1006,42 +1006,68 @@ plotRectangle3D <- function(a, b, ...) {
 #' Plot a polygon.
 #'
 #' @param pts Vertices.
+#' @param useShade Plot shade of the polygon.
+#' @param useLines Plot lines inside the polygon.
+#' @param usePoints Plot point shapes inside the polygon.
+#' @param useFrame Plot a frame around the polygon.
 #' @param ... Further arguments passed on the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
-#'   * `argsPolygon3d`: A list of arguments for [`rgl::polygon3d`].
+#'   * `argsShade`: A list of arguments for [`rgl::polygon3d`] (n > 4 vertices),
+#'                  [rgl::triangles3d] (n = 3 vertices) and [rgl::quads3d] (n = 4 vertices)
+#'                  if `useShade = T`.
+#'   * `argsFrame`: A list of arguments for [`rgl::lines3d`] if `useFrame = T`.
+#'   * `argsPoints`: A list of arguments for [`rgl::shade3d`] if `usePoints = T`. It is important
+#'                   to give a texture using `texture`. A texture can be set using [getTexture].
+#'   * `argsLines`: A list of arguments for [rgl::persp3d] when `useLines = T`. Moreover, the list
+#'                  may contain `lines`: number of lines.
 #'
 #' @return NULL (invisible)
 #' @export
 #'
 #' @examples
+#' pts <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
 #' pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
 #'
 #' ini3D()
 #' plotPolygon3D(pts)
 #' finalize3D()
 #'
-#' # Using a texture
-#' fname <- getTexture(pch = 15+i, cex = 10)
-#' ini3D(T)
-#' plotPolygon3D(pts, argsPolygon3d = list(texture = fname)
+#' ini3D()
+#' plotPolygon3D(pts, argsShade = list(color = "red", alpha = 1))
+#' finalize3D()
+#'
+#' ini3D()
+#' plotPolygon3D(pts, useFrame = T, argsShade = list(color = "red", alpha = 0.5),
+#'               argsFrame = list(color = "green"))
+#' finalize3D()
+#'
+#' ini3D()
+#' plotPolygon3D(pts, useFrame = T, useLines = T, useShade = T,
+#'               argsShade = list(color = "red", alpha = 0.2),
+#'               argsLines = list(color = "blue"))
+#' finalize3D()
+#'
+#' ini3D()
+#' plotPolygon3D(pts, usePoints = T, useShade = T,
+#'               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
 #' finalize3D()
 #'
 #' \donttest{
-#' # In general you have to fine tune size and numbers
+#' # In general you have to finetune size and numbers when you use textures
 #' # Different pch
 #' for (i in 0:3) {
-#'   fname <- getTexture(pch = 15+i, cex = 20)
+#'   fname <- getTexture(pch = 15+i, cex = 30)
 #'   ini3D(T)
-#'   plotPolygon3D(pts, argsPolygon3d = list(texture = fname)
+#'   plotPolygon3D(pts, usePoints = TRUE, argsPoints = list(texture = fname))
 #'   finalize3D()
 #' }
 #'
 #' # Size of pch
 #' for (i in 1:4) {
-#'   fname <- getTexture(pch = 15+i, cex = 5 * i)
+#'   fname <- getTexture(pch = 15+i, cex = 10 * i)
 #'   ini3D(T)
-#'   plotPolygon3D(pts, argsPolygon3d = list(texture = fname))
+#'   plotPolygon3D(pts, usePoints = TRUE, argsPoints = list(texture = fname))
 #'   finalize3D()
 #' }
 #'
@@ -1049,30 +1075,68 @@ plotRectangle3D <- function(a, b, ...) {
 #' fname <- getTexture(pch = 16, cex = 20)
 #' for (i in 1:4) {
 #'   ini3D(T)
-#'   plotPolygon3D(pts, argsPolygon3d = list(texture = fname, texcoords = rbind(pts$x, pts$y)*5*i))
+#'   plotPolygon3D(pts, usePoints = TRUE,
+#'                 argsPoints = list(texture = fname, texcoords = rbind(pts$x, pts$y)*5*i))
 #'   finalize3D()
 #' }
 #' }
-plotPolygon3D <- function(pts, ...) {
+plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FALSE,
+                          useFrame = TRUE, ...) {
    args <- list(...)
-   argsPolygon3d <- mergeLists(list(color = "grey100", col = "grey40",
-                                    lwd = 2, alpha = 0.2,
+   argsShade <- mergeLists(list(color = "black", col = "grey40",
+                                    lwd = 2, alpha = 0.2, fill = TRUE,
                                     texcoords = rbind(pts[,1], pts[,2])*10 ),
-                               args$argsPolygon3d)
-   pts <- .checkPts(pts, p = 3)
-   if (dimFace(pts) != 2) stop("Shape is not a polygon!")
+                               args$argsShade)
+   argsFrame <- mergeLists(list(color = "black", lwd = 1, alpha = 0.8), args$argsFrame)
+   argsPoints <- mergeLists(list(color = "white", specular = "black", alpha = 0.5,
+                                 texcoords = rbind(pts[,1], pts[,2])*10 ),
+                           args$argsPoints)
+   argsLines <- mergeLists(list(color = "black", lwd = 1, alpha = 0.4, lines = 50, back = 'lines',
+                                front = 'lines', lit = FALSE),
+                           args$argsLines)
 
-   if (is.null(argsPolygon3d$texture)) {
-      if (nrow(pts) > 3) do.call(rgl::polygon3d, args = c(list(pts), argsPolygon3d))
-      if (nrow(pts) == 3) do.call(rgl::triangles3d, args = c(list(pts), argsPolygon3d))
-   } else {
-      if (nrow(pts) > 3) poly <- do.call(rgl::polygon3d, args = c(list(pts, plot = FALSE), argsPolygon3d))
-      if (nrow(pts) == 3) {
-         # poly <- do.call(rgl::triangles3d, args = c(list(pts, plot = FALSE), argsPolygon3d))
-         poly <- tmesh3d(rbind(pts[,1], pts[,2], pts[,3], 1), indices = 1:3)
+   pts <- .checkPts(pts, p = 3, asDF = TRUE)
+   if (dimFace(pts) != 2) stop("Vertices don't define a polygon!")
+   if (usePoints) useShade = FALSE
+
+   if (useShade) {
+      if (nrow(pts) > 3) do.call(rgl::polygon3d, args = c(list(pts), argsShade))
+      if (nrow(pts) == 3) do.call(rgl::triangles3d, args = c(list(pts), argsShade))
+   }
+   if (useFrame) {
+      n <- length(pts[,1])
+      nas <- n+1
+      prev <- 0L
+      loop <- integer()
+      for (i in seq_along(nas)) {
+         loop <- c(loop, if (i > 1) NA, (prev + 1L):(nas[i] - 1L), prev + 1L)
+         prev <- nas[i]
       }
-      poly$texcoords <- argsPolygon3d$texcoords
-      shade3d(poly, col = "white", specular = "black", texture = argsPolygon3d$texture)
+      res <- cbind(pts[loop,1], pts[loop,2], pts[loop,3])
+      do.call(rgl::lines3d, args = c(list(res), argsFrame))
+   }
+   if (usePoints) {
+      if (nrow(pts) > 3)
+         poly <- do.call(rgl::polygon3d, args = c(list(pts, plot = FALSE), argsPoints))
+      if (nrow(pts) == 3)
+         poly <- tmesh3d(rbind(pts[,1], pts[,2], pts[,3], 1), indices = 1:3)
+      poly$texcoords <- argsPoints$texcoords
+      do.call(rgl::shade3d, args = c(list(poly), argsPoints))
+   }
+   if (useLines) {
+      if (!rgl::rgl.cur()) stop("Option useLines need an open rgl window!")
+      limits <- rgl::par3d()$bbox
+      m <- c(limits[1], limits[3], limits[5])
+      M <- c(limits[2], limits[4], limits[6])
+      if (all(m == M)) stop("The rgl window's bounding box is not valid!")
+      # do the mesh
+      x <- seq(m[1], M[1], length.out = argsLines$lines)
+      y <- seq(m[2], M[2], length.out = argsLines$lines)
+      xy <- expand.grid(x, y)
+      colnames(pts) <- c("x", "y", "z")
+      xy[sp::point.in.polygon(xy[,1], xy[,2], pts$x, pts$y) <= 0,] <- NA
+      z <- predict(lm(z ~ x + y, data = pts), newdata = data.frame(x=xy[,1], y=xy[,2]))
+      do.call(rgl::persp3d, args = c(list(x, y, z, add = TRUE), argsLines))
    }
    return(invisible(NULL))
 }
@@ -1104,9 +1168,9 @@ plotPolygon3D <- function(pts, ...) {
 #' getTexture()
 getTexture <- function(pch = 16, cex = 10, ...) {
    filename <- tempfile(fileext = ".png")
-   png(filename = filename)
-   plot(1, 1, pch = pch, cex = cex, axes=FALSE, xlab="", ylab="", ...)
-   dev.off()
+   grDevices::png(filename = filename)
+   graphics::plot(1, 1, pch = pch, cex = cex, axes=FALSE, xlab="", ylab="", ...)
+   grDevices::dev.off()
    return(filename)
 }
 
@@ -1474,13 +1538,15 @@ plotPoints3D <- function(pts, addText = F, ...) {
 #' @param normal Normal to the plane.
 #' @param point A point on the plane.
 #' @param offset The offset of the plane (only used if `point = NULL`).
-#' @param usePersp3d Use [rgl::persp3d] to draw the plane (draw wireframes as default).
-#' @param lines If `usePersp3d` then lines specify the number of lines in the wireframe.
+#' @param useShade Plot shade of the plane.
+#' @param useLines Plot lines inside the plane.
+#' @param usePoints Plot point shapes inside the plane.
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
-#'   * `argsPlanes3d`: A list of arguments for [rgl::planes3d].
-#'   * `argsPersp3d`: A list of arguments for [rgl::persp3d].
+#'   * `argsPlanes3d`: A list of arguments for [rgl::planes3d] used when `useShade = T`.
+#'   * `argsLines`: A list of arguments for [rgl::persp3d] when `useLines = T`. Moreover, the list
+#'                  may contain `lines`: number of lines.
 #'
 #' @return NULL (invisible)
 #' @export
@@ -1489,35 +1555,56 @@ plotPoints3D <- function(pts, addText = F, ...) {
 #' ini3D(argsPlot3d = list(xlim = c(-1,10), ylim = c(-1,10), zlim = c(-1,10)) )
 #' plotPlane3D(c(1,1,1), point = c(1,1,1))
 #' plotPoints3D(c(1,1,1))
-#' plotPlane3D(c(1,2,1), point = c(2,2,2), argsPlanes3d = list(col="red"))
+#' plotPlane3D(c(1,2,1), point = c(2,2,2), argsPlanes3d = list(color="red"))
 #' plotPoints3D(c(2,2,2))
-#' plotPlane3D(c(2,1,1), offset = -6, argsPlanes3d = list(col="blue"))
-#' plotPlane3D(c(2,1,1), argsPlanes3d = list(col="green"))
+#' plotPlane3D(c(2,1,1), offset = -6, argsPlanes3d = list(color="blue"))
+#' plotPlane3D(c(2,1,1), argsPlanes3d = list(color="green"))
 #' finalize3D()
-plotPlane3D <- function(normal, point = NULL, offset = 0, usePersp3d = FALSE, lines = 30, ...) {
+#'
+#' ini3D(argsPlot3d = list(xlim = c(-1,10), ylim = c(-1,10), zlim = c(-1,10)) )
+#' plotPlane3D(c(1,1,1), point = c(1,1,1), useLines = TRUE, useShade = TRUE)
+#' plotPlane3D(c(1,2,1), point = c(2,2,2), argsLines = list(col="blue", lines = 100),
+#'             useLines = TRUE)
+#' finalize3D()
+plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = T, useLines = F,
+                        usePoints = F, ...) {
    args <- list(...)
    argsPlanes3d <- mergeLists(list(col = "grey100", alpha = 0.5), args$argsPlanes3d)
-   argsPersp3d <- mergeLists(list(back = 'line', front = 'line', add = TRUE), args$argsPersp3d)
+   argsLines <- mergeLists(list(back = 'lines', front = 'lines', add = TRUE, lines = 50),
+                           args$argsLines)
 
    if (!is.null(point)) offset <- -sum(normal * point)
-   if (!usePersp3d) {
+   if (useShade) {
       do.call(rgl::planes3d, args = c(list(normal, d = offset), argsPlanes3d) )
-   } else {
-      limits <- rgl::par3d()$bbox
-      m <- c(limits[1], limits[3], limits[5])
-      M <- c(limits[2], limits[4], limits[6])
-      # A way to do a mesh
-      x <- seq(m[1], M[1], length.out = lines)
-      y <- seq(m[2], M[2], length.out = lines)
-      # val <- expand.grid(x = x, y = y)
-      f <- function(x,y){-(normal[1]/normal[3])*x - (normal[2]/normal[3])*y - offset/normal[3]}
-      z <- outer(x,y,f)
-      z[z < m[3] | z > M[3]] <- NA
-      # val$z <- f(val$x, val$y)
-      # val <- val %>% dplyr::filter(z >= m[3] & z <= M[3]) %>% dplyr::arrange(x,y,z)
-      # val <- as.matrix(val)
-      do.call(rgl::persp3d, args = c(list(x, y, z), argsPersp3d) )
-      rgl::planes3d(normal, d = offset, back = 'lines', front = 'lines')
+   }
+   # else use points or lines
+   if (!rgl::rgl.cur()) stop("Option useLines or usePoints need an open rgl window!")
+   limits <- rgl::par3d()$bbox
+   m <- c(limits[1], limits[3], limits[5])
+   M <- c(limits[2], limits[4], limits[6])
+   # do the mesh
+   x <- seq(m[1], M[1], length.out = argsLines$lines)
+   y <- seq(m[2], M[2], length.out = argsLines$lines)
+   f <- function(x,y){-(normal[1]/normal[3])*x - (normal[2]/normal[3])*y - offset/normal[3]}
+   z <- outer(x,y,f)
+   z[z < m[3] | z > M[3]] <- NA
+   if (useLines) {
+      do.call(rgl::persp3d, args = c(list(x, y, z), argsLines) )
+   }
+   if (usePoints) {
+      return(invisible(NULL))
+      # do.call(rgl::plot3d, args = c(list(x, y, z, add = TRUE), argsPoints) )
+      # persp3d(x, y, z, back = 'lines', front = 'lines', add = TRUE)
+      #
+      #
+      # if (nrow(pts) > 3) poly <- do.call(rgl::polygon3d, args = c(list(pts, plot = FALSE),
+      #                                                             argsPolygon3d))
+      # if (nrow(pts) == 3) {
+      #    # poly <- do.call(rgl::triangles3d, args = c(list(pts, plot = FALSE), argsPolygon3d))
+      #    poly <- tmesh3d(rbind(pts[,1], pts[,2], pts[,3], 1), indices = 1:3)
+      # }
+      # poly$texcoords <- argsPolygon3d$texcoords
+      # do.call(rgl::shade3d, args = c(list(poly, col = "white", specular = "black"), argsPolygon3d))
    }
    return(invisible(NULL))
 }

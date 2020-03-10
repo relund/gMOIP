@@ -8,3 +8,4 @@ CRAN-RELEASE
 *.log
 *.pdf
 tests/temp/*
+test*.*

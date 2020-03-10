@@ -8,8 +8,9 @@ plotPlane3D(
   normal,
   point = NULL,
   offset = 0,
-  usePersp3d = FALSE,
-  lines = 30,
+  useShade = T,
+  useLines = F,
+  usePoints = F,
   ...
 )
 }
@@ -20,15 +21,18 @@ plotPlane3D(
 
 \item{offset}{The offset of the plane (only used if \code{point = NULL}).}
 
-\item{usePersp3d}{Use \link[rgl:persp3d]{rgl::persp3d} to draw the plane (draw wireframes as default).}
+\item{useShade}{Plot shade of the plane.}
 
-\item{lines}{If \code{usePersp3d} then lines specify the number of lines in the wireframe.}
+\item{useLines}{Plot lines inside the plane.}
+
+\item{usePoints}{Plot point shapes inside the plane.}
 
 \item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
-\item \code{argsPlanes3d}: A list of arguments for \link[rgl:planes3d]{rgl::planes3d}.
-\item \code{argsPersp3d}: A list of arguments for \link[rgl:persp3d]{rgl::persp3d}.
+\item \code{argsPlanes3d}: A list of arguments for \link[rgl:planes3d]{rgl::planes3d} used when \code{useShade = T}.
+\item \code{argsLines}: A list of arguments for \link[rgl:persp3d]{rgl::persp3d} when \code{useLines = T}. Moreover, the list
+may contain \code{lines}: number of lines.
 }}
 }
 \value{
@@ -41,9 +45,15 @@ Plot a plane in 3D.
 ini3D(argsPlot3d = list(xlim = c(-1,10), ylim = c(-1,10), zlim = c(-1,10)) )
 plotPlane3D(c(1,1,1), point = c(1,1,1))
 plotPoints3D(c(1,1,1))
-plotPlane3D(c(1,2,1), point = c(2,2,2), argsPlanes3d = list(col="red"))
+plotPlane3D(c(1,2,1), point = c(2,2,2), argsPlanes3d = list(color="red"))
 plotPoints3D(c(2,2,2))
-plotPlane3D(c(2,1,1), offset = -6, argsPlanes3d = list(col="blue"))
-plotPlane3D(c(2,1,1), argsPlanes3d = list(col="green"))
+plotPlane3D(c(2,1,1), offset = -6, argsPlanes3d = list(color="blue"))
+plotPlane3D(c(2,1,1), argsPlanes3d = list(color="green"))
+finalize3D()
+
+ini3D(argsPlot3d = list(xlim = c(-1,10), ylim = c(-1,10), zlim = c(-1,10)) )
+plotPlane3D(c(1,1,1), point = c(1,1,1), useLines = TRUE, useShade = TRUE)
+plotPlane3D(c(1,2,1), point = c(2,2,2), argsLines = list(col="blue", lines = 100),
+            useLines = TRUE)
 finalize3D()
 }
