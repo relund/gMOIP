@@ -25,4 +25,9 @@ ini3D()
 pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 plotPoints3D(pts)
 finalize3D()
+
+ini3D()
+pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
+plotPoints3D(pts)
+finalize3D(argsAxes3d = list(edges = "bbox"))
 }

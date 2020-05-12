@@ -30,8 +30,19 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
    zVal <- pts %*% t(obj)
    zVal <- round(zVal,10)
    colnames(zVal) <- paste0("z", 1:p)
+   iP <- bind_cols(as.data.frame(pts), as.data.frame(zVal))
+   iP$lbl <- as.character(1:nrow(iP))
    zVal <- addNDSet(zVal, crit = crit, keepDom = TRUE, dubND = TRUE)
-   iP <- bind_cols(as.data.frame(pts), zVal)
+   iP <- full_join(iP, zVal)
+
+   if (is.null(labels)) {
+      iP$lbl <- ""
+      return(iP)
+   }
+   if (labels == "n") iP$lbl <- ""
+   if (labels == "coord") iP$lbl <- df2String(iP[,1:n])
+   return(iP)
+
 
 #    iP <- as.data.frame(iP)
 #    tol <- 1e-4
@@ -139,11 +150,6 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #    # set correct labels
 #    iP$lbl <- iP$oldLbl
 #    iP$oldLbl <- NULL
-   if (is.null(labels)) labels = "n"
-   iP$lbl <- ""
-   if (labels == "coord") iP$lbl <- df2String(iP[,1:n])
-   if (labels == "numb") iP$lbl <- as.character(1:nrow(iP))
-   return(iP)
 }
 
 

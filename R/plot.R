@@ -383,8 +383,8 @@ plotPolytope2D <-
 #' @param latex If \code{True} make latex math labels for TikZ.
 #' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 #'   'coord' add coordinates to the points. Otherwise number all points from one.
-#' @param ... Arguments passed to axes3d, plot3d, title3d. Parsed using lists argsAxes3d,
-#'   argsPlot3d and argsTitle3d.
+#' @param ... Arguments passed to axes3d, plot3d, title3d, text3d. Parsed using lists argsAxes3d,
+#'   argsPlot3d, argsText3d and argsTitle3d.
 #'
 #' @note The feasible region defined by the constraints must be bounded otherwise you may see
 #'   strange results.
@@ -411,6 +411,7 @@ plotPolytope3D <-
       argsAxes3d <- mergeLists(list(edges=c('x', 'y', 'z')), args$argsAxes3d)
       argsPlot3d <- mergeLists(list(xlab = '', box = F, axes = F), args$argsPlot3d)
       argsTitle3d <- mergeLists(list(xlab = 'x1', ylab = 'x2', zlab = 'x3'), args$argsTitle3d)
+      argsText3d <- mergeLists(list(), args$argsText3d)  #cex = c(1.1,1.1), adj=2, font = 2
 
       #open3d()
       do.call(plot3d, args = c(list(x = replicate(2, 1:3), type = 'n'), argsPlot3d))
@@ -507,7 +508,8 @@ plotPolytope3D <-
          }
          points <- as.data.frame(points)
          rownames(points) <- NULL
-         if (length(which(type == "c"))<length(type) & length(which(type == "c"))>0) {
+         if ((length(which(type == "c"))<length(type) & length(which(type == "c"))>0) |
+             (length(which(type == "c"))==length(type))) {
             #pch3d(iPoints[,1:3], col="black", cex = 0.1, pch = 16)
             points3d(points[,1:3], col="grey50", size = 7)
          }
@@ -517,7 +519,7 @@ plotPolytope3D <-
          else if (labels == "n")
             points$lbl <- ""
          else points$lbl <- 1:nrow(points)
-         text3d(points[,1:3], texts = points$lbl, cex = c(1.1,1.1), adj=2, font = 2)
+         do.call(text3d, args = c(list(points[,1:3], texts = points$lbl), argsText3d))
       }
 
       do.call(axes3d, args = argsAxes3d)
@@ -1665,6 +1667,11 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
 #' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pts)
 #' finalize3D()
+#'
+#' ini3D()
+#' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
+#' plotPoints3D(pts)
+#' finalize3D(argsAxes3d = list(edges = "bbox"))
 finalize3D <- function(...){
    args <- list(...)
    argsAxes3d <- mergeLists(list(edges = c('x', 'y', 'z')), args$argsAxes3d)
