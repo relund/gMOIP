@@ -50,7 +50,7 @@ lists (see examples). Currently the following arguments are supported:
 }}
 }
 \value{
-The convex hull (invisible).
+A list with hull, \code{pts} classified and object ids (invisible).
 }
 \description{
 Plot the convex hull of a set of points in 3D.
@@ -64,8 +64,9 @@ plotHull3D(pts, drawPoints = TRUE) # a line
 pts<-matrix(c(1,0,0,1,1,1,1,2,2,3,1,1,3,3,3), ncol = 3, byrow = TRUE)
 plotHull3D(pts, drawLines = FALSE, argsPolygon3d = list(alpha=0.6)) # a polygon
 pts<-matrix(c(5,5,5,10,10,5,10,5,5,5,5,10), ncol = 3, byrow = TRUE)
-plotHull3D(pts, argsPolygon3d = list(alpha=0.9), argsSegments3d = list(color="red"))
+lst <- plotHull3D(pts, argsPolygon3d = list(alpha=0.9), argsSegments3d = list(color="red"))
 finalize3D()
+# rgl.pop(id = lst$ids) # remove last hull
 
 ## Using addRays
 pts <- data.frame(x = c(1,3), y = c(1,3), z = c(1,3))

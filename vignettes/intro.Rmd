@@ -102,7 +102,7 @@ plotPolytope(
    obj,
    type = rep("i", ncol(A)),
    crit = "max",
-   faces = rep("c", ncol(A)),
+   faces = rep("i", ncol(A)),
    plotFaces = TRUE,
    plotFeasible = TRUE,
    plotOptimum = TRUE,
@@ -683,6 +683,7 @@ Non-dominated points can be classified using `classifyNDSet`:
 
 ```{r}
 pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
+open3d()
 ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+2),
   ylim = c(min(pts[,2])-2,max(pts[,2])+2),
   zlim = c(min(pts[,3])-2,max(pts[,3])+2)))

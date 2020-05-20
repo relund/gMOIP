@@ -41,7 +41,7 @@ lists (see examples). Currently the following arguments are supported:
 }}
 }
 \value{
-NULL (invisible)
+Object ids (invisible).
 }
 \description{
 The cones are defined as the point plus R3+.
@@ -59,6 +59,7 @@ ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
 plotCones3D(c(4,4,4), direction = 1)
 plotCones3D(c(2,2,2), direction = -1)
 plotCones3D(c(4,2,2), direction = c(1,-1,-1))
-plotCones3D(c(2,2,4), direction = c(-1,-1,1))
+ids <- plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 finalize3D()
+# rgl.pop(id = ids) # remove last cone
 }

@@ -319,7 +319,7 @@ hullSegment <- function(vertices, hull=geometry::convhulln(vertices),
 #'
 #' @param pts A data frame with all points
 #' @param m Minimum values of the bounding box.
-#' @param M Maximum vlaues of the bounding box.
+#' @param M Maximum values of the bounding box.
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
 #'   plus a value greater than on equal zero. If negative, consider the i'th column of the `pts`
 #'   minus a value greater than on equal zero.
@@ -369,6 +369,8 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
 #'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 #'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param tol Tolerance on std. dev. if using PCA.
+#' @param m Minimum values of the bounding box.
+#' @param M Maximum values of the bounding box.
 #'
 #' @return A list with \code{hull} equal a matrix with row indices of the vertices defining each
 #'   facet in the hull and \code{pts} equal the input points (and dummy points) and columns:
@@ -424,7 +426,8 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
 #' convexHull(pts, addRays = TRUE)
 #' finalize3D()
 convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
-                       tol = mean(mean(abs(pts)))*sqrt(.Machine$double.eps)*2) {
+                       tol = mean(mean(abs(pts)))*sqrt(.Machine$double.eps)*2,
+                       m = apply(pts,2,min)-5, M = apply(pts,2,max)+5) {
    pts <- .checkPts(pts)
    p <- ncol(pts)
    if (length(direction) != p) direction = rep(direction[1],p)
@@ -443,7 +446,7 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
          m <- c(limits[1], limits[3], limits[5])
          M <- c(limits[2], limits[4], limits[6])
          set <- addRays(pts, m, M, direction)
-      } else set <- addRays(pts, direction = direction)
+      } else set <- addRays(pts, m, M, direction = direction)
    } else {
       set <- cbind(pts, pt = 1) # point in (1=original set, 0=artificial)
    }

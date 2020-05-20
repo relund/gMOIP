@@ -38,13 +38,13 @@ may contain \code{lines}: number of lines.
 }}
 }
 \value{
-NULL (invisible)
+Object ids (invisible).
 }
 \description{
 Plot a polygon.
 }
 \examples{
-pts <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
+pts0 <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
 pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
 
 ini3D()
@@ -67,9 +67,10 @@ plotPolygon3D(pts, useFrame = T, useLines = T, useShade = T,
 finalize3D()
 
 ini3D()
-plotPolygon3D(pts, usePoints = T, useShade = T,
+ids <- plotPolygon3D(pts, usePoints = T, useShade = T,
               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
 finalize3D()
+# rgl.pop(id = ids) # remove object again
 
 \donttest{
 # In general you have to finetune size and numbers when you use textures

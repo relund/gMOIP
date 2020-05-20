@@ -16,7 +16,7 @@ addRays(
 
 \item{m}{Minimum values of the bounding box.}
 
-\item{M}{Maximum vlaues of the bounding box.}
+\item{M}{Maximum values of the bounding box.}
 
 \item{direction}{Ray direction. If i'th entry is positive, consider the i'th column of the \code{pts}
 plus a value greater than on equal zero. If negative, consider the i'th column of the \code{pts}

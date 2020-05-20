@@ -12,7 +12,10 @@
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
 #'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 #'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
-#' @param latex If \code{True} make latex math labels for TikZ.
+#' @param drawPlot Draw the ggplot. Set to FALSE if you want to combine hulls in a single plot.
+#' @param drawBBoxHull If addRays then draw the hull areas hitting the bounding box also.
+#' @param m Minimum values of the bounding box.
+#' @param M Maximum values of the bounding box.
 #' @param ... Further arguments passed on the the ggplot plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
@@ -21,21 +24,29 @@
 #'   * `argsGeom_polygon`: A list of arguments for [`ggplot2::geom_polygon`].
 #'   * `argsGeom_label`: A list of arguments for [`ggplot2::geom_label`].
 #'
-#' @return The ggplot.
+#' @return The ggplot object if `drawPlot = T`; otherwise, a list of ggplot components.
 #' @export
 #' @importFrom rlang .data
 #'
 #' @examples
 #' pts<-matrix(c(1,1), ncol = 2, byrow = TRUE)
 #' plotHull2D(pts)
-#' pts<-matrix(c(1,1, 2,2), ncol = 2, byrow = TRUE)
-#' plotHull2D(pts, drawPoints = TRUE)
-#' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, addText = "coord")
-#' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
-#' pts<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
-#' plotHull2D(pts, drawPoints = TRUE, addText = "coord")
-#' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, addText = "coord")
-#' plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
+#' pts1<-matrix(c(2,2, 3,3), ncol = 2, byrow = TRUE)
+#' plotHull2D(pts1, drawPoints = TRUE)
+#' plotHull2D(pts1, drawPoints = TRUE, addRays = TRUE, addText = "coord")
+#' plotHull2D(pts1, drawPoints = TRUE, addRays = TRUE, addText = "coord", drawBBoxHull = TRUE)
+#' plotHull2D(pts1, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
+#' pts2<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
+#' plotHull2D(pts2, drawPoints = TRUE, addText = "coord")
+#' plotHull2D(pts2, drawPoints = TRUE, addRays = TRUE, addText = "coord")
+#' plotHull2D(pts2, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
+#' ## Combine hulls
+#' ggplot() +
+#'   plotHull2D(pts2, drawPoints = TRUE, addText = "coord", drawPlot = FALSE) +
+#'   plotHull2D(pts1, drawPoints = TRUE, drawPlot = FALSE) +
+#'   gMOIPTheme() +
+#'   xlab(expression(x[1])) +
+#'   ylab(expression(x[2]))
 plotHull2D <- function(pts,
                        drawPoints = FALSE,
                        drawLines = TRUE,
@@ -43,7 +54,10 @@ plotHull2D <- function(pts,
                        addText = FALSE,
                        addRays = FALSE,
                        direction = 1,
-                       latex = FALSE,
+                       drawPlot = TRUE,
+                       drawBBoxHull = FALSE,
+                       m = apply(pts,2,min)-5,
+                       M = apply(pts,2,max)+5,
                        ...)
 {
    args <- list(...)
@@ -52,86 +66,75 @@ plotHull2D <- function(pts,
    argsGeom_polygon <- mergeLists(list(fill = "black", alpha = 0.2), args$argsGeom_polygon)
    argsGeom_label <- mergeLists(list(nudge_x = 0.2), args$argsGeom_label)
 
-   myTheme <- theme_bw()
-   myTheme <- myTheme + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                              panel.border = element_blank(),
-                              #axis.line = element_blank(),
-                              axis.line = element_line(colour = "black", size = 0.5,
-                                                       arrow = arrow(length = unit(0.3,"cm")) ),
-                              #axis.ticks = element_blank()
-                              #axis.text.x = element_text(margin = margin(r = 30))
-                              # axis.ticks.length = unit(0.5,"mm"),
-                              #aspect.ratio=4/3,
-                              legend.position="none"
-   )
-
    pts <- .checkPts(pts, p = 2)
-   hull <- convexHull(pts, addRays = addRays, direction = direction)
+   hull <- convexHull(pts, addRays = addRays, direction = direction, m = m, M = M)
    set <- hull$pts
    hull <- hull$hull
    d <- dimFace(set[,1:2, drop = FALSE])
-
-   # Create solution plot
-   plt <- ggplot(set, aes_string(x = colnames(set)[1], y = colnames(set)[2])) #+ coord_fixed(ratio = 1)
-   if (latex) plt <- plt + xlab("$x_1$") + ylab("$x_2$")
-   if (!latex) plt <- plt + xlab(expression(x[1])) + ylab(expression(x[2]))
+   aES <- aes_string(x = colnames(set)[1], y = colnames(set)[2])
+   aES1 <- aes_string(x = colnames(set)[1], y = colnames(set)[2], label = 'text')
+   aES2 <- aes_string(x = colnames(set)[1], y = colnames(set)[2], label = 'addText')
+   lst <- NULL
 
    if (d > 1) { # a polygon
       if (drawPolygons) {
          ptsT <- set[hull,]
-         plt <- plt +
-            do.call(geom_polygon, args = c(list(data = ptsT), argsGeom_polygon))
+         lst <- c(lst,
+            do.call(geom_polygon, args = c(list(aES, data = ptsT), argsGeom_polygon)))
       }
    }
    if (d > 0) { # a line or polygon
       if (drawLines) {
          ptsT <- set[hull,]
          for (i in 2:nrow(ptsT)){
-            if (!(ptsT$pt[i-1] == 0 & ptsT$pt[i] == 0)) {
+            if (!(ptsT$pt[i-1] == 0 & ptsT$pt[i] == 0) | drawBBoxHull) {
                ptsTT <- ptsT[(i-1):i,]
-               plt <- plt +
-                  do.call(geom_path, args = c(list(data = ptsTT), argsGeom_path))
+               lst <- c(lst,
+                  do.call(geom_path, args = c(list(aES, data = ptsTT), argsGeom_path)))
             }
          }
-         if (!(ptsT$pt[1] == 0 & ptsT$pt[nrow(ptsT)] == 0)) {
+         if (!(ptsT$pt[1] == 0 & ptsT$pt[nrow(ptsT)] == 0) | drawBBoxHull) {
             ptsTT <- ptsT[c(1,nrow(ptsT)),]
-            plt <- plt +
-               do.call(geom_path, args = c(list(data = ptsTT), argsGeom_path))
+            lst <- c(lst,
+               do.call(geom_path, args = c(list(aES, data = ptsTT), argsGeom_path)))
          }
       }
    }
    if (drawPoints | d == 0) {
       ptsT <- dplyr::filter(set, .data$pt == 1)
-      plt <- plt +
-         do.call(geom_point, args = c(list(data = ptsT), argsGeom_point))
+      lst <- c(lst,
+         do.call(geom_point, args = c(list(aES, data = ptsT), argsGeom_point)))
    }
 
    ptsT <- dplyr::filter(set, .data$pt == 1)
    if (length(addText) > 1) {
       if (length(addText) == nrow(ptsT)) {
-         plt <- plt +
-            do.call(geom_label, args = c(list(aes_string(label = 'addText'), data = ptsT), argsGeom_label))
+         lst <- c(lst,
+            do.call(geom_label, args = c(list(aes_string(label = 'addText'), data = ptsT), argsGeom_label)))
       }
    } else if (length(addText) == 1) {
       if (addText == TRUE | addText == "coord") {
          ptsT$text <- paste0("(",ptsT[,1],",",ptsT[,2],")")
-         plt <- plt +
-            do.call(geom_label, args = c(list(aes_string(label = 'text'), data = ptsT), argsGeom_label))
+         lst <- c(lst,
+            do.call(geom_label, args = c(list(aES1, data = ptsT), argsGeom_label)))
       } else if (addText == "rownames") {
          ptsT$text <- rownames(ptsT)
-         plt <- plt +
-            do.call(geom_label, args = c(list(aes_string(label = 'text'), data = ptsT), argsGeom_label))
+         lst <- c(lst,
+            do.call(geom_label, args = c(list(aES1, data = ptsT), argsGeom_label)))
       } else if (addText == "both") {
          text <- paste0("(",ptsT[,1],",",ptsT[,2],")")
          ptsT$text <- paste(text,rownames(ptsT))
-         plt <- plt +
-            do.call(geom_label, args = c(list(aes_string(label = 'text'), data = ptsT), argsGeom_label))
+         lst <- c(lst,
+            do.call(geom_label, args = c(list(aES1, data = ptsT), argsGeom_label)))
       } else if (addText != FALSE & length(addText) == nrow(ptsT)) {
-         do.call(geom_label, args = c(list(aes_string(label = 'addText'), data = ptsT), argsGeom_label))
+         lst <- c(lst,
+            do.call(geom_label, args = c(list(aES2, data = ptsT), argsGeom_label)))
       }
    }
-   plt <- plt #+ myTheme
-   return(plt)
+   # if (latex) lst <- c(lst, xlab("$x_1$"), ylab("$x_2$"))
+   # if (!latex) lst <- c(lst, xlab(expression(x[1])), ylab(expression(x[2])))
+   if (drawPlot) lst <- ggplot() + lst
+   return(lst)
 }
 
 
@@ -973,7 +976,7 @@ plotNDSet2D <- function(points,
 #'   * `argsPolygon3d`: A list of arguments for [`rgl::polygon3d`].
 #'   * `argsShade3d`: A list of arguments for [`rgl::shade3d`][rgl::mesh3d].
 #'
-#' @return The corner points of the rectangle (invisible).
+#' @return Object ids (invisible).
 #' @export
 #'
 #' @examples
@@ -981,8 +984,9 @@ plotNDSet2D <- function(points,
 #' plotRectangle3D(c(0,0,0), c(1,1,1))
 #' plotRectangle3D(c(1,1,1), c(4,4,3), drawPoints = TRUE, drawLines = FALSE,
 #'            argsPlot3d = list(size=2, type="s", alpha=0.3))
-#' plotRectangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
+#' ids <- plotRectangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
 #' finalize3D()
+#' # rgl.pop(id = ids) remove last object
 plotRectangle3D <- function(a, b, ...) {
    args <- list(...)
    argsSegments3d <- mergeLists(list(), args$argsSegments3d)
@@ -998,10 +1002,10 @@ plotRectangle3D <- function(a, b, ...) {
    argsP <- list()
    if (!is.null(args$drawPoints)) argsP$drawPoints <- args$drawPoints
    if (!is.null(args$drawLines)) argsP$drawLines <- args$drawLines
-   do.call(plotHull3D, args = c(list(x), list(argsSegments3d = argsSegments3d,
+   lst <- do.call(plotHull3D, args = c(list(x), list(argsSegments3d = argsSegments3d,
                                               argsPlot3d = argsPlot3d, argsShade3d = argsShade3d,
                                               argsPolygon3d = argsPolygon3d), argsP))
-   return(invisible(x))
+   return(invisible(lst$ids))
 }
 
 
@@ -1024,11 +1028,11 @@ plotRectangle3D <- function(a, b, ...) {
 #'   * `argsLines`: A list of arguments for [rgl::persp3d] when `useLines = T`. Moreover, the list
 #'                  may contain `lines`: number of lines.
 #'
-#' @return NULL (invisible)
+#' @return Object ids (invisible).
 #' @export
 #'
 #' @examples
-#' pts <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
+#' pts0 <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
 #' pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
 #'
 #' ini3D()
@@ -1051,9 +1055,10 @@ plotRectangle3D <- function(a, b, ...) {
 #' finalize3D()
 #'
 #' ini3D()
-#' plotPolygon3D(pts, usePoints = T, useShade = T,
+#' ids <- plotPolygon3D(pts, usePoints = T, useShade = T,
 #'               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
 #' finalize3D()
+#' # rgl.pop(id = ids) # remove object again
 #'
 #' \donttest{
 #' # In general you have to finetune size and numbers when you use textures
@@ -1097,13 +1102,14 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
                                 front = 'lines', lit = FALSE),
                            args$argsLines)
 
+   ids <- NULL
    pts <- .checkPts(pts, p = 3, asDF = TRUE)
    if (dimFace(pts) != 2) stop("Vertices don't define a polygon!")
    if (usePoints) useShade = FALSE
 
    if (useShade) {
-      if (nrow(pts) > 3) do.call(rgl::polygon3d, args = c(list(pts), argsShade))
-      if (nrow(pts) == 3) do.call(rgl::triangles3d, args = c(list(pts), argsShade))
+      if (nrow(pts) > 3) ids <- c(ids, do.call(rgl::polygon3d, args = c(list(pts), argsShade)))
+      if (nrow(pts) == 3) ids <- c(ids, do.call(rgl::triangles3d, args = c(list(pts), argsShade)))
    }
    if (useFrame) {
       n <- length(pts[,1])
@@ -1115,7 +1121,7 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
          prev <- nas[i]
       }
       res <- cbind(pts[loop,1], pts[loop,2], pts[loop,3])
-      do.call(rgl::lines3d, args = c(list(res), argsFrame))
+      ids <- c(ids, do.call(rgl::lines3d, args = c(list(res), argsFrame)))
    }
    if (usePoints) {
       if (nrow(pts) > 3)
@@ -1123,7 +1129,7 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
       if (nrow(pts) == 3)
          poly <- tmesh3d(rbind(pts[,1], pts[,2], pts[,3], 1), indices = 1:3)
       poly$texcoords <- argsPoints$texcoords
-      do.call(rgl::shade3d, args = c(list(poly), argsPoints))
+      ids <- c(ids, do.call(rgl::shade3d, args = c(list(poly), argsPoints)))
    }
    if (useLines) {
       if (!rgl::rgl.cur()) stop("Option useLines need an open rgl window!")
@@ -1138,9 +1144,9 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
       colnames(pts) <- c("x", "y", "z")
       xy[sp::point.in.polygon(xy[,1], xy[,2], pts$x, pts$y) <= 0,] <- NA
       z <- predict(lm(z ~ x + y, data = pts), newdata = data.frame(x=xy[,1], y=xy[,2]))
-      do.call(rgl::persp3d, args = c(list(x, y, z, add = TRUE), argsLines))
+      ids <- c(ids, do.call(rgl::persp3d, args = c(list(x, y, z, add = TRUE), argsLines)))
    }
-   return(invisible(NULL))
+   return(invisible(ids))
 }
 
 
@@ -1198,7 +1204,7 @@ getTexture <- function(pch = 16, cex = 10, ...) {
 #'   * `argsSegments3d`: A list of arguments for [`rgl::segments3d`][rgl::points3d].
 #'   * `argsPolygon3d`: A list of arguments for [`rgl::polygon3d`].
 #'
-#' @return NULL (invisible)
+#' @return Object ids (invisible).
 #' @export
 #'
 #' @examples
@@ -1214,8 +1220,9 @@ getTexture <- function(pch = 16, cex = 10, ...) {
 #' plotCones3D(c(4,4,4), direction = 1)
 #' plotCones3D(c(2,2,2), direction = -1)
 #' plotCones3D(c(4,2,2), direction = c(1,-1,-1))
-#' plotCones3D(c(2,2,4), direction = c(-1,-1,1))
+#' ids <- plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 #' finalize3D()
+#' # rgl.pop(id = ids) # remove last cone
 plotCones3D <-
    function(pts,
             drawPoint = TRUE,
@@ -1233,7 +1240,7 @@ plotCones3D <-
    pts <- .checkPts(pts, p = 3)
    for (i in 1:dim(pts)[1]) {
       pt <- as.vector(pts[i, ])
-      plotHull3D(pt, drawPoints = drawPoint,
+      lst <- plotHull3D(pt, drawPoints = drawPoint,
                    drawLines = drawLines, drawPolygons = drawPolygons,
                    addRays = TRUE, direction = direction, drawBBoxHull = rectangle,
                    useRGLBBox = useRGLBBox,
@@ -1241,7 +1248,67 @@ plotCones3D <-
                    argsPolygon3d = argsPolygon3d
                  )
    }
-   return(invisible(NULL))
+   return(invisible(lst$ids))
+   }
+
+
+
+#' Plot a cone defined by a point in 2D.
+#'
+#' The cones are defined as the point plus/minus rays of R2.
+#'
+#' @param pts A matrix with a point in each row.
+#' @param drawPoint Draw the points defining the cone.
+#' @param drawLines Draw lines of the cone.
+#' @param drawPolygons Draw polygons of the cone.
+#' @param rectangle Draw the cone as a rectangle.
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of `pts`
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
+#' @param drawPlot Draw the ggplot. Set to FALSE if you want to combine hulls in a single plot.
+#' @param ... Further arguments passed to [plotHull2D]
+#'
+#' @return A ggplot object
+#' @export
+#'
+#' @examples
+#' plotCones2D(c(4,4), drawLines = FALSE, drawPoint = TRUE,
+#'            argsGeom_point = list(col = "red", size = 10),
+#'            argsGeom_polygon = list(alpha = 0.5), rectangle = TRUE)
+#' plotCones2D(c(1,1), rectangle = FALSE)
+#' plotCones2D(matrix(c(3,3,2,2), ncol = 2, byrow = TRUE))
+#'
+#' ## The Danish flag
+#' lst <- list(argsGeom_polygon = list(alpha = 0.85, fill = "red"),
+#'             drawPlot = FALSE, drawPoint = FALSE, drawLines = FALSE)
+#' p1 <- do.call(plotCones2D, args = c(list(c(2,4), direction = 1), lst))
+#' p2 <- do.call(plotCones2D, args = c(list(c(1,2), direction = -1), lst))
+#' p3 <- do.call(plotCones2D, args = c(list(c(2,2), direction = c(1,-1)), lst))
+#' p4 <- do.call(plotCones2D, args = c(list(c(1,4), direction = c(-1,1)), lst))
+#' ggplot() + p1 + p2 + p3 + p4 + theme_void()
+plotCones2D <-
+   function(pts,
+            drawPoint = TRUE,
+            drawLines = TRUE,
+            drawPolygons = TRUE,
+            direction = 1,
+            rectangle = FALSE,
+            drawPlot = TRUE,
+            m = apply(pts,2,min)-5,
+            M = apply(pts,2,max)+5,
+            ...) {
+   pts <- .checkPts(pts, p = 2)
+   lst <- NULL
+   for (i in 1:dim(pts)[1]) {
+      pt <- as.vector(pts[i, ])
+      lst <- c(lst,
+               plotHull2D(pt, drawPoints = drawPoint,
+                 drawLines = drawLines, drawPolygons = drawPolygons,
+                 addRays = TRUE, direction = direction, drawPlot = FALSE,
+                 drawBBoxHull = rectangle, m = m, M = M, ...))
+   }
+   if (drawPlot) lst <- ggplot() + lst
+   return(lst)
 }
 
 
@@ -1268,7 +1335,7 @@ plotCones3D <-
 #'   * `argsShade3d`: A list of arguments for [`rgl::shade3d`][rgl::mesh3d].
 #'   * `argsText3d`: A list of arguments for [`rgl::text3d`].
 #'
-#' @return The convex hull (invisible).
+#' @return A list with hull, `pts` classified and object ids (invisible).
 #' @export
 #'
 #' @examples
@@ -1280,8 +1347,9 @@ plotCones3D <-
 #' pts<-matrix(c(1,0,0,1,1,1,1,2,2,3,1,1,3,3,3), ncol = 3, byrow = TRUE)
 #' plotHull3D(pts, drawLines = FALSE, argsPolygon3d = list(alpha=0.6)) # a polygon
 #' pts<-matrix(c(5,5,5,10,10,5,10,5,5,5,5,10), ncol = 3, byrow = TRUE)
-#' plotHull3D(pts, argsPolygon3d = list(alpha=0.9), argsSegments3d = list(color="red"))
+#' lst <- plotHull3D(pts, argsPolygon3d = list(alpha=0.9), argsSegments3d = list(color="red"))
 #' finalize3D()
+#' # rgl.pop(id = lst$ids) # remove last hull
 #'
 #' ## Using addRays
 #' pts <- data.frame(x = c(1,3), y = c(1,3), z = c(1,3))
@@ -1366,6 +1434,7 @@ plotHull3D <- function(pts,
                                args$argsPolygon3d)
    argsText3d <- mergeLists(list(), args$argsText3d)
 
+   ids <- NULL
    pts <- .checkPts(pts, p = 3)
    if (length(direction) != 3) direction = rep(direction[1],3)
    hull <- convexHull(pts, addRays = addRays, direction = direction, useRGLBBox = useRGLBBox)
@@ -1392,17 +1461,17 @@ plotHull3D <- function(pts,
             if (!(pt[tri[1], 4] == 0 && pt[tri[length(tri)], 4] == 0)) {  #  && !drawBBoxHull
                tri1 <- c(tri1, NA, tri[1], tri[length(tri)])
             }
-            do.call(rgl::polygon3d, args = c(list(pt[tri1, 1], pt[tri1, 2], pt[tri1, 3], fill = FALSE),
-                    argsSegments3d))
+            ids <- c(ids, do.call(rgl::polygon3d, args = c(list(pt[tri1, 1], pt[tri1, 2], pt[tri1, 3], fill = FALSE),
+                    argsSegments3d)))
          }
          if (drawPolygons) {
             if (drawBBoxHull | (!drawBBoxHull & nrow(dplyr::intersect(pt[,1:3],pN)) == 0)) {
                if (length(tri)==3) {
-                  do.call(rgl::triangles3d, args = c(list(x = pt[,1:3]), argsPolygon3d) )
+                  ids <- c(ids, do.call(rgl::triangles3d, args = c(list(x = pt[,1:3]), argsPolygon3d) ))
                } else if (length(tri)==4){
                   tri <- convexHull(pt[,1:3])$hull # then have to find the vertex sequence
                   obj <- rgl::qmesh3d(t(pt[,1:3]),tri, homogeneous = FALSE)
-                  do.call(rgl::shade3d, args = c(list(obj), argsPolygon3d))
+                  ids <- c(ids, do.call(rgl::shade3d, args = c(list(obj), argsPolygon3d)))
                } else {
                   # idx <- apply(pt[,1:3], 2, function(x) {return(length(unique(x))==1)})
                   # idx<-which(!idx)
@@ -1412,9 +1481,9 @@ plotHull3D <- function(pts,
                   comb <- t(utils::combn(3,2))
                   for (j in 1:3) {
                      res <- try(
-                        do.call(rgl::polygon3d, args = c(list(
+                        ids <- c(ids, do.call(rgl::polygon3d, args = c(list(
                         pt[tri, 1], pt[tri, 2], pt[tri, 3], fill = TRUE, coords = comb[j,]
-                     ), argsPolygon3d)), silent = TRUE)
+                     ), argsPolygon3d))), silent = TRUE)
                      if (!inherits(res, "try-error")) break #else {cat(i, " ", j, " ")}
                   }
                }
@@ -1423,31 +1492,31 @@ plotHull3D <- function(pts,
       }
    }
    if (d==0) {
-      do.call(rgl::plot3d, args = c(list(set[,1], set[,2], set[,3], add=TRUE), argsPlot3d) )
+      ids <- c(ids, do.call(rgl::plot3d, args = c(list(set[,1], set[,2], set[,3], add=TRUE), argsPlot3d)))
    }
    if (d==1) { #segments3d(set, col = "black", lwd=10, smooth= TRUE)
       cyl <- rgl::cylinder3d(set, radius = 0.01)
-      do.call(rgl::shade3d, args = c(list(cyl), argsShade3d) )
+      ids <- c(ids, do.call(rgl::shade3d, args = c(list(cyl), argsShade3d)))
    }
    if (d==2) {
       idx <- apply(set[,1:3], 2, function(x) {return(length(unique(x))==1)})
       tri <- hull
       if (length(tri)==3) {
-         if (drawPolygons) do.call(rgl::triangles3d,
-              args = c(list(set[tri,1], set[tri,2], set[tri,3]), argsPolygon3d) )
-         if (drawLines) do.call(rgl::polygon3d,
+         if (drawPolygons) ids <- c(ids, do.call(rgl::triangles3d,
+              args = c(list(set[tri,1], set[tri,2], set[tri,3]), argsPolygon3d) ))
+         if (drawLines) ids <- c(ids, do.call(rgl::polygon3d,
               args = c(list(set[tri,1], set[tri,2], set[tri,3], coords = which(!idx), fill= FALSE),
-                       argsSegments3d) )
+                       argsSegments3d) ))
       } else {
-         if (drawPolygons) do.call(rgl::polygon3d,
+         if (drawPolygons) ids <- c(ids, do.call(rgl::polygon3d,
               args = c(list(set[tri,1], set[tri,2], set[tri,3], coords = which(!idx), fill= TRUE),
-                       argsPolygon3d) )
-         if (drawLines) do.call(rgl::polygon3d,
+                       argsPolygon3d) ))
+         if (drawLines) ids <- c(ids, do.call(rgl::polygon3d,
               args = c(list(set[tri,1], set[tri,2], set[tri,3], coords = which(!idx), fill= FALSE),
-                       argsSegments3d) )
+                       argsSegments3d) ))
       }
    }
-   if (drawPoints) do.call(plotPoints3D, args = c(list(pts), list(argsPlot3d = argsPlot3d)))
+   if (drawPoints) ids <- c(ids, do.call(plotPoints3D, args = c(list(pts), list(argsPlot3d = argsPlot3d))))
 
 
    if (length(addText) > 1) {
@@ -1457,19 +1526,19 @@ plotHull3D <- function(pts,
    } else if (length(addText) == 1) {
       if (addText == TRUE | addText == "coord") {
          text <- paste0("(",pts[,1],",",pts[,2],",",pts[,3],")")
-         do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) ))
       } else if (addText == "rownames") {
          text <- rownames(as.data.frame(pts))
-         do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) ))
       } else if (addText == "both") {
          text <- paste0("(",pts[,1],",",pts[,2],",",pts[,3],")")
          text <- paste(text,rownames(as.data.frame(pts)))
-         do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = pts, texts = text), argsText3d) ))
       } else if (addText != FALSE & length(addText) == nrow(pts)) {
-         do.call(rgl::text3d, args = c(list(x = pts, texts = addText), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = pts, texts = addText), argsText3d) ))
       }
    }
-   return(invisible(list(hull = hull, pts = set)))
+   return(invisible(list(hull = hull, pts = set, ids = ids)))
    stop("Error in plotHull3D")
 }
 
@@ -1486,7 +1555,7 @@ plotHull3D <- function(pts,
 #'   * `argsPch3d`: A list of arguments for [`rgl::pch3d`].
 #'   * `argsText3d`: A list of arguments for [`rgl::text3d`].
 #'
-#' @return NULL (invisible)
+#' @return Object ids (invisible).
 #' @export
 #'
 #' @examples
@@ -1497,41 +1566,43 @@ plotHull3D <- function(pts,
 #' plotPoints3D(c(3,2,3), argsPlot3d = list(col = "blue", size = 10, type="p"))
 #' plotPoints3D(c(1.5,1.5,1.5), argsPlot3d = list(col = "blue", size = 10, type="p"))
 #' plotPoints3D(c(2,2,2, 1,1,1), addText = "coord")
-#' plotPoints3D(c(3,3,3, 4,4,4), addText = "rownames")
+#' ids <- plotPoints3D(c(3,3,3, 4,4,4), addText = "rownames")
 #' finalize3D()
+#' # rgl.pop(ids) # remove the last again
 plotPoints3D <- function(pts, addText = F, ...) {
    args <- list(...)
    argsPlot3d <- mergeLists(list(size = 5, col = "black", type="p"), args$argsPlot3d)
    argsPch3d <- mergeLists(list(litt = TRUE), args$argsPch3d)
    argsText3d <- mergeLists(list(), args$argsText3d)
 
+   ids <- NULL
    p <- pts
    if (is.vector(pts)) p <- matrix(pts, ncol = 3, byrow = TRUE)
    p <- as.matrix(p)
 
-   if (is.null(args$argsPch3d)) do.call(rgl::plot3d, args = c(list(p, add= TRUE), argsPlot3d) )
-   if (!is.null(args$argsPch3d)) do.call(rgl::pch3d, args = c(list(p), argsPch3d) )
+   if (is.null(args$argsPch3d)) ids <- c(ids, do.call(rgl::plot3d, args = c(list(p, add= TRUE), argsPlot3d) ))
+   if (!is.null(args$argsPch3d)) ids <- c(ids, do.call(rgl::pch3d, args = c(list(p), argsPch3d) ))
 
    if (length(addText) > 1) {
       if (length(addText) == nrow(p)) {
-         do.call(rgl::text3d, args = c(list(x = p, texts = addText), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = p, texts = addText), argsText3d) ))
       }
    } else if (length(addText) == 1) {
       if (addText == TRUE | addText == "coord") {
          text <- paste0("(",p[,1],",",p[,2],",",p[,3],")")
-         do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) ))
       } else if (addText == "rownames") {
          text <- rownames(as.data.frame(p))
-         do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) ))
       } else if (addText == "both") {
          text <- paste0("(",p[,1],",",p[,2],",",p[,3],")")
          text <- paste(text,rownames(as.data.frame(p)))
-         do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = p, texts = text), argsText3d) ))
       } else if (addText != FALSE & length(addText) == nrow(p)) {
-         do.call(rgl::text3d, args = c(list(x = p, texts = addText), argsText3d) )
+         ids <- c(ids, do.call(rgl::text3d, args = c(list(x = p, texts = addText), argsText3d) ))
       }
    }
-   return(invisible(NULL))
+   return(invisible(ids))
 }
 
 
@@ -1565,9 +1636,10 @@ plotPoints3D <- function(pts, addText = F, ...) {
 #'
 #' ini3D(argsPlot3d = list(xlim = c(-1,10), ylim = c(-1,10), zlim = c(-1,10)) )
 #' plotPlane3D(c(1,1,1), point = c(1,1,1), useLines = TRUE, useShade = TRUE)
-#' plotPlane3D(c(1,2,1), point = c(2,2,2), argsLines = list(col="blue", lines = 100),
+#' ids <- plotPlane3D(c(1,2,1), point = c(2,2,2), argsLines = list(col="blue", lines = 100),
 #'             useLines = TRUE)
 #' finalize3D()
+#' # rgl.pop(id = ids) # remove last plane
 plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = T, useLines = F,
                         usePoints = F, ...) {
    args <- list(...)
@@ -1575,9 +1647,10 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = T, useLines
    argsLines <- mergeLists(list(back = 'lines', front = 'lines', add = TRUE, lines = 50),
                            args$argsLines)
 
+   ids <- NULL
    if (!is.null(point)) offset <- -sum(normal * point)
    if (useShade) {
-      do.call(rgl::planes3d, args = c(list(normal, d = offset), argsPlanes3d) )
+      ids <- c(ids, do.call(rgl::planes3d, args = c(list(normal, d = offset), argsPlanes3d) ))
    }
    # else use points or lines
    if (!rgl::rgl.cur()) stop("Option useLines or usePoints need an open rgl window!")
@@ -1591,10 +1664,10 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = T, useLines
    z <- outer(x,y,f)
    z[z < m[3] | z > M[3]] <- NA
    if (useLines) {
-      do.call(rgl::persp3d, args = c(list(x, y, z), argsLines) )
+      ids <- c(ids, do.call(rgl::persp3d, args = c(list(x, y, z), argsLines) ))
    }
    if (usePoints) {
-      return(invisible(NULL))
+      return(invisible(ids))
       # do.call(rgl::plot3d, args = c(list(x, y, z, add = TRUE), argsPoints) )
       # persp3d(x, y, z, back = 'lines', front = 'lines', add = TRUE)
       #
@@ -1608,7 +1681,7 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = T, useLines
       # poly$texcoords <- argsPolygon3d$texcoords
       # do.call(rgl::shade3d, args = c(list(poly, col = "white", specular = "black"), argsPolygon3d))
    }
-   return(invisible(NULL))
+   return(invisible(ids))
 }
 
 
@@ -1682,4 +1755,20 @@ finalize3D <- function(...){
    do.call(rgl::title3d, args = argsTitle3d)
    rgl.bringtotop()
    return(invisible(NULL))
+}
+
+gMOIPTheme <- function(...) {
+   theme_bw() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+         panel.border = element_blank(),
+         #axis.line = element_blank(),
+         axis.line = element_line(colour = "black", size = 0.5,
+                                  arrow = arrow(length = unit(0.3,"cm")) ),
+         #axis.ticks = element_blank()
+         #axis.text.x = element_text(margin = margin(r = 30))
+         # axis.ticks.length = unit(0.5,"mm"),
+         #aspect.ratio=4/3,
+         legend.position="none",
+         ...
+   )
 }

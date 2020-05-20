@@ -12,7 +12,10 @@ plotHull2D(
   addText = FALSE,
   addRays = FALSE,
   direction = 1,
-  latex = FALSE,
+  drawPlot = TRUE,
+  drawBBoxHull = FALSE,
+  m = apply(pts, 2, min) - 5,
+  M = apply(pts, 2, max) + 5,
   ...
 )
 }
@@ -34,7 +37,13 @@ and \code{both} supported or a vector with text.}
 plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
-\item{latex}{If \code{True} make latex math labels for TikZ.}
+\item{drawPlot}{Draw the ggplot. Set to FALSE if you want to combine hulls in a single plot.}
+
+\item{drawBBoxHull}{If addRays then draw the hull areas hitting the bounding box also.}
+
+\item{m}{Minimum values of the bounding box.}
+
+\item{M}{Maximum values of the bounding box.}
 
 \item{...}{Further arguments passed on the the ggplot plotting functions. This must be done as
 lists. Currently the following arguments are supported:
@@ -46,7 +55,7 @@ lists. Currently the following arguments are supported:
 }}
 }
 \value{
-The ggplot.
+The ggplot object if \code{drawPlot = T}; otherwise, a list of ggplot components.
 }
 \description{
 Plot the convex hull of a set of points in 3D.
@@ -54,12 +63,20 @@ Plot the convex hull of a set of points in 3D.
 \examples{
 pts<-matrix(c(1,1), ncol = 2, byrow = TRUE)
 plotHull2D(pts)
-pts<-matrix(c(1,1, 2,2), ncol = 2, byrow = TRUE)
-plotHull2D(pts, drawPoints = TRUE)
-plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, addText = "coord")
-plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
-pts<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
-plotHull2D(pts, drawPoints = TRUE, addText = "coord")
-plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, addText = "coord")
-plotHull2D(pts, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
+pts1<-matrix(c(2,2, 3,3), ncol = 2, byrow = TRUE)
+plotHull2D(pts1, drawPoints = TRUE)
+plotHull2D(pts1, drawPoints = TRUE, addRays = TRUE, addText = "coord")
+plotHull2D(pts1, drawPoints = TRUE, addRays = TRUE, addText = "coord", drawBBoxHull = TRUE)
+plotHull2D(pts1, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
+pts2<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
+plotHull2D(pts2, drawPoints = TRUE, addText = "coord")
+plotHull2D(pts2, drawPoints = TRUE, addRays = TRUE, addText = "coord")
+plotHull2D(pts2, drawPoints = TRUE, addRays = TRUE, direction = -1, addText = "coord")
+## Combine hulls
+ggplot() +
+  plotHull2D(pts2, drawPoints = TRUE, addText = "coord", drawPlot = FALSE) +
+  plotHull2D(pts1, drawPoints = TRUE, drawPlot = FALSE) +
+  gMOIPTheme() +
+  xlab(expression(x[1])) +
+  ylab(expression(x[2]))
 }

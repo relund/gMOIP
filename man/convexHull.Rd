@@ -9,7 +9,9 @@ convexHull(
   addRays = FALSE,
   useRGLBBox = FALSE,
   direction = 1,
-  tol = mean(mean(abs(pts))) * sqrt(.Machine$double.eps) * 2
+  tol = mean(mean(abs(pts))) * sqrt(.Machine$double.eps) * 2,
+  m = apply(pts, 2, min) - 5,
+  M = apply(pts, 2, max) + 5
 )
 }
 \arguments{
@@ -24,6 +26,10 @@ plus a value greater than on equal zero (minimize objective $i$). If negative, c
 i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
 \item{tol}{Tolerance on std. dev. if using PCA.}
+
+\item{m}{Minimum values of the bounding box.}
+
+\item{M}{Maximum values of the bounding box.}
 }
 \value{
 A list with \code{hull} equal a matrix with row indices of the vertices defining each
