@@ -1685,6 +1685,30 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = T, useLines
 }
 
 
+#' ggPlot theme for the package
+#'
+#' @param ... Further arguments parsed to [ggplot2::theme].
+#'
+#' @return The theme object.
+#' @export
+gMOIPTheme <- function(...) {
+   return(
+      theme_bw() +
+      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+            panel.border = element_blank(),
+            #axis.line = element_blank(),
+            axis.line = element_line(colour = "black", size = 0.5,
+                                     arrow = arrow(length = unit(0.3,"cm")) ),
+            #axis.ticks = element_blank()
+            #axis.text.x = element_text(margin = margin(r = 30))
+            # axis.ticks.length = unit(0.5,"mm"),
+            #aspect.ratio=4/3,
+            legend.position="none",
+            ...
+      )
+   )
+}
+
 
 #' Initialize the rgl window.
 #'
@@ -1755,20 +1779,4 @@ finalize3D <- function(...){
    do.call(rgl::title3d, args = argsTitle3d)
    rgl.bringtotop()
    return(invisible(NULL))
-}
-
-gMOIPTheme <- function(...) {
-   theme_bw() +
-   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-         panel.border = element_blank(),
-         #axis.line = element_blank(),
-         axis.line = element_line(colour = "black", size = 0.5,
-                                  arrow = arrow(length = unit(0.3,"cm")) ),
-         #axis.ticks = element_blank()
-         #axis.text.x = element_text(margin = margin(r = 30))
-         # axis.ticks.length = unit(0.5,"mm"),
-         #aspect.ratio=4/3,
-         legend.position="none",
-         ...
-   )
 }
