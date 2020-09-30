@@ -28,10 +28,10 @@ plotPolygon3D(
 lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsShade}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}} (n > 4 vertices),
-\link[rgl:triangles3d]{rgl::triangles3d} (n = 3 vertices) and \link[rgl:quads3d]{rgl::quads3d} (n = 4 vertices)
+\link[rgl:3dobjects]{rgl::triangles3d} (n = 3 vertices) and \link[rgl:3dobjects]{rgl::quads3d} (n = 4 vertices)
 if \code{useShade = T}.
-\item \code{argsFrame}: A list of arguments for \code{\link[rgl:lines3d]{rgl::lines3d}} if \code{useFrame = T}.
-\item \code{argsPoints}: A list of arguments for \code{\link[rgl:shade3d]{rgl::shade3d}} if \code{usePoints = T}. It is important
+\item \code{argsFrame}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::lines3d}} if \code{useFrame = T}.
+\item \code{argsPoints}: A list of arguments for \code{\link[rgl:mesh3d]{rgl::shade3d}} if \code{usePoints = T}. It is important
 to give a texture using \code{texture}. A texture can be set using \link{getTexture}.
 \item \code{argsLines}: A list of arguments for \link[rgl:persp3d]{rgl::persp3d} when \code{useLines = T}. Moreover, the list
 may contain \code{lines}: number of lines.

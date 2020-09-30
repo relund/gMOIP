@@ -51,7 +51,7 @@ lists. Currently the following arguments are supported:
 \item \code{argsGeom_point}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.
 \item \code{argsGeom_path}: A list of arguments for \code{\link[ggplot2:geom_path]{ggplot2::geom_path}}.
 \item \code{argsGeom_polygon}: A list of arguments for \code{\link[ggplot2:geom_polygon]{ggplot2::geom_polygon}}.
-\item \code{argsGeom_label}: A list of arguments for \code{\link[ggplot2:geom_label]{ggplot2::geom_label}}.
+\item \code{argsGeom_label}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_label}}.
 }}
 }
 \value{

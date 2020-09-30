@@ -17,7 +17,7 @@ lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
 \item \code{argsPch3d}: A list of arguments for \code{\link[rgl:pch3d]{rgl::pch3d}}.
-\item \code{argsText3d}: A list of arguments for \code{\link[rgl:text3d]{rgl::text3d}}.
+\item \code{argsText3d}: A list of arguments for \code{\link[rgl:texts]{rgl::text3d}}.
 }}
 }
 \value{
