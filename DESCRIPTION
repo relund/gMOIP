@@ -42,5 +42,6 @@ Suggests:
     knitr,
     rmarkdown,
     roxygen2,
+    ggsci,
     testthat (>= 2.1.0)
 VignetteBuilder: knitr
