@@ -9,3 +9,5 @@ CRAN-RELEASE
 *.pdf
 tests/temp/*
 test*.*
+pts_fig4.Rdata
+plot_polytope.tex
