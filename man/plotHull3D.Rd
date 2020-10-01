@@ -102,32 +102,35 @@ plotHull3D(pts, addRays = TRUE)
 finalize3D()
 
 \donttest{
-pts <- genNDSet(3, 100)
-pts <- as.data.frame(pts)
+pts <- genNDSet(3, 100, dubND = FALSE)
+pts <- as.data.frame(pts[,1:3])
 
 ini3D(argsPlot3d = list(
-  xlim = c(0,max(pts$x)+10),
-  ylim = c(0,max(pts$y)+10),
-  zlim = c(0,max(pts$z)+10)))
+  xlim = c(0,max(pts[,1])+10),
+  ylim = c(0,max(pts[,2])+10),
+  zlim = c(0,max(pts[,3])+10)))
 plotHull3D(pts, drawPoints = TRUE, addRays = TRUE)
 finalize3D()
 
-ini3D(argsPlot3d = list(xlim = c(0,max(pts[,1])+10),
+ini3D(argsPlot3d = list(
+  xlim = c(0,max(pts[,1])+10),
   ylim = c(0,max(pts[,2])+10),
   zlim = c(0,max(pts[,3])+10)))
 plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addRays = TRUE)
 finalize3D()
 
-ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
-  ylim = c(0,max(pts$y)+10),
-  zlim = c(0,max(pts$z)+10)))
+ini3D(argsPlot3d = list(
+  xlim = c(0,max(pts[,1])+10),
+  ylim = c(0,max(pts[,2])+10),
+  zlim = c(0,max(pts[,3])+10)))
 plotHull3D(pts, drawPoints = TRUE, drawLines = FALSE,
   argsPolygon3d = list(alpha = 1), addRays = TRUE)
 finalize3D()
 
-ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
-  ylim = c(0,max(pts$y)+2),
-  zlim = c(0,max(pts$z)+2)))
+ini3D(argsPlot3d = list(
+  xlim = c(0,max(pts[,1])+10),
+  ylim = c(0,max(pts[,2])+10),
+  zlim = c(0,max(pts[,3])+10)))
 plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addRays = TRUE)
 plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 finalize3D()

@@ -8,9 +8,9 @@ plotPlane3D(
   normal,
   point = NULL,
   offset = 0,
-  useShade = T,
-  useLines = F,
-  usePoints = F,
+  useShade = TRUE,
+  useLines = FALSE,
+  usePoints = FALSE,
   ...
 )
 }

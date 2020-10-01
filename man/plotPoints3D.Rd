@@ -4,7 +4,7 @@
 \alias{plotPoints3D}
 \title{Plot points in 3D.}
 \usage{
-plotPoints3D(pts, addText = F, ...)
+plotPoints3D(pts, addText = FALSE, ...)
 }
 \arguments{
 \item{pts}{A vector or matrix with the points.}

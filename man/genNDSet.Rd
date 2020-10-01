@@ -46,7 +46,7 @@ Generate a sample of nondominated points.
 }
 \examples{
 range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
-pts <- genNDSet(3, 800, range = range, random = TRUE, keep = TRUE)
+pts <- genNDSet(3, 50, range = range, random = TRUE, keep = TRUE)
 head(pts)
 Rfast::colMinsMaxs(as.matrix(pts))
 ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
@@ -57,6 +57,7 @@ plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red", size = 10))
 plotCones3D(pts[pts$nd,1:3], argsPolygon3d = list(alpha = 1))
 finalize3D()
 
+\donttest{
 ini3D()
 range <- c(1,100)
 cent <- rep(range[1] + (range[2]-range[1])/2, 3)
@@ -80,4 +81,5 @@ plotPoints3D(pts)
 plotPoints3D(pts[pts$nd,], argsPlot3d = list(col = "red", size = 10))
 rgl::planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
 finalize3D()
+}
 }

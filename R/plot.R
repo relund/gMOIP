@@ -420,7 +420,7 @@ plotPolytope3D <-
       # set plot parameters
       args <- list(...)
       argsAxes3d <- mergeLists(list(edges=c('x', 'y', 'z')), args$argsAxes3d)
-      argsPlot3d <- mergeLists(list(xlab = '', box = F, axes = F), args$argsPlot3d)
+      argsPlot3d <- mergeLists(list(xlab = '', box = FALSE, axes = F), args$argsPlot3d)
       argsTitle3d <- mergeLists(list(xlab = 'x1', ylab = 'x2', zlab = 'x3'), args$argsTitle3d)
       argsText3d <- mergeLists(list(), args$argsText3d)  #cex = c(1.1,1.1), adj=2, font = 2
 
@@ -1038,18 +1038,18 @@ plotRectangle3D <- function(a, b, ...) {
 #' finalize3D()
 #'
 #' ini3D()
-#' plotPolygon3D(pts, useFrame = T, argsShade = list(color = "red", alpha = 0.5),
+#' plotPolygon3D(pts, useFrame = TRUE, argsShade = list(color = "red", alpha = 0.5),
 #'               argsFrame = list(color = "green"))
 #' finalize3D()
 #'
 #' ini3D()
-#' plotPolygon3D(pts, useFrame = T, useLines = T, useShade = T,
+#' plotPolygon3D(pts, useFrame = TRUE, useLines = TRUE, useShade = TRUE,
 #'               argsShade = list(color = "red", alpha = 0.2),
 #'               argsLines = list(color = "blue"))
 #' finalize3D()
 #'
 #' ini3D()
-#' ids <- plotPolygon3D(pts, usePoints = T, useShade = T,
+#' ids <- plotPolygon3D(pts, usePoints = TRUE, useShade = TRUE,
 #'               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
 #' finalize3D()
 #' # rgl.pop(id = ids) # remove object again
@@ -1382,32 +1382,35 @@ plotCones2D <-
 #' finalize3D()
 #'
 #' \donttest{
-#' pts <- genNDSet(3, 100)
-#' pts <- as.data.frame(pts)
+#' pts <- genNDSet(3, 100, dubND = FALSE)
+#' pts <- as.data.frame(pts[,1:3])
 #'
 #' ini3D(argsPlot3d = list(
-#'   xlim = c(0,max(pts$x)+10),
-#'   ylim = c(0,max(pts$y)+10),
-#'   zlim = c(0,max(pts$z)+10)))
+#'   xlim = c(0,max(pts[,1])+10),
+#'   ylim = c(0,max(pts[,2])+10),
+#'   zlim = c(0,max(pts[,3])+10)))
 #' plotHull3D(pts, drawPoints = TRUE, addRays = TRUE)
 #' finalize3D()
 #'
-#' ini3D(argsPlot3d = list(xlim = c(0,max(pts[,1])+10),
+#' ini3D(argsPlot3d = list(
+#'   xlim = c(0,max(pts[,1])+10),
 #'   ylim = c(0,max(pts[,2])+10),
 #'   zlim = c(0,max(pts[,3])+10)))
 #' plotHull3D(pts, drawPoints = TRUE, drawPolygons = TRUE, addText = "coord", addRays = TRUE)
 #' finalize3D()
 #'
-#' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+10),
-#'   ylim = c(0,max(pts$y)+10),
-#'   zlim = c(0,max(pts$z)+10)))
+#' ini3D(argsPlot3d = list(
+#'   xlim = c(0,max(pts[,1])+10),
+#'   ylim = c(0,max(pts[,2])+10),
+#'   zlim = c(0,max(pts[,3])+10)))
 #' plotHull3D(pts, drawPoints = TRUE, drawLines = FALSE,
 #'   argsPolygon3d = list(alpha = 1), addRays = TRUE)
 #' finalize3D()
 #'
-#' ini3D(argsPlot3d = list(xlim = c(0,max(pts$x)+2),
-#'   ylim = c(0,max(pts$y)+2),
-#'   zlim = c(0,max(pts$z)+2)))
+#' ini3D(argsPlot3d = list(
+#'   xlim = c(0,max(pts[,1])+10),
+#'   ylim = c(0,max(pts[,2])+10),
+#'   zlim = c(0,max(pts[,3])+10)))
 #' plotHull3D(pts, drawPoints = TRUE, argsPolygon3d = list(color = "red"), addRays = TRUE)
 #' plotCones3D(pts, argsPolygon3d = list(alpha = 1), rectangle = TRUE)
 #' finalize3D()
@@ -1566,7 +1569,7 @@ plotHull3D <- function(pts,
 #' ids <- plotPoints3D(c(3,3,3, 4,4,4), addText = "rownames")
 #' finalize3D()
 #' # rgl.pop(ids) # remove the last again
-plotPoints3D <- function(pts, addText = F, ...) {
+plotPoints3D <- function(pts, addText = FALSE, ...) {
    args <- list(...)
    argsPlot3d <- mergeLists(list(size = 5, col = "black", type="p"), args$argsPlot3d)
    argsPch3d <- mergeLists(list(litt = TRUE), args$argsPch3d)
@@ -1637,8 +1640,8 @@ plotPoints3D <- function(pts, addText = F, ...) {
 #'             useLines = TRUE)
 #' finalize3D()
 #' # rgl.pop(id = ids) # remove last plane
-plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = T, useLines = F,
-                        usePoints = F, ...) {
+plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = TRUE, useLines = FALSE,
+                        usePoints = FALSE, ...) {
    args <- list(...)
    argsPlanes3d <- mergeLists(list(col = "grey100", alpha = 0.5), args$argsPlanes3d)
    argsLines <- mergeLists(list(back = 'lines', front = 'lines', add = TRUE, lines = 50),
@@ -1732,7 +1735,7 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
          xlab = '',
          ylab = '',
          zlab = '',
-         box = F,
+         box = FALSE,
          axes = F
       ), args$argsPlot3d)
    argsAspect3d <- mergeLists(list(x = "iso"), args$argsAspect3d)

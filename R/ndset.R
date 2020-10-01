@@ -623,6 +623,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' Rfast::colMinsMaxs(as.matrix(pts))
 #'
 #'
+#' \donttest{
 #' ### Using sphere
 #' ## p = 2
 #' range <- c(1,100)
@@ -748,6 +749,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' pts <- genSample(p, 1000, range = range, box = TRUE, argsBox = list(cor = "idxSplit"))
 #' head(pts)
 #' Rfast::colMinsMaxs(as.matrix(pts))
+#' }
 genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box = FALSE, ...) {
    if (!is.matrix(range)) range <- matrix(range, ncol = 2)
    if (nrow(range) == 1) range <-  matrix(rep(range, each=p), nrow=p)
@@ -879,7 +881,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #'
 #' @examples
 #' range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
-#' pts <- genNDSet(3, 800, range = range, random = TRUE, keep = TRUE)
+#' pts <- genNDSet(3, 50, range = range, random = TRUE, keep = TRUE)
 #' head(pts)
 #' Rfast::colMinsMaxs(as.matrix(pts))
 #' ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
@@ -890,6 +892,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' plotCones3D(pts[pts$nd,1:3], argsPolygon3d = list(alpha = 1))
 #' finalize3D()
 #'
+#' \donttest{
 #' ini3D()
 #' range <- c(1,100)
 #' cent <- rep(range[1] + (range[2]-range[1])/2, 3)
@@ -913,6 +916,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' plotPoints3D(pts[pts$nd,], argsPlot3d = list(col = "red", size = 10))
 #' rgl::planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
 #' finalize3D()
+#' }
 genNDSet <-
    function(p,
             n,

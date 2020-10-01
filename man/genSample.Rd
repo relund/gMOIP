@@ -94,6 +94,7 @@ head(pts)
 Rfast::colMinsMaxs(as.matrix(pts))
 
 
+\donttest{
 ### Using sphere
 ## p = 2
 range <- c(1,100)
@@ -219,4 +220,5 @@ range <- c(1,100)
 pts <- genSample(p, 1000, range = range, box = TRUE, argsBox = list(cor = "idxSplit"))
 head(pts)
 Rfast::colMinsMaxs(as.matrix(pts))
+}
 }

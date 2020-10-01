@@ -56,18 +56,18 @@ plotPolygon3D(pts, argsShade = list(color = "red", alpha = 1))
 finalize3D()
 
 ini3D()
-plotPolygon3D(pts, useFrame = T, argsShade = list(color = "red", alpha = 0.5),
+plotPolygon3D(pts, useFrame = TRUE, argsShade = list(color = "red", alpha = 0.5),
               argsFrame = list(color = "green"))
 finalize3D()
 
 ini3D()
-plotPolygon3D(pts, useFrame = T, useLines = T, useShade = T,
+plotPolygon3D(pts, useFrame = TRUE, useLines = TRUE, useShade = TRUE,
               argsShade = list(color = "red", alpha = 0.2),
               argsLines = list(color = "blue"))
 finalize3D()
 
 ini3D()
-ids <- plotPolygon3D(pts, usePoints = T, useShade = T,
+ids <- plotPolygon3D(pts, usePoints = TRUE, useShade = TRUE,
               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
 finalize3D()
 # rgl.pop(id = ids) # remove object again
