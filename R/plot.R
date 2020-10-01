@@ -265,7 +265,7 @@ plotPolytope2D <-
    )
 
    # Create solution plot
-   p<- ggplot() #+ coord_fixed(ratio = 1)
+   p<- ggplot2::ggplot() #+ coord_fixed(ratio = 1)
    if (latex) p <- p + xlab("$x_1$") + ylab("$x_2$")
    if (!latex) p <- p + xlab(expression(x[1])) + ylab(expression(x[2]))
    #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = F) +
@@ -622,7 +622,7 @@ plotCriterion2D <- function(A,
    if (crit=="min") points <- points[order(points$z2,points$z1),]
 
    # Initialize plot
-   p <- ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
+   p <- ggplot2::ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
    if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
    if (!latex) p <- p + xlab(expression(z[1])) + ylab(expression(z[2]))
 
@@ -875,7 +875,7 @@ plotNDSet2D <- function(points,
    if (crit=="max") points <- points[order(-points$z2,-points$z1),]
    if (crit=="min") points <- points[order(points$z2,points$z1),]
    # Initialize plot
-   p <- ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
+   p <- ggplot2::ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
    if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
    if (!latex) p <- p + xlab(expression(z[1])) + ylab(expression(z[2]))
 
@@ -1295,7 +1295,7 @@ plotCones3D <-
 #' p2 <- do.call(plotCones2D, args = c(list(c(1,2), direction = -1), lst))
 #' p3 <- do.call(plotCones2D, args = c(list(c(2,2), direction = c(1,-1)), lst))
 #' p4 <- do.call(plotCones2D, args = c(list(c(1,4), direction = c(-1,1)), lst))
-#' ggplot() + p1 + p2 + p3 + p4 + theme_void()
+#' ggplot2::ggplot() + p1 + p2 + p3 + p4 + theme_void()
 plotCones2D <-
    function(pts,
             drawPoint = TRUE,
@@ -1317,7 +1317,7 @@ plotCones2D <-
                  addRays = TRUE, direction = direction, drawPlot = FALSE,
                  drawBBoxHull = rectangle, m = m, M = M, ...))
    }
-   if (drawPlot) lst <- ggplot() + lst
+   if (drawPlot) lst <- ggplot2::ggplot() + lst
    return(lst)
 }
 
