@@ -67,7 +67,7 @@ library(gMOIP)
 ## Single criterion models
 
 We define the model \(\max\{cx | Ax \leq b\}\) (could also be minimized) using matrix `A` and
-vectores `b` and `obj`:
+vectors `b` and `obj`:
 
 ```{r}
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
@@ -171,7 +171,7 @@ plotPolytope(A,
              labels = "n")
 ```
 
-MILP model (here with continous faces):
+MILP model (here with continuous faces):
 
 ```{r, webgl=TRUE, cache=FALSE}
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
@@ -549,7 +549,7 @@ finalize3D(argsAxes3d = list(edges = "bbox", box = F))
 loadView(v = view, clear = FALSE)
 ```
 
-A set of non-dominated points and the areas they dominate. Lightblue plane are a lower bound.
+A set of non-dominated points and the areas they dominate. Light blue plane are a lower bound.
 
 ```{r Fig4, webgl = TRUE, echo=FALSE, cache=FALSE}
 pts <- data.frame(
@@ -710,7 +710,7 @@ finalize3D()
 pts
 ```
 
-The classificaton is done using the qhull algorithm that find the convex hull of the points including the rays. If a vertex then if must be supported extreme. Next we use the `inHull` algorithm to find out if the remaning are on the border or not (supported non-extreme and unsupported). 
+The classification is done using the qhull algorithm that find the convex hull of the points including the rays. If a vertex then if must be supported extreme. Next we use the `inHull` algorithm to find out if the remaining are on the border or not (supported non-extreme and unsupported). 
 
 ## Animations
 

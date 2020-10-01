@@ -296,7 +296,7 @@ gridExtra::grid.arrange(p1, p2, p3, p4, nrow = 2)
 
 ## Saving plots to LaTeX
 
-If you write a paper using LaTeX, you may create a tikz file of the plot for LaTeX using
+If you write a paper using LaTeX, you may create a TikZ file of the plot for LaTeX using
 
 ```{r, eval=FALSE}
 library(tikzDevice)

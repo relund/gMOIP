@@ -80,7 +80,7 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #       }
 #    }
 #    # classify extreme supported
-#    idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
+#    idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove duplicated points
 #    iP$ext <- FALSE
 #    iP$ext[idx[1]] <- TRUE
 #    iP$ext[idx[length(idx)]] <- TRUE
@@ -133,7 +133,7 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #             }
 #          }
 #       }
-#       # classify dublicates
+#       # classify duplicates
 #       idx <- which(iP$nD)
 #       if (!length(idx)<2) {
 #          for (i in 2:length(idx)) {
@@ -163,7 +163,7 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #' @param crit A max or min vector. If length one assume all objectives are optimized in the same
 #'   direction.
 #' @param keepDom Keep dominated points in output.
-#' @param dubND Dublicated non-dominated points are classified as non-dominated.
+#' @param dubND Duplicated non-dominated points are classified as non-dominated.
 #' @param classify Non-dominated points are classified into supported extreme (se), supported
 #'   non-extreme (sne) and unsupported (us)
 #'
@@ -336,7 +336,7 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
    # if (!keepDom) iP <- iP[iP$nD,]
    # iP$rowIdx <- 1:nrow(iP)
    # # classify extreme supported
-   # idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
+   # idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove duplicated points
    # iP$ext <- FALSE
    # iP$ext[idx[1]] <- TRUE
    # iP$ext[idx[length(idx)]] <- TRUE
@@ -389,7 +389,7 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
    #          }
    #       }
    #    }
-   #    # classify dublicates
+   #    # classify duplicates
    #    idx <- which(iP$nD)
    #    if (!length(idx)<2) {
    #       for (i in 2:length(idx)) {
@@ -484,7 +484,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
    if (!keepDom) iP <- iP[iP$nD,]
    iP$rowIdx <- 1:nrow(iP)
    # classify extreme supported
-   idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove dublicated points
+   idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove duplicated points
    iP$ext <- FALSE
    iP$ext[idx[1]] <- TRUE
    iP$ext[idx[length(idx)]] <- TRUE
@@ -537,7 +537,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
             }
          }
       }
-      # classify dublicates
+      # classify duplicates
       idx <- which(iP$nD)
       if (!length(idx)<2) {
          for (i in 2:length(idx)) {
@@ -574,8 +574,9 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #'      - `plane`: The plane used.
 #'      - `below`: Either true (generate points below the plane), false (generate points above the
 #'                 plane) or `NULL` (generated on the whole sphere).
-#'      - `factor`: If using a plane. Then the factor multiply `n` with so generate enough points
+#'      - `factor`: If using a plane. Then the factor to multiply `n` with, so generate enough points
 #'                  below/above the plane.
+#'      - `closeToPlane`: If TRUE only return points close to the plane.
 #'   * `argsBox`: A list of arguments for generating points inside boxes:
 #'      - `intervals`: Number of intervals to split the length of the range into. That is, each
 #'                     range is divided into `intervals` (sub)intervals and only the lowest/highest
@@ -765,7 +766,8 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
             center = range[,1] + (range[,2]-range[,1])/2,
             plane = NULL,
             below = TRUE,
-            factor = 2 + 1/log(n)
+            factor = 2 + 1/log(n),
+            closeToPlane = FALSE
          ), args$argsSphere)
       if (is.null(argsSphere$plane))
          argsSphere$plane <- c(argsSphere$center, -sum(argsSphere$center ^ 2))
@@ -869,7 +871,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' @param box Generate points in boxes.
 #' @param keep Keep dominated points also.
 #' @param crit Criteria used (a vector of min/max).
-#' @param dubND Should dublicated non-dominated points be considered as non-dominated.
+#' @param dubND Should duplicated non-dominated points be considered as non-dominated.
 #' @param ... Further arguments passed on to [`genSample`].
 #'
 #' @return A data frame with `p+1` columns (last one indicate if dominated or not).
@@ -1035,7 +1037,7 @@ classifyNDSet <- function(pts, direction = 1) {
       dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us"))) %>%
       dplyr::select(tidyselect::all_of(1:p), c("se", "sne", "us", "cls")) %>%
       dplyr::mutate(id = which(!idx))
-   set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of dublicates
+   set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of duplicates
    set1 <- set1 %>%
       dplyr::filter(!is.na(.data$id.y)) %>%
       dplyr::mutate(id.x = .data$id.y) %>% dplyr::select(.data$z1:.data$id.x)

@@ -25,7 +25,7 @@ direction.}
 
 \item{keepDom}{Keep dominated points in output.}
 
-\item{dubND}{Dublicated non-dominated points are classified as non-dominated.}
+\item{dubND}{Duplicated non-dominated points are classified as non-dominated.}
 
 \item{classify}{Non-dominated points are classified into supported extreme (se), supported
 non-extreme (sne) and unsupported (us)}

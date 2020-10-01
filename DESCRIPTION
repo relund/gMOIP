@@ -12,6 +12,7 @@ Description: Make 2D and 3D plots of linear programming (LP),
     For instance the non-dominated (Pareto) set for bi-objective LP/ILP/MILP programming models 
     (see vignettes for an overview).
 License: GPL (>= 3.3.2)
+Language: en-US
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
@@ -43,5 +44,7 @@ Suggests:
     rmarkdown,
     roxygen2,
     ggsci,
+    tidyverse,
+    magrittr,
     testthat (>= 2.1.0)
 VignetteBuilder: knitr

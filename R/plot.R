@@ -1036,6 +1036,7 @@ plotRectangle3D <- function(a, b, ...) {
 #'                  may contain `lines`: number of lines.
 #'
 #' @return Object ids (invisible).
+#' @importFrom stats lm predict
 #' @export
 #'
 #' @examples
@@ -1273,6 +1274,8 @@ plotCones3D <-
 #'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 #'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param drawPlot Draw the ggplot. Set to FALSE if you want to combine hulls in a single plot.
+#' @param m Minimum values of the bounding box.
+#' @param M Maximum values of the bounding box.
 #' @param ... Further arguments passed to [plotHull2D]
 #'
 #' @return A ggplot object

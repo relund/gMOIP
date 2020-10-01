@@ -37,7 +37,7 @@ lists (see examples). Currently the following arguments are supported:
 \item \code{plane}: The plane used.
 \item \code{below}: Either true (generate points below the plane), false (generate points above the
 plane) or \code{NULL} (generated on the whole sphere).
-\item \code{factor}: If using a plane. Then the factor multiply \code{n} with so generate enough points
+\item \code{factor}: If using a plane. Then the factor to multiply \code{n} with, so generate enough points
 below/above the plane.
 }
 \item \code{argsBox}: A list of arguments for generating points inside boxes:

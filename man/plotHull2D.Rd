@@ -79,4 +79,11 @@ ggplot() +
   gMOIPTheme() +
   xlab(expression(x[1])) +
   ylab(expression(x[2]))
+
+# Plotting an LP
+A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
+b <- c(3,27,90)
+obj <- c(7.75, 10)
+pts3 <- cornerPoints(A, b)
+plotHull2D(pts3, drawPoints = TRUE, addText = "coord", argsGeom_polygon = list(fill = "red"))
 }

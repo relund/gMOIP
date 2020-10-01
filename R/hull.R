@@ -67,10 +67,12 @@ dimFace<-function(pts, dim = NULL) {
 #'   dimensions, the numerical issues of floating point arithmetic will probably suggest a larger
 #'   value of tol.
 #'
-#' @note Some of the code are inspired by the Matlab code by John D'Errico
-#'   http://www.mathworks.com/matlabcentral/fileexchange/10226-inhull and
-#'   https://tolstoy.newcastle.edu.au/R/e8/help/09/12/8784.html. If the dimension of the hull is
-#'   below \eqn{p} then PCA may be used to check (a warning will be given).
+#' @note Some of the code are inspired by the [Matlab
+#'   code](http://www.mathworks.com/matlabcentral/fileexchange/10226-inhull) by
+#'   John D'Errico and
+#'   [how to find a point inside a hull](https://stat.ethz.ch/pipermail/r-help/2009-December/415377.html).
+#'   If the dimension of the hull is below \eqn{p} then PCA may be used to check (a
+#'   warning will be given).
 #'
 #' @return An integer vector of length \eqn{n} with values 1 (inside hull), -1 (outside hull) or 0
 #'   (on hull to precision indicated by tol).

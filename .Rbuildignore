@@ -13,3 +13,5 @@
 ^.*\.log$
 ^tests/testTex$
 ^tests/temp$
+^.*test.*$
+^pts_fig4\.Rdata$

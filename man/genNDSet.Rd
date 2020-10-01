@@ -34,7 +34,7 @@ genNDSet(
 
 \item{crit}{Criteria used (a vector of min/max).}
 
-\item{dubND}{Should dublicated non-dominated points be considered as non-dominated.}
+\item{dubND}{Should duplicated non-dominated points be considered as non-dominated.}
 
 \item{...}{Further arguments passed on to \code{\link{genSample}}.}
 }

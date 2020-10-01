@@ -34,6 +34,10 @@ i'th column of \code{pts} minus a value greater than on equal zero (maximize obj
 
 \item{drawPlot}{Draw the ggplot. Set to FALSE if you want to combine hulls in a single plot.}
 
+\item{m}{Minimum values of the bounding box.}
+
+\item{M}{Maximum values of the bounding box.}
+
 \item{...}{Further arguments passed to \link{plotHull2D}}
 }
 \value{
