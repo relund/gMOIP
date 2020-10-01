@@ -42,6 +42,7 @@ nondominated points may in fact be dominated by a segment.
 dat <- data.frame(z1=c(12,14,16,18,18,18,14,15,15), z2=c(18,16,12,4,2,6,14,14,16))
 points <- addNDSet(dat, crit = "min", keepDom = TRUE)
 plotNDSet2D(points, crit = "min", addTriangles = TRUE)
+plotNDSet2D(points, crit = "min", addTriangles = FALSE)
 plotNDSet2D(points, crit = "min", addTriangles = TRUE, addHull = FALSE)
 points <- addNDSet(dat, crit = "max", keepDom = TRUE)
 plotNDSet2D(points, crit = "max", addTriangles = TRUE)

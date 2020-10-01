@@ -47,6 +47,7 @@ A ggplot object
 The cones are defined as the point plus/minus rays of R2.
 }
 \examples{
+library(ggplot2)
 plotCones2D(c(4,4), drawLines = FALSE, drawPoint = TRUE,
            argsGeom_point = list(col = "red", size = 10),
            argsGeom_polygon = list(alpha = 0.5), rectangle = TRUE)
