@@ -61,6 +61,7 @@ The ggplot object if \code{drawPlot = T}; otherwise, a list of ggplot components
 Plot the convex hull of a set of points in 3D.
 }
 \examples{
+library(ggplot2)
 pts<-matrix(c(1,1), ncol = 2, byrow = TRUE)
 plotHull2D(pts)
 pts1<-matrix(c(2,2, 3,3), ncol = 2, byrow = TRUE)

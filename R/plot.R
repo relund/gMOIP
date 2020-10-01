@@ -27,8 +27,9 @@
 #' @return The ggplot object if `drawPlot = T`; otherwise, a list of ggplot components.
 #' @export
 #' @importFrom rlang .data
-#'
+#' @import ggplot2
 #' @examples
+#' library(ggplot2)
 #' pts<-matrix(c(1,1), ncol = 2, byrow = TRUE)
 #' plotHull2D(pts)
 #' pts1<-matrix(c(2,2, 3,3), ncol = 2, byrow = TRUE)
@@ -265,7 +266,7 @@ plotPolytope2D <-
    )
 
    # Create solution plot
-   p<- ggplot2::ggplot() #+ coord_fixed(ratio = 1)
+   p<- ggplot() #+ coord_fixed(ratio = 1)
    if (latex) p <- p + xlab("$x_1$") + ylab("$x_2$")
    if (!latex) p <- p + xlab(expression(x[1])) + ylab(expression(x[2]))
    #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = F) +
@@ -569,6 +570,7 @@ mergeLists <- function (a,b) {
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
+#' @import ggplot2
 #' @example inst/examples/ex_criterion.R
 plotCriterion2D <- function(A,
                             b,
@@ -622,7 +624,7 @@ plotCriterion2D <- function(A,
    if (crit=="min") points <- points[order(points$z2,points$z1),]
 
    # Initialize plot
-   p <- ggplot2::ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
+   p <- ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
    if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
    if (!latex) p <- p + xlab(expression(z[1])) + ylab(expression(z[2]))
 
@@ -752,7 +754,7 @@ plotCriterion2D <- function(A,
 #' @param print Print the view so can be copied to R code (no file is saved).
 #'
 #' @note Only save if the file name don't exists.
-#' @return The ggplot2 object.
+#' @return NULL (invisible).
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @examples
@@ -777,6 +779,7 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
       save(view, file = fname)
       message(paste0("RGL view saved to RData file ", fname, "."))
    }
+   return(invisible(NULL))
 }
 
 
@@ -838,6 +841,7 @@ loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE
 #' @return The ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
+#' @import ggplot2
 #' @examples
 #' dat <- data.frame(z1=c(12,14,16,18,18,18,14,15,15), z2=c(18,16,12,4,2,6,14,14,16))
 #' points <- addNDSet(dat, crit = "min", keepDom = TRUE)
@@ -875,7 +879,7 @@ plotNDSet2D <- function(points,
    if (crit=="max") points <- points[order(-points$z2,-points$z1),]
    if (crit=="min") points <- points[order(points$z2,points$z1),]
    # Initialize plot
-   p <- ggplot2::ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
+   p <- ggplot(points, aes_q(x = quote(z1), y = quote(z2), col = "grey10") )
    if (latex) p <- p + xlab("$z_1$") + ylab("$z_2$")
    if (!latex) p <- p + xlab(expression(z[1])) + ylab(expression(z[2]))
 
@@ -1280,8 +1284,9 @@ plotCones3D <-
 #'
 #' @return A ggplot object
 #' @export
-#'
+#' @import ggplot2
 #' @examples
+#' library(ggplot2)
 #' plotCones2D(c(4,4), drawLines = FALSE, drawPoint = TRUE,
 #'            argsGeom_point = list(col = "red", size = 10),
 #'            argsGeom_polygon = list(alpha = 0.5), rectangle = TRUE)
@@ -1295,7 +1300,7 @@ plotCones3D <-
 #' p2 <- do.call(plotCones2D, args = c(list(c(1,2), direction = -1), lst))
 #' p3 <- do.call(plotCones2D, args = c(list(c(2,2), direction = c(1,-1)), lst))
 #' p4 <- do.call(plotCones2D, args = c(list(c(1,4), direction = c(-1,1)), lst))
-#' ggplot2::ggplot() + p1 + p2 + p3 + p4 + theme_void()
+#' ggplot() + p1 + p2 + p3 + p4 + theme_void()
 plotCones2D <-
    function(pts,
             drawPoint = TRUE,
@@ -1317,7 +1322,7 @@ plotCones2D <-
                  addRays = TRUE, direction = direction, drawPlot = FALSE,
                  drawBBoxHull = rectangle, m = m, M = M, ...))
    }
-   if (drawPlot) lst <- ggplot2::ggplot() + lst
+   if (drawPlot) lst <- ggplot() + lst
    return(lst)
 }
 

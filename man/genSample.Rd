@@ -39,6 +39,7 @@ lists (see examples). Currently the following arguments are supported:
 plane) or \code{NULL} (generated on the whole sphere).
 \item \code{factor}: If using a plane. Then the factor to multiply \code{n} with, so generate enough points
 below/above the plane.
+\item \code{closeToPlane}: If TRUE only return points close to the plane.
 }
 \item \code{argsBox}: A list of arguments for generating points inside boxes:
 \itemize{

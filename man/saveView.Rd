@@ -14,7 +14,7 @@ saveView(fname = "view.RData", overwrite = FALSE, print = FALSE)
 \item{print}{Print the view so can be copied to R code (no file is saved).}
 }
 \value{
-The ggplot2 object.
+NULL (invisible).
 }
 \description{
 Help function to save the view angle for the RGL 3D plot
