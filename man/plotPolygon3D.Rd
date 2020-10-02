@@ -29,11 +29,11 @@ lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsShade}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}} (n > 4 vertices),
 \link[rgl:3dobjects]{rgl::triangles3d} (n = 3 vertices) and \link[rgl:3dobjects]{rgl::quads3d} (n = 4 vertices)
-if \code{useShade = T}.
-\item \code{argsFrame}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::lines3d}} if \code{useFrame = T}.
-\item \code{argsPoints}: A list of arguments for \code{\link[rgl:mesh3d]{rgl::shade3d}} if \code{usePoints = T}. It is important
+if \code{useShade = TRUE}.
+\item \code{argsFrame}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::lines3d}} if \code{useFrame = TRUE}.
+\item \code{argsPoints}: A list of arguments for \code{\link[rgl:mesh3d]{rgl::shade3d}} if \code{usePoints = TRUE}. It is important
 to give a texture using \code{texture}. A texture can be set using \link{getTexture}.
-\item \code{argsLines}: A list of arguments for \link[rgl:persp3d]{rgl::persp3d} when \code{useLines = T}. Moreover, the list
+\item \code{argsLines}: A list of arguments for \link[rgl:persp3d]{rgl::persp3d} when \code{useLines = TRUE}. Moreover, the list
 may contain \code{lines}: number of lines.
 }}
 }
@@ -77,7 +77,7 @@ finalize3D()
 # Different pch
 for (i in 0:3) {
   fname <- getTexture(pch = 15+i, cex = 30)
-  ini3D(T)
+  ini3D(TRUE)
   plotPolygon3D(pts, usePoints = TRUE, argsPoints = list(texture = fname))
   finalize3D()
 }
@@ -85,7 +85,7 @@ for (i in 0:3) {
 # Size of pch
 for (i in 1:4) {
   fname <- getTexture(pch = 15+i, cex = 10 * i)
-  ini3D(T)
+  ini3D(TRUE)
   plotPolygon3D(pts, usePoints = TRUE, argsPoints = list(texture = fname))
   finalize3D()
 }
@@ -93,7 +93,7 @@ for (i in 1:4) {
 # Number of pch
 fname <- getTexture(pch = 16, cex = 20)
 for (i in 1:4) {
-  ini3D(T)
+  ini3D(TRUE)
   plotPolygon3D(pts, usePoints = TRUE,
                 argsPoints = list(texture = fname, texcoords = rbind(pts$x, pts$y)*5*i))
   finalize3D()

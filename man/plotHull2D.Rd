@@ -55,7 +55,7 @@ lists. Currently the following arguments are supported:
 }}
 }
 \value{
-The ggplot object if \code{drawPlot = T}; otherwise, a list of ggplot components.
+The ggplot object if \code{drawPlot = TRUE}; otherwise, a list of ggplot components.
 }
 \description{
 Plot the convex hull of a set of points in 3D.
