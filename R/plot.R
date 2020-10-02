@@ -24,7 +24,7 @@
 #'   * `argsGeom_polygon`: A list of arguments for [`ggplot2::geom_polygon`].
 #'   * `argsGeom_label`: A list of arguments for [`ggplot2::geom_label`].
 #'
-#' @return The ggplot object if `drawPlot = T`; otherwise, a list of ggplot components.
+#' @return The ggplot object if `drawPlot = TRUE`; otherwise, a list of ggplot components.
 #' @export
 #' @importFrom rlang .data
 #' @import ggplot2
@@ -269,7 +269,7 @@ plotPolytope2D <-
    p<- ggplot() #+ coord_fixed(ratio = 1)
    if (latex) p <- p + xlab("$x_1$") + ylab("$x_2$")
    if (!latex) p <- p + xlab(expression(x[1])) + ylab(expression(x[2]))
-   #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = F) +
+   #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = FALSE) +
 
    if (plotFaces) {
       cPoints = cornerPoints(A, b, faces, nonneg)
@@ -420,7 +420,7 @@ plotPolytope3D <-
       # set plot parameters
       args <- list(...)
       argsAxes3d <- mergeLists(list(edges=c('x', 'y', 'z')), args$argsAxes3d)
-      argsPlot3d <- mergeLists(list(xlab = '', box = FALSE, axes = F), args$argsPlot3d)
+      argsPlot3d <- mergeLists(list(xlab = '', box = FALSE, axes = FALSE), args$argsPlot3d)
       argsTitle3d <- mergeLists(list(xlab = 'x1', ylab = 'x2', zlab = 'x3'), args$argsTitle3d)
       argsText3d <- mergeLists(list(), args$argsText3d)  #cex = c(1.1,1.1), adj=2, font = 2
 
@@ -1014,11 +1014,11 @@ plotRectangle3D <- function(a, b, ...) {
 #'
 #'   * `argsShade`: A list of arguments for [`rgl::polygon3d`] (n > 4 vertices),
 #'                  [rgl::triangles3d] (n = 3 vertices) and [rgl::quads3d] (n = 4 vertices)
-#'                  if `useShade = T`.
-#'   * `argsFrame`: A list of arguments for [`rgl::lines3d`] if `useFrame = T`.
-#'   * `argsPoints`: A list of arguments for [`rgl::shade3d`] if `usePoints = T`. It is important
+#'                  if `useShade = TRUE`.
+#'   * `argsFrame`: A list of arguments for [`rgl::lines3d`] if `useFrame = TRUE`.
+#'   * `argsPoints`: A list of arguments for [`rgl::shade3d`] if `usePoints = TRUE`. It is important
 #'                   to give a texture using `texture`. A texture can be set using [getTexture].
-#'   * `argsLines`: A list of arguments for [rgl::persp3d] when `useLines = T`. Moreover, the list
+#'   * `argsLines`: A list of arguments for [rgl::persp3d] when `useLines = TRUE`. Moreover, the list
 #'                  may contain `lines`: number of lines.
 #'
 #' @return Object ids (invisible).
@@ -1059,7 +1059,7 @@ plotRectangle3D <- function(a, b, ...) {
 #' # Different pch
 #' for (i in 0:3) {
 #'   fname <- getTexture(pch = 15+i, cex = 30)
-#'   ini3D(T)
+#'   ini3D(TRUE)
 #'   plotPolygon3D(pts, usePoints = TRUE, argsPoints = list(texture = fname))
 #'   finalize3D()
 #' }
@@ -1067,7 +1067,7 @@ plotRectangle3D <- function(a, b, ...) {
 #' # Size of pch
 #' for (i in 1:4) {
 #'   fname <- getTexture(pch = 15+i, cex = 10 * i)
-#'   ini3D(T)
+#'   ini3D(TRUE)
 #'   plotPolygon3D(pts, usePoints = TRUE, argsPoints = list(texture = fname))
 #'   finalize3D()
 #' }
@@ -1075,7 +1075,7 @@ plotRectangle3D <- function(a, b, ...) {
 #' # Number of pch
 #' fname <- getTexture(pch = 16, cex = 20)
 #' for (i in 1:4) {
-#'   ini3D(T)
+#'   ini3D(TRUE)
 #'   plotPolygon3D(pts, usePoints = TRUE,
 #'                 argsPoints = list(texture = fname, texcoords = rbind(pts$x, pts$y)*5*i))
 #'   finalize3D()
@@ -1453,7 +1453,7 @@ plotHull3D <- function(pts,
             if (length(tri)>3) { # then have to find the vertex sequence
                tri <- convexHull(pt[,1:3])$hull
             }
-            tri1 <- NULL # use tri1 to include the addRays=T case
+            tri1 <- NULL # use tri1 to include the addRays=TRUE case
             for (j in 2:length(tri)){
                if (!(pt[tri[j-1],4] == 0 && pt[tri[j],4] == 0)) #  && !drawBBoxHull
                   tri1 <- c(tri1,NA,tri[j-1],tri[j])
@@ -1617,8 +1617,8 @@ plotPoints3D <- function(pts, addText = FALSE, ...) {
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
-#'   * `argsPlanes3d`: A list of arguments for [rgl::planes3d] used when `useShade = T`.
-#'   * `argsLines`: A list of arguments for [rgl::persp3d] when `useLines = T`. Moreover, the list
+#'   * `argsPlanes3d`: A list of arguments for [rgl::planes3d] used when `useShade = TRUE`.
+#'   * `argsLines`: A list of arguments for [rgl::persp3d] when `useLines = TRUE`. Moreover, the list
 #'                  may contain `lines`: number of lines.
 #'
 #' @return NULL (invisible)
@@ -1736,7 +1736,7 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
          ylab = '',
          zlab = '',
          box = FALSE,
-         axes = F
+         axes = FALSE
       ), args$argsPlot3d)
    argsAspect3d <- mergeLists(list(x = "iso"), args$argsAspect3d)
 
