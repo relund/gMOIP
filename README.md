@@ -6,16 +6,18 @@ Status](https://travis-ci.org/relund/gMOIP.svg?branch=master)](https://travis-ci
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
 [![CRAN\_Downloads\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
 
-# gMOIP - 2D and 3D plots of LP/ILP/MILP programming models
+# gMOIP - Tools for 2D and 3D plots of single and multi-objective linear/integer programming models
 
-Make 2D and 3D plots of the polytope of a linear programming (LP),
-integer linear programming (ILP) model, or mixed integer linear
-programming (MILP) model with 2 or 3 variables, including integer
-points, ranges and iso profit curve.
-
-Can also make a plot of the bi-objective criterion space and the
+With this package you can make 2D and 3D plots of linear programming
+(LP), integer linear programming (ILP), or mixed integer linear
+programming (MILP) models with up to three objectives. Plots of both the
+solution and criterion space are possible. For instance the
 non-dominated (Pareto) set for bi-objective LP/ILP/MILP programming
 models.
+
+The convex hull of a set of points in 2D or 3D can also be plotted. A
+general function for checking if a point is inside the convex hull is
+also provided.
 
 ## Usage
 
@@ -105,10 +107,11 @@ view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
 loadView(v = view)  # set view angle
-plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
+plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "n")
+snapshot3d("README-3d-1.png")
 ```
 
-![](README-3d-1.png)<!-- -->
+![](README-3d-1.png)
 
 The 3D plot is here a static image (so it can be seen in markdown).
 However, it may be an interactive plot as seen in [this
@@ -150,8 +153,8 @@ install.packages("gMOIP")
 Alternatively, install the latest development version from GitHub:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("relund/gMOIP")
+install.packages("remotes")
+remotes::install_github("relund/gMOIP")
 
 library(gMOIP)
 browseVignettes('gMOIP')
