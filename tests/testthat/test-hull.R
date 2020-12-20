@@ -133,6 +133,16 @@ test_that("In hull (2D)", {
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,0,0,0,-1))
 
+   vertices <- matrix(c(1,1, 1,2, 1,3), ncol = 2, byrow = TRUE) # vert. line
+   pt <- matrix(c(1,2, 1,3, 1,4), ncol = 2, byrow = TRUE)
+   res <- inHull(pt, vertices)
+   expect_equal(res, c(0,0,-1))
+
+   vertices <- matrix(c(1,1, 2,1, 3,1), ncol = 2, byrow = TRUE) # horiz. line
+   pt <- matrix(c(2,1, 3,1, 4,1), ncol = 2, byrow = TRUE)
+   res <- inHull(pt, vertices)
+   expect_equal(res, c(0,0,-1))
+
    vertices <- matrix(c(0,0, 0,3, 3,0), ncol = 2, byrow = TRUE)
    pt <- matrix(c(0,0, 1,1, 4,4), ncol = 2, byrow = TRUE)
    res <- inHull(pt, vertices)
