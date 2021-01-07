@@ -154,11 +154,25 @@ inHull <- function(pts, vertices, hull=NULL,
       return(val)
    }
    if (d == 1) { # a line, i.e. assume vertices contain two points
-      l <- apply(pts, 1, FUN = function(x) {(x-vertices[1,])/(vertices[2,]-vertices[1,])})
-      eq <- apply(l, 2, FUN = function(x) abs(max(x) - min(x)) < tol)
-      l <- apply(l, 2, FUN = function(x) max(x) < 1 + tol & min(x) > -tol)
-      l <- eq & l
-      return(-as.integer(!l))
+      denom <- vertices[2,]-vertices[1,]
+      zeros <- denom == 0
+      # handle horizontal and vertical lines differently from others
+      if (any(zeros)) {
+         stopifnot(!all(zeros))
+         # to be on line, necessary for pts to agree on "zeros dimension"
+         l <- abs(pts[, zeros] - vertices[1, zeros]) < tol
+         # now check "non-zeros dimension"
+         mn <- min(vertices[, !zeros])
+         mx <- max(vertices[, !zeros])
+         l[l] <- mn - tol < pts[l, !zeros] & pts[l, !zeros] < mx + tol
+         return(-as.integer(!l))
+      } else {
+        l <- apply(pts, 1, FUN = function(x) {(x-vertices[1,])/denom})
+        eq <- apply(l, 2, FUN = function(x) abs(max(x) - min(x)) < tol)
+        l <- apply(l, 2, FUN = function(x) max(x) < 1 + tol & min(x) > -tol)
+        l <- eq & l
+        return(-as.integer(!l))
+      }
    }
    if (p == 2 & d != 2) {
       val <- grDevices::chull(rbind(vertices,pts))
