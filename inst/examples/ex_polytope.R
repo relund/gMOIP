@@ -16,7 +16,8 @@ plotPolytope(
    plotFaces = TRUE,
    plotFeasible = TRUE,
    plotOptimum = FALSE,
-   labels = NULL
+   labels = NULL,
+   argsFaces = list(argsGeom_polygon = list(fill = "red"))
 )
 # With optimum and labels:
 plotPolytope(
@@ -29,7 +30,8 @@ plotPolytope(
    plotFaces = TRUE,
    plotFeasible = TRUE,
    plotOptimum = TRUE,
-   labels = "coord"
+   labels = "coord",
+   argsOptimum = list(lty="solid")
 )
 # Minimize:
 plotPolytope(
@@ -130,7 +132,9 @@ plotPolytope(
    plotFaces = TRUE,
    plotFeasible = TRUE,
    plotOptimum = TRUE,
-   labels = "coord"
+   labels = "coord",
+   argsLabels = list(size = 4, color = "blue"),
+   argsFeasible = list(color = "red", size = 3)
 )
 #ILP model with IP faces:
 plotPolytope(
@@ -162,7 +166,8 @@ plotPolytope(
    plotFaces = FALSE,
    plotFeasible = TRUE,
    plotOptimum = TRUE,
-   labels = "coord"
+   labels = "coord",
+   argsFeasible = list(color = "red")
 )
 # First coordinate integer and with LP faces:
 plotPolytope(

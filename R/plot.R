@@ -191,18 +191,18 @@ plotPolytope <- function(A,
             plotOptimum = FALSE,
             latex = FALSE,
             labels = NULL, ...)
-   {
-      if (length(type)!=ncol(A)) stop("Arg. 'type' must be same length as columns in A!")
-      if (length(faces)!=ncol(A)) stop("Arg. 'faces' must be same length as columns in A!")
-      if (!is.null(obj))
-         if (length(obj)!=ncol(A))
-            stop("Arg. 'obj' must have the same columns as in A and be a single criterion!")
-      if (ncol(A)==2) return(plotPolytope2D(A, b, obj, type, nonneg, crit, faces, plotFaces,
-                                            plotFeasible, plotOptimum, latex, labels, ...))
-      if (ncol(A)==3) return(plotPolytope3D(A, b, obj, type, nonneg, crit, faces, plotFaces,
-                                            plotFeasible, plotOptimum, latex, labels, ...))
-      stop("Only 2 or 3 variables supported!")
-   }
+{
+   if (length(type)!=ncol(A)) stop("Arg. 'type' must be same length as columns in A!")
+   if (length(faces)!=ncol(A)) stop("Arg. 'faces' must be same length as columns in A!")
+   if (!is.null(obj))
+      if (length(obj)!=ncol(A))
+         stop("Arg. 'obj' must have the same columns as in A and be a single criterion!")
+   if (ncol(A)==2) return(plotPolytope2D(A, b, obj, type, nonneg, crit, faces, plotFaces,
+                                         plotFeasible, plotOptimum, latex, labels, ...))
+   if (ncol(A)==3) return(plotPolytope3D(A, b, obj, type, nonneg, crit, faces, plotFaces,
+                                         plotFeasible, plotOptimum, latex, labels, ...))
+   stop("Only 2D or 3D variables supported!")
+}
 
 
 
@@ -227,8 +227,15 @@ plotPolytope <- function(A,
 #' @param latex If \code{True} make latex math labels for TikZ.
 #' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 #'   'coord' add coordinates to the points. Otherwise number all points from one.
-#' @param ... If 2D arguments passed to the \link{aes_string} function in
-#'   \link{geom_point} or \link{geom_line}.
+#' @param ... Further arguments passed on the the ggplot plotting functions. This must be done as
+#'   lists. Currently the following arguments are supported:
+#'
+#'   * `argsFaces`: A list of arguments for [`plotFaces2D`].
+#'   * `argsFeasible`: A list of arguments for [`ggplot2::geom_point`] (if ILP)
+#'                     and for [`ggplot2::geom_line`] (if MILP).
+#'   * `argsLabels`: A list of arguments for [`ggplot2::geom_text`].
+#'   * `argsOptimum`: A list of arguments for [`ggplot2::geom_abline`].
+#'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
 #'
 #' @return A ggplot2 object.
 #' @author Lars Relund \email{lars@@relund.dk}
@@ -247,36 +254,39 @@ plotPolytope2D <-
             latex = FALSE,
             labels = NULL,
             ...)
-   {
-      if (!is.null(obj) & (!is.vector(obj) | !length(obj) == ncol(A)))
-         stop("Arg. obj must be a vector of same length as the number of columns in A.")
-      #if (is.null(points) & is.null(rangePoints) & is.null(cPoints)) stop("Arguments cPoints, points or rangePoints must be specified!")
-      # Set Custom theme
-      myTheme <- theme_bw()
-   myTheme <- myTheme + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                              panel.border = element_blank(),
-                              #axis.line = element_blank(),
-                              axis.line = element_line(colour = "black", size = 0.5,
-                                                       arrow = arrow(length = unit(0.3,"cm")) ),
-                              #axis.ticks = element_blank()
-                              #axis.text.x = element_text(margin = margin(r = 30))
-                              # axis.ticks.length = unit(0.5,"mm"),
-                              #aspect.ratio=4/3,
-                              legend.position="none"
-   )
+{
+   args <- list(...)
+   argsFaces <- mergeLists(list(argsGeom_polygon = list(fill = "gray90"), argsGeom_path = list(size = 0.5)), args$argsFaces)
+   argsFeasible <- mergeLists(list(), args$argsFeasible)
+   argsLabels <- mergeLists(list(size=3, color = "gray50", hjust = 1), args$argsLabels)
+   argsOptimum <- mergeLists(list(nudge_x = 1.0, lty="dashed"), args$argsOptimum)
+   argsTheme <- mergeLists(list(), args$argsTheme)
+
+   if (!is.null(obj) & (!is.vector(obj) | !length(obj) == ncol(A)))
+     stop("Arg. obj must be a vector of same length as the number of columns in A.")
+   # Set Custom theme
+   # myTheme <- theme_bw()
+   # myTheme <- myTheme + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+   #                            panel.border = element_blank(),
+   #                            #axis.line = element_blank(),
+   #                            axis.line = element_line(colour = "black", size = 0.5,
+   #                                                     arrow = arrow(length = unit(0.3,"cm")) ),
+   #                            #axis.ticks = element_blank()
+   #                            #axis.text.x = element_text(margin = margin(r = 30))
+   #                            # axis.ticks.length = unit(0.5,"mm"),
+   #                            #aspect.ratio=4/3,
+   #                            legend.position="none"
+   # )
 
    # Create solution plot
-   p<- ggplot() #+ coord_fixed(ratio = 1)
+   p <- ggplot() #+ coord_fixed(ratio = 1)
    if (latex) p <- p + xlab("$x_1$") + ylab("$x_2$")
    if (!latex) p <- p + xlab(expression(x[1])) + ylab(expression(x[2]))
-   #coord_cartesian(xlim = c(-0.1, max(cPoints$x1)+1), ylim = c(-0.1, max(cPoints$x2)+1), expand = FALSE) +
 
    if (plotFaces) {
       cPoints = cornerPoints(A, b, faces, nonneg)
-      idx <- grDevices::chull(cPoints)
-      cPoints <- cPoints[idx,]
-      p <- p + geom_polygon(data = as.data.frame(cPoints), aes_string(x = 'x1', y = 'x2'),
-                            fill="gray90", size = 0.5, linetype = 1, color="gray")
+      p <- p +
+         do.call(plotHull2D, args = c(list(cPoints, drawPlot = FALSE), argsFaces))
    }
 
    # find feasible points
@@ -299,30 +309,25 @@ plotPolytope2D <-
    points <- as.data.frame(points)
 
    if (plotFeasible) {
-      if (all(type == "c")) {
-         #p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=points) #+ scale_colour_grey(start = 0.6, end = 0)
-      }
+      # if (all(type == "c")) {
+      #    #p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=points) #+ scale_colour_grey(start = 0.6, end = 0)
+      # }
       if (all(type == "i")) {
-         p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=points, ...) #+ scale_colour_grey(start = 0.6, end = 0)
+         p <- p +
+            do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=points), argsFeasible))
       }
       if (length(which(type == "c"))==1) {
-         # pl <- slices(A, b, type, nonneg)
-         # pl <- lapply(pl, unique)
-         # for (i in 1:length(pl)) pl[[i]] <- cbind(pl[[i]],i)
-         # pl <- lapply(pl, function(x) {
-         #    colnames(x) <- c("x1", "x2", "g")
-         #    rownames(x) <- NULL
-         #    x<-data.frame(x)
-         # })
-         # tmp <- do.call(rbind, pl)
-         # points <- tmp[,1:2]
-         p <- p + geom_line(aes_string(x = 'x1', y = 'x2', group='g', ...), data=points)
-         idx <- sapply(pl, function(x) nrow(x)==1)
-         pl <- pl[idx]
-         if (length(pl)>0) {
-            tmp <- do.call(rbind, pl)
-            p <- p + geom_point(aes_string(x = 'x1', y = 'x2', ...), data=tmp)
-         }
+         p <- p +
+            do.call(geom_line, args = c(list(aes_string(x = 'x1', y = 'x2', group='g'), data=points), argsFeasible)) +
+            do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=points), argsFeasible))
+         # idx <- sapply(pl, function(x) nrow(x)==1)
+         # pl <- pl[idx]
+         # if (length(pl)>0) {
+         #    tmp <- do.call(rbind, pl)
+         #    p <- p +
+         #       do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=tmp), argsFeasible))
+         #       #geom_point(aes_string(x = 'x1', y = 'x2', ...), data=tmp)
+         # }
       }
    }
 
@@ -336,15 +341,20 @@ plotPolytope2D <-
       else
          tmp$lbl <- 1:nrow(tmp)
       if (length(tmp$lbl)>0) {
-         p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=tmp)
+         #p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=tmp)
          nudgeS=-(max(tmp$x1)-min(tmp$x1))/100
-         if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) > 0)
-            p <- p + ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'),
-                                              data=tmp, size=3, colour = "gray50")
-         if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) == 0)
-            p <- p + geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp,
-                               nudge_x = nudgeS, nudge_y = nudgeS, hjust=1, size=3,
-                               colour = "gray50")
+         #if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) > 0)
+            p <- p +
+               do.call(ggrepel::geom_text_repel,
+                       args = c(list(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp),
+                                argsLabels))
+               #ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'),data=tmp, size=3, colour = "gray50")
+         # if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) == 0)
+         #    p <- p +
+         #       do.call(geom_text,
+         #               args = c(list(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, nudge_x = nudgeS, nudge_y = nudgeS, hjust=1),
+         #                        argsLabels))
+               #geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, nudge_x = nudgeS, nudge_y = nudgeS, hjust=1, size=3, colour = "gray50")
       }
    }
 
@@ -360,15 +370,22 @@ plotPolytope2D <-
          if (latex) str <- paste0("$z^* = ", round(tmp$z[i], 2) , "$")
          if (!latex) str <- paste0("z* = ", round(tmp$z[i],2) )
          if (obj[2]!=0) {
-            p <- p + geom_abline(intercept = tmp$z[i]/obj[2], slope = -obj[1]/obj[2], lty="dashed")
+            p <- p +
+               do.call(geom_abline, args = c(list(intercept = tmp$z[i]/obj[2], slope = -obj[1]/obj[2]), argsOptimum))
+               #geom_abline(intercept = tmp$z[i]/obj[2], slope = -obj[1]/obj[2], lty="dashed")
          } else {
-            p <- p + geom_vline(xintercept = tmp$x1[i], lty="dashed")
+            p <- p +
+               do.call(geom_abline, args = c(list(xintercept = tmp$x1[i]), argsOptimum))
+               #geom_vline(xintercept = tmp$x1[i], lty="dashed")
          }
-         p <- p + geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,],
-                             nudge_x = 1.0)
+         p <- p +
+            do.call(geom_label, args = c(list(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,]), argsLabels))
+            #geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,], nudge_x = 1.0)
       }
    }
-   p <- p + myTheme
+
+   p <- p +
+      do.call(gMOIPTheme, args = c(list(), argsTheme))
    return(p)
 }
 
