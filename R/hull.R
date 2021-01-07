@@ -145,44 +145,23 @@ inHull <- function(pts, vertices, hull=NULL,
    cx <- nrow(pts)   # points to test
    d <- dimFace(vertices, dim = p)
    if (d == 0) return(-as.integer(apply(pts, 1, FUN = function(x) any(x != vertices[1,]))))
-   if (p == 1) {
+   if (p == 1) { #1D space - check if between max and min
       m <- min(vertices)
       M <- max(vertices)
-      val <- rep(0,cx)
-      val[pts > M | pts < m] <- -1
-      val[pts < M & pts > m] <- 1
+      val <- rep(0, cx)  # first set all on hull
+      val[pts > M + tol | pts < m - tol] <- -1
+      val[pts < M - tol & pts > m + tol] <- 1
       return(val)
    }
-   if (d == 1) { # a line, i.e. assume vertices contain two points
-      denom <- vertices[2,]-vertices[1,]
-      zeros <- denom == 0
-      # handle horizontal and vertical lines differently from others
-      if (any(zeros)) {
-         stopifnot(!all(zeros))
-         # to be on line, necessary for pts to agree on "zeros dimension"
-         l <- abs(pts[, zeros] - vertices[1, zeros]) < tol
-         # now check "non-zeros dimension"
-         mn <- min(vertices[, !zeros])
-         mx <- max(vertices[, !zeros])
-         l[l] <- mn - tol < pts[l, !zeros] & pts[l, !zeros] < mx + tol
-         return(-as.integer(!l))
-      } else {
-        l <- apply(pts, 1, FUN = function(x) {(x-vertices[1,])/denom})
-        eq <- apply(l, 2, FUN = function(x) abs(max(x) - min(x)) < tol)
-        l <- apply(l, 2, FUN = function(x) max(x) < 1 + tol & min(x) > -tol)
-        l <- eq & l
-        return(-as.integer(!l))
-      }
-   }
-   if (p == 2 & d != 2) {
-      val <- grDevices::chull(rbind(vertices,pts))
+   if (p == 2 & d != 2) { # only case is d = 1 (i.e. no interior points)
+      val <- grDevices::chull(rbind(vertices,pts))  # check if adding pts changes the hull
       nrp <- nrow(vertices)
       outside <- unique(val[val>nrp])-nrp
       done <- FALSE
       while(!done){
          val <- grDevices::chull(rbind(vertices,pts[-(outside),]))
          also.outside <- (1:cx)[-outside][unique(val[val>nrp])-nrp]
-         outside <- c(outside,also.outside)
+         outside <- c(outside, also.outside)
          done <- length(also.outside)==0
       }
       val <- rep(0,cx)
@@ -229,6 +208,31 @@ inHull <- function(pts, vertices, hull=NULL,
       val[abs(val) < tol] <- 0
       return(as.integer(sign(val)))
    }
+
+   if (d == 1) { # a line (i.e. no interior points)
+      denom <- vertices[2,]-vertices[1,]  # the direction d of the line p = d * t + p0
+      # case: if d_i = 0 => p_i = p0_i otherwise not on line
+      zeros <- denom == 0
+      if (any(zeros)) {
+         val <- apply(pts[, zeros, drop=F], 1, FUN = function(x) {any(x != vertices[1, zeros])})  # are some points not on the line
+         # reduce dimension where d_i = 0
+         vertices <- vertices[, !zeros, drop = F]
+         pts <- pts[, !zeros, drop=F]
+         res <- inHull(pts, vertices, tol = tol)
+         res[res == 1] <- 0   # set interior pts to true value
+         res[res == -1] <- 1
+         res <- as.logical(res)
+         return(-as.integer(res | val))
+      } else {
+        l <- apply(pts, 1, FUN = function(x) {(x-vertices[1,])/denom})  # calc t values t = d_i/(p_i-p0_i)
+        t <- apply(vertices, 1, FUN = function(x) {(x[1] - vertices[1,1])/denom[1]}) # t values for vertices
+        eq <- apply(l, 2, FUN = function(x) abs(max(x) - min(x)) < tol) # check if values in each col are equal (i.e. on line)
+        l <- apply(l, 2, FUN = function(x) max(x) < max(t) + tol & min(x) > min(t) - tol) # check if t values are on line
+        l <- eq & l
+        return(-as.integer(!l))
+      }
+   }
+
    if (p != d) {  # note p>2
       outside <- rep(2,cx)
       row.names(pts) <- 1:nrow(pts)

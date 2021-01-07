@@ -123,12 +123,12 @@ test_that("In hull (1D)", {
 })
 
 test_that("In hull (2D)", {
-   vertices <- matrix(c(2,4), ncol = 2)
+   vertices <- matrix(c(2,4), ncol = 2) # a pt
    pt <- matrix(c(2,4, 1,1), ncol = 2, byrow = TRUE)
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,-1))
 
-   vertices <- matrix(c(0,0, 3,3), ncol = 2, byrow = TRUE)
+   vertices <- matrix(c(0,0, 3,3), ncol = 2, byrow = TRUE) # a line
    pt <- matrix(c(0,0, 1,1, 2,2, 3,3, 4,4), ncol = 2, byrow = TRUE)
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,0,0,0,-1))
@@ -143,22 +143,37 @@ test_that("In hull (2D)", {
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,0,-1))
 
-   vertices <- matrix(c(0,0, 0,3, 3,0), ncol = 2, byrow = TRUE)
+   vertices <- matrix(c(0,0, 0,3, 3,0), ncol = 2, byrow = TRUE) # a polygon
    pt <- matrix(c(0,0, 1,1, 4,4), ncol = 2, byrow = TRUE)
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,1,-1))
 })
 
 test_that("In hull (3D)", {
-   vertices <- matrix(c(2,2,2), ncol = 3, byrow = TRUE)
+   vertices <- matrix(c(2,2,2), ncol = 3, byrow = TRUE) # a point
    pt <- matrix(c(1,1,1, 3,3,3, 2,2,2, 3,3,2), ncol = 3, byrow = TRUE)
    res <- inHull(pt, vertices)
    expect_equal(res, c(-1,-1,0,-1))
 
-   vertices <- matrix(c(2,2,2, 4,4,4), ncol = 3, byrow = TRUE)
+   vertices <- matrix(c(2,2,2, 4,4,4), ncol = 3, byrow = TRUE) # a line
    pt <- matrix(c(1,1,1, 2,2,2, 3,3,3, 4,4,4, 3,3,2), ncol = 3, byrow = TRUE)
    res <- inHull(pt, vertices)
    expect_equal(res, c(-1,0,0,0,-1))
+
+   vertices <- matrix(c(1,1,5, 1,2,5, 1,3,5), ncol = 3, byrow = TRUE) # vert. line
+   pt <- matrix(c(1,2,5, 1,3,5, 1,4,5, 1,7,7), ncol = 3, byrow = TRUE)
+   res <- inHull(pt, vertices)
+   expect_equal(res, c(0,0,-1,-1))
+
+   vertices <- matrix(c(1,1,6, 2,1,6, 3,1,6), ncol = 3, byrow = TRUE) # horiz. line
+   pt <- matrix(c(2,1,6, 3,1,6, 4,1,6), ncol = 3, byrow = TRUE)
+   res <- inHull(pt, vertices)
+   expect_equal(res, c(0,0,-1))
+
+   vertices <- matrix(c(1,1,6, 2,2,6, 4,4,6), ncol = 3, byrow = TRUE) # line
+   pt <- matrix(c(2,2,6, 1,1,6, 3,3,6, 2,1,2, 1,2,6), ncol = 3, byrow = TRUE)
+   res <- inHull(pt, vertices)
+   expect_equal(res, c(0,0,0,-1,-1))
 
    vertices <- matrix(c(1,0,0, 1,1,0, 1,0,1), ncol = 3, byrow = TRUE)
    pt <- matrix(c(1,0.1,0.2, 3,3,2), ncol = 3, byrow = TRUE)
@@ -173,6 +188,11 @@ test_that("In hull (3D)", {
 })
 
 test_that("In hull (5D)", {
+   vertices <- matrix(c(1,1,1,6,7, 2,2,2,6,7, 5,5,5,6,7), ncol = 5, byrow = TRUE) # line
+   pt <- matrix(c(1,1,1,6,7, 2,2,2,6,7, 3,3,3,6,7, 3,3,2,6,7), ncol = 5, byrow = TRUE)
+   res <- inHull(pt, vertices)
+   expect_equal(res, c(0,0,0,-1))
+
    vertices <- matrix(c(4,0,0,0,0, 0,4,0,0,0, 0,0,4,0,0, 0,0,0,4,0, 0,0,0,0,4, 0,0,0,0,0),
                       ncol = 5, byrow = TRUE)
    pt <- matrix(c(0.1,0.1,0.1,0.1,0.1, 3,3,3,3,3, 2,0,0,0,0), ncol = 5, byrow = TRUE)
