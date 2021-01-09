@@ -11,3 +11,4 @@ tests/temp/*
 test*.*
 pts_fig4.Rdata
 plot_polytope.tex
+docs
