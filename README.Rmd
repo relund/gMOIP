@@ -4,6 +4,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include=FALSE}
@@ -19,9 +21,11 @@ knit_hooks$set(webgl = hook_webgl, rgl = hook_rgl)
 library(gMOIP)
 ```
 
-[![Travis-CI Build Status](https://travis-ci.org/relund/gMOIP.svg?branch=master)](https://travis-ci.org/relund/gMOIP)
+<!-- badges: start -->
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
 [![CRAN_Downloads_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
+[![R build status](https://github.com/relund/gMOIP/workflows/R-CMD-check/badge.svg)](https://github.com/relund/gMOIP/actions)
+<!-- badges: end -->
 
 # gMOIP - Tools for 2D and 3D plots of single and multi-objective linear/integer programming models
 
