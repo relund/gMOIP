@@ -120,6 +120,11 @@ test_that("In hull (1D)", {
    pt <- matrix(c(1,3,4,5), ncol = 1, byrow = TRUE)
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,1,0,-1))
+
+   vertices <- matrix(4, ncol = 1)
+   pt <- matrix(c(1,3.99,4,4.01), ncol = 1, byrow = TRUE)
+   res <- inHull(pt, vertices, tol = 0.011)
+   expect_equal(res, c(-1,0,0,0))
 })
 
 test_that("In hull (2D)", {
@@ -147,6 +152,16 @@ test_that("In hull (2D)", {
    pt <- matrix(c(0,0, 1,1, 4,4), ncol = 2, byrow = TRUE)
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,1,-1))
+
+   vertices <- matrix(c(3,3, 8,8, 9,9), ncol = 2, byrow = TRUE)
+   pts <- matrix(c(3,3.1, 4,4.001, 9,9.01, 5,5), ncol = 2, byrow = TRUE)
+   res <- inHull(pts, vertices, tol = 0.015)
+   expect_equal(res, c(-1,0,0,0))
+
+   vertices <- matrix(c(3,3, 8,8, 9,9), ncol = 2, byrow = TRUE)
+   pts <- matrix(c(3,3.1, 4,5, 9,8, 5,5), ncol = 2, byrow = TRUE)
+   res <- inHull(pts, vertices, tol = 10)
+   expect_equal(res, c(0,0,0,0))
 })
 
 test_that("In hull (3D)", {
