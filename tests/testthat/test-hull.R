@@ -153,6 +153,11 @@ test_that("In hull (2D)", {
    res <- inHull(pt, vertices)
    expect_equal(res, c(0,1,-1))
 
+   vertices <- matrix(c(0,0, 0,3, 3,0, 1,1), ncol = 2, byrow = TRUE) # a polygon
+   pt <- matrix(c(0,0, 1,1, 4,4), ncol = 2, byrow = TRUE)
+   res <- inHull(pt, vertices)
+   expect_equal(res, c(0,1,-1))
+
    vertices <- matrix(c(3,3, 8,8, 9,9), ncol = 2, byrow = TRUE)
    pts <- matrix(c(3,3.1, 4,4.001, 9,9.01, 5,5), ncol = 2, byrow = TRUE)
    res <- inHull(pts, vertices, tol = 0.015)
