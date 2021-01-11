@@ -259,7 +259,7 @@ plotPolytope2D <-
    argsFaces <- mergeLists(list(argsGeom_polygon = list(fill = "gray90"), argsGeom_path = list(size = 0.5)), args$argsFaces)
    argsFeasible <- mergeLists(list(), args$argsFeasible)
    argsLabels <- mergeLists(list(size=3, color = "gray50", hjust = 1), args$argsLabels)
-   argsOptimum <- mergeLists(list(nudge_x = 1.0, lty="dashed"), args$argsOptimum)
+   argsOptimum <- mergeLists(list(lty="dashed"), args$argsOptimum)
    argsTheme <- mergeLists(list(), args$argsTheme)
 
    if (!is.null(obj) & (!is.vector(obj) | !length(obj) == ncol(A)))

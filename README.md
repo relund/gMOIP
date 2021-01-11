@@ -1,33 +1,36 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![Travis-CI Build
-Status](https://travis-ci.org/relund/gMOIP.svg?branch=master)](https://travis-ci.org/relund/gMOIP)
+<!-- badges: start -->
+
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
 [![CRAN\_Downloads\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
+[![R build
+status](https://github.com/relund/gMOIP/workflows/R-CMD-check/badge.svg)](https://github.com/relund/gMOIP/actions)
+<!-- badges: end -->
 
-# gMOIP - Tools for 2D and 3D plots of single and multi-objective linear/integer programming models
+# Tools for 2D and 3D plots of single and multi-objective linear/integer programming models
 
-With this package you can make 2D and 3D plots of linear programming
-(LP), integer linear programming (ILP), or mixed integer linear
-programming (MILP) models with up to three objectives. Plots of both the
-solution and criterion space are possible. For instance the
+The `gMOIP` package can be used to make 2D and 3D plots of linear
+programming (LP), integer linear programming (ILP), or mixed integer
+linear programming (MILP) models with up to three objectives. Plots of
+both the solution and criterion space are possible. For instance the
 non-dominated (Pareto) set for bi-objective LP/ILP/MILP programming
 models.
 
-The convex hull of a set of points in 2D or 3D can also be plotted. A
-general function for checking if a point is inside the convex hull is
-also provided.
+The package also include an `inHull` function for checking if a set of
+points is inside/at/outside the convex hull of a set of vertices (for
+arbitrary dimension).
 
 ## Usage
 
-We define the model \(\max\{cx | Ax \leq b\}\) (could also be minimized)
+Consider the model \(\max\{cx | Ax \leq b\}\) (could also be minimized)
 with 2 variables:
 
 ``` r
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
-obj <- c(7.75, 10)  # coefficients c
+coeff <- c(7.75, 10)  # coefficients c
 ```
 
 The polytope of the LP model with non-negative continuous variables
@@ -37,7 +40,7 @@ The polytope of the LP model with non-negative continuous variables
 plotPolytope(
    A,
    b,
-   obj,
+   coeff,
    type = rep("c", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -56,7 +59,7 @@ The polytope of the ILP model with LP faces (\(x\in \mathbb{Z}_0\)):
 plotPolytope(
    A,
    b,
-   obj,
+   coeff,
    type = rep("i", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
@@ -75,7 +78,7 @@ The polytope of the MILP model (first variable integer) with LP faces:
 plotPolytope(
    A,
    b,
-   obj,
+   coeff,
    type = c("i", "c"),
    crit = "max",
    faces = c("c", "c"),
@@ -98,7 +101,7 @@ A <- matrix( c(
    5, 2, 4
 ), nc = 3, byrow = TRUE)
 b <- c(55, 26, 30, 57)
-obj <- c(20, 10, 15)
+coeff <- c(20, 10, 15)
 ```
 
 ``` r
@@ -107,11 +110,10 @@ view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
 loadView(v = view)  # set view angle
-plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "n")
-snapshot3d("README-3d-1.png")
+plotPolytope(A, b, plotOptimum = TRUE, obj = coeff, labels = "n")
 ```
 
-![](README-3d-1.png)
+![](README-3d-1.png)<!-- -->
 
 The 3D plot is here a static image (so it can be seen in markdown).
 However, it may be an interactive plot as seen in [this
@@ -130,7 +132,7 @@ tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
 plotPolytope(
    A,
    b,
-   obj,
+   coeff,
    type = rep("i", ncol(A)),
    crit = "max",
    faces = rep("c", ncol(A)),
