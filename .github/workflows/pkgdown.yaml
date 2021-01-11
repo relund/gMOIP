@@ -18,6 +18,10 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Install XQuartz on macOS
+        if: runner.os == 'macOS'
+        run: brew cask install xquartz
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -43,6 +47,6 @@ jobs:
 
       - name: Deploy package
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
+          git config --local user.email "junk@relund.dk"
+          git config --local user.name "Lars Relund"
           Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
