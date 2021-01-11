@@ -76,13 +76,15 @@ jobs:
 
       - name: Install XQuartz on macOS
         if: runner.os == 'macOS'
-        run: brew cask install xquartz
+        run: brew install [--cask] xquartz
 
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
+        env:
+          RGL_USE_NULL: TRUE
 
       - name: Session info
         run: |
