@@ -230,7 +230,7 @@ plotPolytope <- function(A,
 #' @param ... Further arguments passed on the the ggplot plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
-#'   * `argsFaces`: A list of arguments for [`plotFaces2D`].
+#'   * `argsFaces`: A list of arguments for [`plotHull2D`].
 #'   * `argsFeasible`: A list of arguments for [`ggplot2::geom_point`] (if ILP)
 #'                     and for [`ggplot2::geom_line`] (if MILP).
 #'   * `argsLabels`: A list of arguments for [`ggplot2::geom_text`].
