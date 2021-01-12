@@ -1,4 +1,5 @@
 ---
+always_allow_html: true
 output: 
    github_document
 editor_options: 
@@ -18,7 +19,7 @@ rgl::setupKnitr()
 opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-",
+  fig.path = "man/figures/README-",
   echo = TRUE, warning=FALSE, message=FALSE, include = TRUE, fig.show='hold'
 )
 library(gMOIP)
@@ -115,13 +116,14 @@ b <- c(55, 26, 30, 57)
 coeff <- c(20, 10, 15)
 ```
 
-```{r 3d, rgl=TRUE, include=TRUE}
+```{r 3d, include=TRUE}
 # LP model
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
 loadView(v = view)  # set view angle
 plotPolytope(A, b, plotOptimum = TRUE, obj = coeff, labels = "n")
+rglwidget()
 ```
 
 The 3D plot is here a static image (so it can be seen in markdown). However, it may be an interactive plot as seen in [this example](http://htmlpreview.github.io/?https://github.com/relund/gMOIP/blob/master/inst/examples/3d_interactive.html).
