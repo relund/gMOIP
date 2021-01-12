@@ -55,7 +55,7 @@ only one is shown) and add the iso profit line.}
 \item{...}{Further arguments passed on the the ggplot plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{
-\item \code{argsFaces}: A list of arguments for \code{\link{plotFaces2D}}.
+\item \code{argsFaces}: A list of arguments for \code{\link{plotHull2D}}.
 \item \code{argsFeasible}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}} (if ILP)
 and for \code{\link[ggplot2:geom_path]{ggplot2::geom_line}} (if MILP).
 \item \code{argsLabels}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_text}}.

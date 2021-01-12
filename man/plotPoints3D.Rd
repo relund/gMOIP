@@ -36,5 +36,6 @@ plotPoints3D(c(1.5,1.5,1.5), argsPlot3d = list(col = "blue", size = 10, type="p"
 plotPoints3D(c(2,2,2, 1,1,1), addText = "coord")
 ids <- plotPoints3D(c(3,3,3, 4,4,4), addText = "rownames")
 finalize3D()
+rgl::rglwidget()
 # rgl.pop(ids) # remove the last again
 }
