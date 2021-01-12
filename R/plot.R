@@ -411,8 +411,22 @@ plotPolytope2D <-
 #' @param latex If \code{True} make latex math labels for TikZ.
 #' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 #'   'coord' add coordinates to the points. Otherwise number all points from one.
-#' @param ... Arguments passed to axes3d, plot3d, title3d, text3d. Parsed using lists argsAxes3d,
-#'   argsPlot3d, argsText3d and argsTitle3d.
+#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#'   lists. Currently the following arguments are supported:
+#'
+#'   * `argsAxes3d`: A list of arguments for [rgl::axes3d].
+#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d] to open the rgl window.
+#'   * `argsTitle3d`: A list of arguments for [rgl::title3d].
+#'   * `argsFaces`: A list of arguments for [`plotHull3D`].
+#'   * `argsFeasible`: A list of arguments for rgl functions:
+#'      - `points3d`: A list of arguments for [`rgl::points3d].
+#'      - `segments3d`: A list of arguments for [`rgl::segments3d].
+#'      - `triangles3d`: A list of arguments for [`rgl::triangles3d].
+#'   * `argsLabels`: A list of arguments for rgl functions:
+#'      - `points3d`: A list of arguments for [`rgl::points3d].
+#'      - `text3d`: A list of arguments for [`rgl::text3d].
+#'   * `argsOptimum`: A list of arguments for rgl functions:
+#'      - `points3d`: A list of arguments for [`rgl::points3d].
 #'
 #' @note The feasible region defined by the constraints must be bounded otherwise you may see
 #'   strange results.
@@ -436,48 +450,27 @@ plotPolytope3D <-
    {
       # set plot parameters
       args <- list(...)
-      argsAxes3d <- mergeLists(list(edges=c('x', 'y', 'z')), args$argsAxes3d)
       argsPlot3d <- mergeLists(list(xlab = '', box = FALSE, axes = FALSE), args$argsPlot3d)
+      argsFaces <- mergeLists(list(drawPoints = FALSE, drawLines = TRUE), args$argsFaces)
+      argsFeasible <- list()
+      argsFeasible$points3d <- mergeLists(list(size = 3), args$argsFeasible$points3d)
+      argsFeasible$segments3d <- mergeLists(list(lwd=2, line_antialias = TRUE), args$argsFeasible$segments3d)
+      argsFeasible$triangles3d <- mergeLists(list(col="grey100", alpha=0.4, smooth = FALSE), args$argsFeasible$triangles3d)
+      argsOptimum <- list()
+      argsOptimum$points3d <- mergeLists(list(col="red", size = 7), args$argsOptimum$points3d)
+      argsLabels <- list()
+      argsLabels$points3d <- mergeLists(list(col="grey50", size = 7), args$argsLabels$points3d)
+      argsLabels$text3d <- mergeLists(list(), args$argsLabels$text3d)
+      argsAxes3d <- mergeLists(list(edges=c('x', 'y', 'z')), args$argsAxes3d)
       argsTitle3d <- mergeLists(list(xlab = 'x1', ylab = 'x2', zlab = 'x3'), args$argsTitle3d)
-      argsText3d <- mergeLists(list(), args$argsText3d)  #cex = c(1.1,1.1), adj=2, font = 2
 
-      #open3d()
+
       do.call(plot3d, args = c(list(x = replicate(2, 1:3), type = 'n'), argsPlot3d))
       aspect3d("iso")
 
-      plotMat <- function(mat, col="black") {
-         if (nrow(mat)==1) pch3d(mat, color=col, cex = 0.1, pch = 16) #points3d(mat, col=col, size = 10)
-         if (nrow(mat)==2) { #segments3d(mat, col = "black", lwd=10, smooth= TRUE)
-            cyl <- cylinder3d(mat, radius = 0.01)
-            shade3d(cyl, col = col)
-         }
-         if (nrow(mat)==3) triangles3d(mat, col=col, alpha=0.6)
-         #if (nrow(mat)==4) quads3d(mat, col="black", fill= TRUE)
-         if (nrow(mat)>=4) {
-            # idx <- apply(mat, 2, function(x) diff(range(x)) < 1e-10 )
-            # hull <- geometry::convhulln(mat[,!idx])
-            hull <- geometry::convhulln(mat, options = "QJ")
-            tri <- t(hull)
-            triangles3d(mat[tri,1], mat[tri,2], mat[tri,3], col=col, alpha=0.2)
-         }
-      }
-
       if (plotFaces) { # plot faces
          vertices <- cornerPoints(A, b, faces, nonneg)
-         plotMat(vertices, col="grey100")
-         # points3d(vertices, col="blue", size = 10)
-         # text3d(vertices, text = paste0(1:nrow(vertices)), cex = 2, adj=2)
-         hull <- geometry::convhulln(vertices)
-         # tri <- t(hull)
-         #
-         # # colfunc <- colorRampPalette(c("red","yellow","springgreen","royalblue"))
-         # #colfunc <- colorRampPalette(c("cornflowerblue", "peachpuff", "cadetblue2", "khaki"))
-         # # colours <- paste0("Gray", seq(80,10, by = -10))
-         # #colours <- colfunc(ncol(tri))
-         # triangles3d(vertices[tri,1],vertices[tri,2],vertices[tri,3], col="grey70", alpha=0.6)
-         # # find and plot segments
-         seg <- t(hullSegment(vertices, hull))
-         segments3d(vertices[seg,1],vertices[seg,2],vertices[seg,3], col = "grey70", lwd=2)
+         do.call(plotHull3D, args = c(list(pts = vertices), argsFaces))
       }
 
       if (plotFeasible) {
@@ -485,29 +478,26 @@ plotPolytope3D <-
             # don't plot anything
          } else if (all(type == "i")) {
             iPoints <- integerPoints(A, b, nonneg)
-            #points3d(iPoints[,1:3], col="black", size = 7)
-            pch3d(iPoints[,1:3], color = "black", cex = 0.1, pch = 16)
+            do.call(points3d, args = c(list(iPoints[,1:3]), argsFeasible$points3d))
          } else {
             pl <- slices(A, b, type, nonneg)
             for (i in 1:length(pl)) {
                mat <- pl[[i]]
+               # print(mat)
                if (is.null(mat)) next
-               if (nrow(mat)==1) {
-                  #pch3d(mat, color="black", cex = 0.1, pch = 16)
-                  points3d(mat, col="black", size = 7)
+               if (nrow(mat) == 1) {
+                  do.call(points3d, args = c(list(mat), argsFeasible$points3d))
                }
-               if (nrow(mat)==2) { #segments3d(mat, col = "black", lwd=10, smooth= TRUE)
-                  cyl <- cylinder3d(mat, radius = 0.015)
-                  shade3d(cyl, col = "black")
+               if (nrow(mat) == 2) {
+                  do.call(segments3d, args = c(list(mat), argsFeasible$segments3d))
+                  #cyl <- cylinder3d(mat, radius = 0.015)
+                  #shade3d(cyl, col = "black")
                }
-               if (nrow(mat)==3) triangles3d(mat, col="grey100", alpha=0.6)
-               #if (nrow(mat)==4) quads3d(mat, col="black", fill= TRUE)
-               if (nrow(mat)>=4) {
-                  # idx <- apply(mat, 2, function(x) diff(range(x)) < 1e-10 )
-                  # hull <- geometry::convhulln(mat[,!idx])
+               if (nrow(mat) == 3) do.call(triangles3d, args = c(list(mat), argsFeasible$triangles3d))
+               if (nrow(mat) > 3) {
                   hull <- geometry::convhulln(mat, options = "QJ")
                   tri <- t(hull)
-                  triangles3d(mat[tri,1], mat[tri,2], mat[tri,3], col="grey100", alpha=0.6)
+                  do.call(triangles3d, args = c(list(mat[tri,1], mat[tri,2], mat[tri,3]), argsFeasible$triangles3d))
                }
             }
          }
@@ -515,15 +505,11 @@ plotPolytope3D <-
 
       if (plotOptimum) {
          if (is.null(obj)) stop("You need to specify the objective coefficients when using argument plotOption = TRUE.")
-         vertices <- cornerPoints(A, b, type, nonneg) #points3d(vertices[,1:3], col="blue", size = 10)
+         vertices <- cornerPoints(A, b, type, nonneg)
          val <- vertices[,1:3] %*% as.matrix(obj)
          idx <- which.max(val)
          val <- vertices[idx,1:3]
-         points3d(val[1], val[2], val[3], col="red", size = 14)
-         #pch3d(val[1], val[2], val[3], col="red", cex = 0.2, pch = 16)
-         #spheres3d(val[1], val[2], val[3], col="black", radius = 1)
-         #planes3d(obj, d = -val, alpha = 0.6)
-         #arrow3d(c(0,0,0), 0.25*obj, type="lines", barblen = 0.01, col="red", lwd=5)
+         do.call(points3d, args = c(list(val[1], val[2], val[3]), argsOptimum$points3d))
       }
 
       if (!is.null(labels)) {
@@ -539,15 +525,14 @@ plotPolytope3D <-
          if ((length(which(type == "c"))<length(type) & length(which(type == "c"))>0) |
              (length(which(type == "c"))==length(type))) {
             #pch3d(iPoints[,1:3], col="black", cex = 0.1, pch = 16)
-            points3d(points[,1:3], col="grey50", size = 7)
+            do.call(points3d, args = c(list(points[,1:3]), argsLabels$points3d))
          }
-
          if (labels=="coord")
             points$lbl <- df2String(points)
          else if (labels == "n")
             points$lbl <- ""
          else points$lbl <- 1:nrow(points)
-         do.call(text3d, args = c(list(points[,1:3], texts = points$lbl), argsText3d))
+         do.call(text3d, args = c(list(points[,1:3], texts = points$lbl), argsLabels$text3d))
       }
 
       do.call(axes3d, args = argsAxes3d)

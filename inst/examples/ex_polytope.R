@@ -1,4 +1,4 @@
-### 2D examples
+#### 2D examples ####
 # Define the model max/min coeff*x st. Ax<=b, x>=0
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
@@ -199,7 +199,7 @@ plotPolytope(
 
 
 
-### 3D examples
+#### 3D examples ####
 # Ex 1
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
@@ -215,6 +215,9 @@ b <- c(55, 26, 30, 57)
 obj <- c(20, 10, 15)
 # LP model
 plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
+plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord",
+             argsFaces = list(drawLines = FALSE, argsPolygon3d = list(alpha = 0.95)),
+             argsLabels = list(points3d = list(color = "blue")))
 # ILP model
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj)
 # MILP model
