@@ -1,0 +1,28 @@
+reference:
+- title: 2D graphics
+- contents:
+  - matches("2D|Theme")
+  - plotPolytope
+- title: 3D graphics
+  contents:
+  - matches("3D|View")
+  - plotPolytope
+- title: Convex hull
+- contents:
+  - matches("Hull")
+  - dimFace
+- title: Matematical programming
+- contents:
+  - addNDSet
+  - classifyNDSet
+  - genNDSet
+  - genSample
+  - addRays
+- title: Multi-objective programming
+- contents:
+  - plotPolytope
+  - starts_with("corner")
+  - binaryPoints
+  - criterionPoints
+  - integerPoints
+  - slices
