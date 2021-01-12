@@ -12,16 +12,16 @@ editor_options:
 ```{r, include = FALSE}
 library(knitr)
 library(rgl)
+if (interactive()) setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+rgl::setupKnitr()
 opts_chunk$set(
   collapse = TRUE,
   #cache = TRUE, autodep = TRUE, 
   comment = "#>",
-  fig.path = "bi-obj-", fig.show = "asis", 
+  fig.show = "asis", 
   warning=FALSE, message=FALSE, include = TRUE, 
   out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
 )
-
-knit_hooks$set(webgl = hook_webgl, rgl = hook_rgl)
 ```
 
 With `gMOIP` you can also make plots of the criterion space for bi-objective models (linear
