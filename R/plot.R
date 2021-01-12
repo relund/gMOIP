@@ -1585,6 +1585,7 @@ plotHull3D <- function(pts,
 #' plotPoints3D(c(2,2,2, 1,1,1), addText = "coord")
 #' ids <- plotPoints3D(c(3,3,3, 4,4,4), addText = "rownames")
 #' finalize3D()
+#' rglwidget()
 #' # rgl.pop(ids) # remove the last again
 plotPoints3D <- function(pts, addText = FALSE, ...) {
    args <- list(...)

@@ -896,7 +896,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' ini3D()
 #' range <- c(1,100)
 #' cent <- rep(range[1] + (range[2]-range[1])/2, 3)
-#' pts <- genNDSet(3, 800, range = range, sphere = TRUE, keep = TRUE,
+#' pts <- genNDSet(3, 100, range = range, sphere = TRUE, keep = TRUE,
 #'        argsSphere = list(center = cent))
 #' rgl::spheres3d(cent, radius=49.5, color = "grey100", alpha=0.1)
 #' plotPoints3D(pts)
