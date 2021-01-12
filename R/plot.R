@@ -1168,7 +1168,6 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
 #' @param ...  Further arguments passed to `plot`.
 #'
 #' @return The file name.
-#' @export
 #'
 #' @examples
 #' # Pch shapes

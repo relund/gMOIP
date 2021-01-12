@@ -6,21 +6,20 @@ editor_options:
   chunk_output_type: console
 ---
 
-
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include=FALSE}
 library(knitr)
 library(rgl)
 if (interactive()) setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-if (isTRUE(getOption('knitr.in.progress'))) options(rgl.useNULL=TRUE)
 rgl::setupKnitr()
 opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
+  #comment = "#>",
   fig.path = "man/figures/README-",
-  echo = TRUE, warning=FALSE, message=FALSE, include = TRUE, fig.show='hold'
+  out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62,
+  echo = TRUE, warning=FALSE, message=FALSE, 
+  include = TRUE
 )
 library(gMOIP)
 ```
@@ -123,10 +122,18 @@ view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
 loadView(v = view)  # set view angle
 plotPolytope(A, b, plotOptimum = TRUE, obj = coeff, labels = "n")
-rglwidget()
 ```
 
-The 3D plot is here a static image (so it can be seen in markdown). However, it may be an interactive plot as seen in [this example](http://htmlpreview.github.io/?https://github.com/relund/gMOIP/blob/master/inst/examples/3d_interactive.html).
+```{r, include=FALSE}
+movie3d(spin3d(), duration = 10, type="gif", dir="./man/figures", movie = "README-3d", convert = NULL)
+```
+
+<center>
+![](man/figures/README-3d.gif)
+</center>
+
+Note: interactive 3d plots cannot be displayed in a github README file, and static images or animated gifs are used here instead.
+Visit the [pkgdown online documentation](https://relund.github.io/gMOIP/) to view plots which can be manipulated in the browser.
 
 For more examples see `example("gMOIP-package")` or `browseVignettes('gMOIP')`. 
 

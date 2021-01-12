@@ -101,6 +101,7 @@ cornerPoints <- function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, nco
 #' @note Do a simple enumeration of all integer points between min and max values found using the continuous polytope.
 #' @author Lars Relund \email{lars@@relund.dk}.
 #' @export
+#'
 #' @examples
 #' A <- matrix( c(3,-2, 1, 2, 4,-2,-3, 2, 1), nc = 3, byrow = TRUE)
 #' b <- c(10, 12, 3)
