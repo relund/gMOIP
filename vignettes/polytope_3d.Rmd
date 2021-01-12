@@ -12,8 +12,8 @@ editor_options:
 ```{r, include = FALSE}
 library(knitr)
 library(rgl)
-
-options(rgl.useNULL=TRUE)
+if (interactive()) setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+rgl::setupKnitr()
 opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -21,8 +21,6 @@ opts_chunk$set(
   warning=FALSE, message=FALSE, include = TRUE, 
   out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
 )
-
-knit_hooks$set(webgl = hook_webgl, rgl = hook_rgl)
 ```
 
 With `gMOIP` you can make 3D plots of the polytope/feasible region/solution space of a linear programming (LP), integer linear programming (ILP) model, or mixed integer linear programming (MILP) model. This vignette gives examples on how to make plots given a model with three variables. 
