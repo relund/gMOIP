@@ -10,7 +10,11 @@ jobs:
   pkgdown:
     runs-on: macOS-latest
     env:
+      # prevent rgl issues because no X11 display is available
+      RGL_USE_NULL: true
+      DISPLAY: 99 # for rgl
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v2
 
@@ -41,8 +45,6 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           install.packages("pkgdown", type = "binary")
         shell: Rscript {0}
-        env:
-          RGL_USE_NULL: TRUE
 
       - name: Install package
         run: R CMD INSTALL .
