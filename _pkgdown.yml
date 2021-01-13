@@ -3,6 +3,7 @@ reference:
 - contents:
   - matches("2D|Theme")
   - plotPolytope
+  - -addNDSet2D
 - title: 3D graphics
   contents:
   - matches("3D|View")
@@ -10,16 +11,9 @@ reference:
   - getTexture
 - title: Convex hull
 - contents:
-  - matches("Hull")
+  - matches("Hull|hull")
   - dimFace
 - title: Matematical programming
-- contents:
-  - addNDSet
-  - classifyNDSet
-  - genNDSet
-  - genSample
-  - addRays
-- title: Multi-objective programming
 - contents:
   - plotPolytope
   - starts_with("corner")
@@ -27,3 +21,10 @@ reference:
   - criterionPoints
   - integerPoints
   - slices
+- title: Multi-objective programming
+- contents:
+  - addNDSet
+  - classifyNDSet
+  - genNDSet
+  - genSample
+  - addRays
