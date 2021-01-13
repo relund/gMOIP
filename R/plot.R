@@ -168,13 +168,37 @@ plotHull2D <- function(pts,
 #' @param latex If \code{True} make latex math labels for TikZ.
 #' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 #'   'coord' add coordinates to the points. Otherwise number all points from one.
-#' @param ... If 2D arguments passed to the \link{aes_string} function in
-#'   \link{geom_point} or \link{geom_line}.
+#' @param ... If 2D, further arguments passed on the the ggplot plotting functions. This must be
+#'   done as lists. Currently the following arguments are supported:
+#'
+#'   * `argsFaces`: A list of arguments for [`plotHull2D`].
+#'   * `argsFeasible`: A list of arguments for [`ggplot2::geom_point`] (if ILP)
+#'                     and for [`ggplot2::geom_line`] (if MILP).
+#'   * `argsLabels`: A list of arguments for [`ggplot2::geom_text`].
+#'   * `argsOptimum`: A list of arguments for [`ggplot2::geom_abline`].
+#'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
+#'
+#' If 3D further arguments passed on the the rgl plotting functions. This must be done as
+#'   lists. Currently the following arguments are supported:
+#'
+#'   * `argsAxes3d`: A list of arguments for [rgl::axes3d].
+#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d] to open the rgl window.
+#'   * `argsTitle3d`: A list of arguments for [rgl::title3d].
+#'   * `argsFaces`: A list of arguments for [`plotHull3D`].
+#'   * `argsFeasible`: A list of arguments for rgl functions:
+#'      - `points3d`: A list of arguments for [`rgl::points3d].
+#'      - `segments3d`: A list of arguments for [`rgl::segments3d].
+#'      - `triangles3d`: A list of arguments for [`rgl::triangles3d].
+#'   * `argsLabels`: A list of arguments for rgl functions:
+#'      - `points3d`: A list of arguments for [`rgl::points3d].
+#'      - `text3d`: A list of arguments for [`rgl::text3d].
+#'   * `argsOptimum`: A list of arguments for rgl functions:
+#'      - `points3d`: A list of arguments for [`rgl::points3d].
 #'
 #' @note The feasible region defined by the constraints must be bounded (i.e. no extreme rays)
 #'   otherwise you may see strange results.
 #'
-#' @return If 2D a ggplot2 object. If 3D a rgl window with 3D plot.
+#' @return If 2D a ggplot2 object. If 3D a rgl window with the 3D plot.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @import rgl ggplot2
@@ -238,6 +262,7 @@ plotPolytope <- function(A,
 #'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
 #'
 #' @return A ggplot2 object.
+#' @export
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import ggplot2
 plotPolytope2D <-
@@ -264,19 +289,6 @@ plotPolytope2D <-
 
    if (!is.null(obj) & (!is.vector(obj) | !length(obj) == ncol(A)))
      stop("Arg. obj must be a vector of same length as the number of columns in A.")
-   # Set Custom theme
-   # myTheme <- theme_bw()
-   # myTheme <- myTheme + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-   #                            panel.border = element_blank(),
-   #                            #axis.line = element_blank(),
-   #                            axis.line = element_line(colour = "black", size = 0.5,
-   #                                                     arrow = arrow(length = unit(0.3,"cm")) ),
-   #                            #axis.ticks = element_blank()
-   #                            #axis.text.x = element_text(margin = margin(r = 30))
-   #                            # axis.ticks.length = unit(0.5,"mm"),
-   #                            #aspect.ratio=4/3,
-   #                            legend.position="none"
-   # )
 
    # Create solution plot
    p <- ggplot() #+ coord_fixed(ratio = 1)
@@ -309,9 +321,6 @@ plotPolytope2D <-
    points <- as.data.frame(points)
 
    if (plotFeasible) {
-      # if (all(type == "c")) {
-      #    #p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=points) #+ scale_colour_grey(start = 0.6, end = 0)
-      # }
       if (all(type == "i")) {
          p <- p +
             do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=points), argsFeasible))
@@ -432,6 +441,7 @@ plotPolytope2D <-
 #'   strange results.
 #'
 #' @return A rgl window with 3D plot.
+#' @export
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import rgl
 plotPolytope3D <-
@@ -1445,8 +1455,10 @@ plotHull3D <- function(pts,
    d <- dimFace(set[,1:3, drop = FALSE])
    if (d==3) { # then poly define facets
       poly <- hull
-      pN <- purrr::map_dfc(1:3, function(i) if (sign(direction[i]) > 0) max(set[,i]) else min(set[,i]))
-      colnames(pN) <- colnames(set[,1:3])
+      v <- 1:3
+      names(v) <- colnames(set[,1:3])
+      pN <- purrr::map_dfc(v, function(i) if (sign(direction[i]) > 0) max(set[,i]) else min(set[,i]))
+      #colnames(pN) <- colnames(set[,1:3])
       for (i in 1:dim(poly)[1]) {
          tri <- poly[i,!is.na(poly[i,])]
          pt <- set[tri,1:4]

@@ -29,11 +29,12 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
    pts <- .checkPts(pts, stopUnique = FALSE)
    zVal <- pts %*% t(obj)
    zVal <- round(zVal,10)
-   colnames(zVal) <- paste0("z", 1:p)
+   zNames <- paste0("z", 1:p)
+   colnames(zVal) <- zNames
    iP <- bind_cols(as.data.frame(pts), as.data.frame(zVal))
    iP$lbl <- as.character(1:nrow(iP))
    zVal <- addNDSet(zVal, crit = crit, keepDom = TRUE, dubND = TRUE)
-   iP <- full_join(iP, zVal)
+   iP <- full_join(iP, zVal, by = zNames)
 
    if (is.null(labels)) {
       iP$lbl <- ""
