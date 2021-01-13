@@ -191,7 +191,7 @@ points from one based on the solution space points.</p></td>
 <span class='va'>pts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='integerPoints.html'>integerPoints</a></span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span><span class='op'>)</span>
 <span class='va'>obj</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='op'>-</span><span class='fl'>3</span>,<span class='fl'>1</span>,<span class='op'>-</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span>, ncol <span class='op'>=</span> <span class='fl'>3</span> <span class='op'>)</span>
 <span class='fu'>criterionPoints</span><span class='op'>(</span><span class='va'>pts</span>, <span class='va'>obj</span>, crit <span class='op'>=</span> <span class='st'>"max"</span>, labels <span class='op'>=</span> <span class='st'>"numb"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Joining, by = c("z1", "z2")</span></div><div class='output co'>#&gt;     x1 x2 x3 z1 z2 lbl    nd    se   sne    us cls
+</div><div class='output co'>#&gt;     x1 x2 x3 z1 z2 lbl    nd    se   sne    us cls
 #&gt; 1    0  0  0  0  0   1  TRUE  TRUE FALSE FALSE  se
 #&gt; 2    1  0  0  1 -1   2  TRUE FALSE  TRUE FALSE sne
 #&gt; 3    1  0  0  1 -1   2  TRUE FALSE  TRUE FALSE sne
