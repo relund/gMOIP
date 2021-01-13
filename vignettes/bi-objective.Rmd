@@ -12,7 +12,6 @@ editor_options:
 ```{r, include = FALSE}
 library(knitr)
 library(rgl)
-if (interactive()) setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rgl::setupKnitr()
 opts_chunk$set(
   collapse = TRUE,

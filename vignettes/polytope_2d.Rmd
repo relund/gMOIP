@@ -10,7 +10,6 @@ editor_options:
 ---
 
 ```{r, include = FALSE}
-if (interactive()) setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",

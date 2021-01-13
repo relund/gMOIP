@@ -17,7 +17,6 @@ library(rgl)
 library(ggsci)
 library(tidyverse)
 library(magrittr)
-if (interactive()) setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rgl::setupKnitr()
 rgl::par3d("family" = "serif")
 opts_chunk$set(
