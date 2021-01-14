@@ -13,6 +13,7 @@ editor_options:
 library(knitr)
 library(rgl)
 rgl::setupKnitr()
+options(rgl.useNULL=FALSE)
 opts_chunk$set(
   collapse = TRUE,
   #comment = "#>",
@@ -77,7 +78,7 @@ plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible =
 Let us have a look at some MILP models (we use static images). MILP model with variable 1 and 3 
 integer:
 
-```{r ex1MILP_1, rgl = TRUE}
+```{r ex1MILP_1, rgl=TRUE}
 loadView(v = view, close = T, zoom = 0.75)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = TRUE, obj = obj)
 ```
