@@ -415,7 +415,7 @@ Example with many supported:
 
 ```{r, webgl=TRUE, cache=FALSE}
 loadView(v = view)
-pts <- genNDSet(3, 50, argsSphere = list(below = TRUE))
+pts <- genNDSet(3, 50, argsSphere = list(below = TRUE), dubND = FALSE)
 pts <- classifyNDSet(pts[,1:3])
 ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+2),
    ylim = c(min(pts[,2])-2,max(pts[,2])+2),
