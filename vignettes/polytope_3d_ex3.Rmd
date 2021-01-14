@@ -12,11 +12,10 @@ editor_options:
 ```{r, include = FALSE}
 library(knitr)
 library(rgl)
-rgl::setupKnitr(autoprint = TRUE)
+rgl::setupKnitr()
 options(rgl.useNULL=TRUE)
 opts_chunk$set(
   collapse = TRUE,
-  webgl = TRUE,
   #comment = "#>",
   warning=FALSE, message=FALSE, include = TRUE, 
   out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
@@ -64,14 +63,54 @@ plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
 
 Note in the html file you can zoom/turn/twist the figure with your mouse (`rglwidget`).
 
-The ILP model with LP and ILP faces:
+The ILP model:
 
 ```{r ex3ILP, webgl = TRUE}
-loadView(v = view, close = TRUE)
-rgl::mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
+loadView(v = view, close = F, zoom = 0.75)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj, 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
-plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible = FALSE, obj = obj,
-             argsTitle3d = list(main = "ILP faces") )
 ```
 
+
+Let us have a look at some MILP models (we use static images). MILP model with variable 1 and 3 
+integer:
+
+```{r ex3MILP_1, webgl = TRUE}
+loadView(v = view, close = T, zoom = 0.75)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = TRUE, obj = obj)
+```
+
+MILP model with variable 2 and 3 integer:
+
+```{r ex3MILP_2, webgl = TRUE}
+loadView(v = view, zoom = 0.75)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = TRUE, obj = obj)
+```
+
+MILP model with variable 1 and 2 integer:
+
+```{r ex3MILP_3, webgl = TRUE}
+loadView(v = view, zoom = 0.75)
+plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = TRUE, obj = obj)
+```
+
+MILP model with variable 1 integer:
+
+```{r ex3MILP_4, webgl = TRUE}
+loadView(v = view, zoom = 0.75)
+plotPolytope(A, b, type = c("i","c","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
+```
+
+MILP model with variable 2 integer:
+
+```{r ex3MILP_5, webgl = TRUE}
+loadView(v = view, zoom = 0.75)
+plotPolytope(A, b, type = c("c","i","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
+```
+
+MILP model with variable 3 integer:
+
+```{r ex3MILP_6, webgl = TRUE}
+loadView(v = view, zoom = 0.75)
+plotPolytope(A, b, type = c("c","c","i"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
+```
