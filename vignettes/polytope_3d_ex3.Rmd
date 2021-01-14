@@ -12,7 +12,7 @@ editor_options:
 ```{r, include = FALSE}
 library(knitr)
 library(rgl)
-rgl::setupKnitr()
+rgl::setupKnitr(autoprint = TRUE)
 options(rgl.useNULL=TRUE)
 opts_chunk$set(
   collapse = TRUE,
@@ -73,5 +73,6 @@ plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
 plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible = FALSE, obj = obj,
              argsTitle3d = list(main = "ILP faces") )
+highlevel(integer()) # To trigger display as rglwidget
 ```
 
