@@ -46,7 +46,7 @@ Ab <- matrix( c(
 ), nc = 4, byrow = TRUE)
 A <- Ab[,1:3]
 b <- Ab[,4]
-obj = c(1,1,3)
+obj <- c(1,1,3)
 ```
 
 We load the preferred view angle for the RGL window:

@@ -64,7 +64,8 @@ Note in the html file you can zoom/turn/twist the figure with your mouse (`rglwi
 The ILP model with LP and ILP faces:
 
 ```{r ex2ILP, webgl = TRUE}
-loadView(v = view, close = T)
+#loadView(v = view, close = T)
+view3d(userMatrix = view)
 rgl::mfrow3d(nr = 1, nc = 2, sharedMouse = TRUE)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj, 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
@@ -75,7 +76,8 @@ plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible =
 Let us have a look at some MILP models. MILP model with variable 1 and 3 
 integer:
 
-```{r ex2MILP_1}
+```{r ex2MILP_1, webgl = TRUE}
+open3d()
 loadView(v = view, close = T, zoom = 0.75)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = TRUE, obj = obj)
 ```
