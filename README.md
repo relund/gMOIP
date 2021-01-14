@@ -13,14 +13,19 @@ status](https://github.com/relund/gMOIP/workflows/R-CMD-check/badge.svg)](https:
 
 The `gMOIP` package can be used to make 2D and 3D plots of linear
 programming (LP), integer linear programming (ILP), or mixed integer
-linear programming (MILP) models with up to three objectives. Plots of
-both the solution and criterion space are possible. For instance the
+linear programming (MILP) models with up to three objectives. This
+include the polytope, integer points, ranges and iso profit curve. Plots
+of both the solution and criterion space are possible. For instance the
 non-dominated (Pareto) set for bi-objective LP/ILP/MILP programming
 models.
 
 The package also include an `inHull` function for checking if a set of
 points is inside/at/outside the convex hull of a set of vertices (for
 arbitrary dimension).
+
+Finally, the package also contains functions for generating
+(non-dominated) points in \(\mathbb{R}_n\) and classifying non-dominated
+points as supported extreme, supported non-extreme and unsupported.
 
 ## Usage
 

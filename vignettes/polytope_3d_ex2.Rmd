@@ -2,7 +2,7 @@
 title: "Plotting polytopes in 3D - Example 2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Plotting polytopes in 3D}
+  %\VignetteIndexEntry{Plotting polytopes in 3D - Example 2}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -13,7 +13,7 @@ editor_options:
 library(knitr)
 library(rgl)
 rgl::setupKnitr()
-options(rgl.useNULL=T)
+options(rgl.useNULL=TRUE)
 opts_chunk$set(
   collapse = TRUE,
   webgl = TRUE,

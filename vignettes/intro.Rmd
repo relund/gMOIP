@@ -18,24 +18,29 @@ library(ggsci)
 library(tidyverse)
 library(magrittr)
 rgl::setupKnitr()
+options(rgl.useNULL=TRUE)
 rgl::par3d("family" = "serif")
 opts_chunk$set(
   collapse = TRUE,
+  
   comment = "#>",
   warning=FALSE, message=FALSE, include = TRUE, 
-  #cache = TRUE,
+  cache = TRUE,
   out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
 )
 ```
 
-Package `gMOIP` can be used to make 2D and 3D plots of the polytope of a linear programming (LP),
-integer linear programming (ILP) model, or mixed integer linear programming (MILP) model with 2 or
-3 variables, including integer points, ranges and iso profit curve. You can also make a plot of the
-bi-objective criterion space and the non-dominated (Pareto) set for bi-objective LP/ILP/MILP
-programming models.
+The `gMOIP` package can be used to make 2D and 3D plots of linear programming (LP), integer linear
+programming (ILP), or mixed integer linear programming (MILP) models with up to three objectives.
+This include the polytope, integer points, ranges and iso profit curve. Plots of both the solution
+and criterion space are possible. For instance the non-dominated (Pareto) set for bi-objective
+LP/ILP/MILP programming models.
 
-Finally, it contains functions for generating (non-dominated) points in $\mathbb{R}_n$ and
-classifying non-dominated points as supported extreme, supported non-extreme and unsupported.
+The package also include an `inHull` function for checking if a set of points is inside/at/outside
+the convex hull of a set of vertices (for arbitrary dimension).
+
+Finally, the package also contains functions for generating (non-dominated) points in $\mathbb{R}_n$
+and classifying non-dominated points as supported extreme, supported non-extreme and unsupported.
 
 
 ## Installation
@@ -51,11 +56,10 @@ Alternatively, install the latest development version from GitHub:
 ``` r
 install.packages("devtools")
 devtools::install_github("relund/gMOIP")
+library(gMOIP)
 ```
 
-We load the model:
-
-```{r, cache=FALSE}
+```{r, cache=FALSE, include=FALSE}
 library(gMOIP)
 ```
 
@@ -75,7 +79,7 @@ The polytope of the LP model with non-negative continuous variables
 (\(x \geq 0\)):
 
 ```{r}
-p <- plotPolytope(
+plotPolytope(
    A,
    b,
    obj,
@@ -98,7 +102,7 @@ plotPolytope(
    obj,
    type = rep("i", ncol(A)),
    crit = "max",
-   faces = rep("i", ncol(A)),
+   faces = rep("c", ncol(A)),
    plotFaces = TRUE,
    plotFeasible = TRUE,
    plotOptimum = TRUE,
@@ -182,6 +186,7 @@ plotPolytope(A,
              plotOptimum = TRUE, 
              # plotFaces = FALSE,
              labels = "n")
+rglwidget()
 ```
 
 

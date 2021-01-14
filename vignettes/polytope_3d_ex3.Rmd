@@ -2,7 +2,7 @@
 title: "Plotting polytopes in 3D - Example 3"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Plotting polytopes in 3D}
+  %\VignetteIndexEntry{Plotting polytopes in 3D - Example 3}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -13,7 +13,7 @@ editor_options:
 library(knitr)
 library(rgl)
 rgl::setupKnitr()
-options(rgl.useNULL=T)
+options(rgl.useNULL=TRUE)
 opts_chunk$set(
   collapse = TRUE,
   webgl = TRUE,
@@ -73,48 +73,5 @@ plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
 plotPolytope(A, b, faces = c("i","i","i"), type = c("i","i","i"), plotFeasible = FALSE, obj = obj,
              argsTitle3d = list(main = "ILP faces") )
-```
-
-Let us have a look at some MILP models. MILP model with variable 1 and 3 
-integer:
-
-```{r ex3MILP_1}
-loadView(v = view, close = T, zoom = 0.75)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = TRUE, obj = obj)
-```
-
-MILP model with variable 2 and 3 integer:
-
-```{r ex3MILP_2}
-loadView(v = view, zoom = 0.75)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = TRUE, obj = obj)
-```
-
-MILP model with variable 1 and 2 integer:
-
-```{r ex3MILP_3}
-loadView(v = view, zoom = 0.75)
-plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = TRUE, obj = obj)
-```
-
-MILP model with variable 1 integer:
-
-```{r ex3MILP_4}
-loadView(v = view, zoom = 0.75)
-plotPolytope(A, b, type = c("i","c","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
-```
-
-MILP model with variable 2 integer:
-
-```{r ex3MILP_5}
-loadView(v = view, zoom = 0.75)
-plotPolytope(A, b, type = c("c","i","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
-```
-
-MILP model with variable 3 integer:
-
-```{r ex3MILP_6}
-loadView(v = view, zoom = 0.75)
-plotPolytope(A, b, type = c("c","c","i"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 ```
 

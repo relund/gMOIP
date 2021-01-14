@@ -464,7 +464,7 @@ plotPolytope3D <-
       argsFaces <- mergeLists(list(drawPoints = FALSE, drawLines = TRUE), args$argsFaces)
       argsFeasible <- list()
       argsFeasible$points3d <- mergeLists(list(size = 3), args$argsFeasible$points3d)
-      argsFeasible$segments3d <- mergeLists(list(lwd=2, line_antialias = TRUE), args$argsFeasible$segments3d)
+      argsFeasible$segments3d <- mergeLists(list(lwd=1), args$argsFeasible$segments3d)
       argsFeasible$triangles3d <- mergeLists(list(col="grey100", alpha=0.4, smooth = FALSE), args$argsFeasible$triangles3d)
       argsOptimum <- list()
       argsOptimum$points3d <- mergeLists(list(col="red", size = 7), args$argsOptimum$points3d)
