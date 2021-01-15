@@ -31,8 +31,6 @@ First we load the package:
 library(gMOIP)
 ```
 
-## Example 4
-
 We define the model:
 
 ```{r ex4Model}
