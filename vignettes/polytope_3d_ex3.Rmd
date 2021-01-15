@@ -114,3 +114,4 @@ MILP model with variable 3 integer:
 loadView(v = view, zoom = 0.75)
 plotPolytope(A, b, type = c("c","c","i"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 ```
+
