@@ -1442,7 +1442,7 @@ plotHull3D <- function(pts,
    argsSegments3d <- mergeLists(list(lwd = 1, col = "grey40"), args$argsSegments3d)
    argsPlot3d <- mergeLists(list(size = 5, col = "black"), args$argsPlot3d)
    argsShade3d <- mergeLists(list(col = "grey100"), args$argsShade3d)
-   argsPolygon3d <- mergeLists(list(color = "grey100", col = "grey40", lwd = 2, alpha = 0.2),
+   argsPolygon3d <- mergeLists(list(color = "black", lwd = 2, alpha = 0.03),
                                args$argsPolygon3d)
    argsText3d <- mergeLists(list(), args$argsText3d)
 
