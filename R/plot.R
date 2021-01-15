@@ -172,10 +172,15 @@ plotHull2D <- function(pts,
 #'   done as lists. Currently the following arguments are supported:
 #'
 #'   * `argsFaces`: A list of arguments for [`plotHull2D`].
-#'   * `argsFeasible`: A list of arguments for [`ggplot2::geom_point`] (if ILP)
-#'                     and for [`ggplot2::geom_line`] (if MILP).
-#'   * `argsLabels`: A list of arguments for [`ggplot2::geom_text`].
-#'   * `argsOptimum`: A list of arguments for [`ggplot2::geom_abline`].
+#'   * `argsFeasible`: A list of arguments for `ggplotl2` functions:
+#'      - `geom_point`: A list of arguments for [`ggplot2::geom_point`].
+#'      - `geom_line`: A list of arguments for [`ggplot2::geom_line`].
+#'   * `argsLabels`: A list of arguments for `ggplotl2` functions:
+#'      - `geom_text`: A list of arguments for [`ggplot2::geom_text`].
+#'   * `argsOptimum`:
+#'      - `geom_point`: A list of arguments for [`ggplot2::geom_point`].
+#'      - `geom_abline`: A list of arguments for [`ggplot2::geom_abline`].
+#'      - `geom_label`: A list of arguments for [`ggplot2::geom_label`].
 #'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
 #'
 #' If 3D further arguments passed on the the rgl plotting functions. This must be done as
@@ -255,10 +260,15 @@ plotPolytope <- function(A,
 #'   lists. Currently the following arguments are supported:
 #'
 #'   * `argsFaces`: A list of arguments for [`plotHull2D`].
-#'   * `argsFeasible`: A list of arguments for [`ggplot2::geom_point`] (if ILP)
-#'                     and for [`ggplot2::geom_line`] (if MILP).
-#'   * `argsLabels`: A list of arguments for [`ggplot2::geom_text`].
-#'   * `argsOptimum`: A list of arguments for [`ggplot2::geom_abline`].
+#'   * `argsFeasible`: A list of arguments for `ggplotl2` functions:
+#'      - `geom_point`: A list of arguments for [`ggplot2::geom_point`].
+#'      - `geom_line`: A list of arguments for [`ggplot2::geom_line`].
+#'   * `argsLabels`: A list of arguments for `ggplotl2` functions:
+#'      - `geom_text`: A list of arguments for [`ggplot2::geom_text`].
+#'   * `argsOptimum`:
+#'      - `geom_point`: A list of arguments for [`ggplot2::geom_point`].
+#'      - `geom_abline`: A list of arguments for [`ggplot2::geom_abline`].
+#'      - `geom_label`: A list of arguments for [`ggplot2::geom_label`].
 #'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
 #'
 #' @return A ggplot2 object.
@@ -282,9 +292,15 @@ plotPolytope2D <-
 {
    args <- list(...)
    argsFaces <- mergeLists(list(argsGeom_polygon = list(fill = "gray90"), argsGeom_path = list(size = 0.5)), args$argsFaces)
-   argsFeasible <- mergeLists(list(), args$argsFeasible)
-   argsLabels <- mergeLists(list(size=3, color = "gray50", hjust = 1), args$argsLabels)
-   argsOptimum <- mergeLists(list(lty="dashed"), args$argsOptimum)
+   argsFeasible <- list()
+   argsFeasible$geom_point <- mergeLists(list(), args$argsFeasible$geom_point)
+   argsFeasible$geom_line <- mergeLists(list(), args$argsFeasible$geom_line)
+   argsLabels <- list()
+   argsLabels$geom_text <- mergeLists(list(size=3, color = "gray50", hjust = 1), args$argsLabels$geom_text)
+   argsOptimum <- list()
+   argsOptimum$geom_abline <- mergeLists(list(lty="dashed"), args$argsOptimum$geom_abline)
+   argsOptimum$geom_point <- mergeLists(list(color = "red"), args$argsOptimum$geom_point)
+   argsOptimum$geom_label <- mergeLists(list(nudge_x = 1, nudge_y = 0.5), args$argsOptimum$geom_label)
    argsTheme <- mergeLists(list(), args$argsTheme)
 
    if (!is.null(obj) & (!is.vector(obj) | !length(obj) == ncol(A)))
@@ -323,20 +339,12 @@ plotPolytope2D <-
    if (plotFeasible) {
       if (all(type == "i")) {
          p <- p +
-            do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=points), argsFeasible))
+            do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=points), argsFeasible$geom_point))
       }
       if (length(which(type == "c"))==1) {
          p <- p +
-            do.call(geom_line, args = c(list(aes_string(x = 'x1', y = 'x2', group='g'), data=points), argsFeasible)) +
-            do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=points), argsFeasible))
-         # idx <- sapply(pl, function(x) nrow(x)==1)
-         # pl <- pl[idx]
-         # if (length(pl)>0) {
-         #    tmp <- do.call(rbind, pl)
-         #    p <- p +
-         #       do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=tmp), argsFeasible))
-         #       #geom_point(aes_string(x = 'x1', y = 'x2', ...), data=tmp)
-         # }
+            do.call(geom_line, args = c(list(aes_string(x = 'x1', y = 'x2', group='g'), data=points), argsFeasible$geom_line)) +
+            do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=points), argsFeasible$geom_point))
       }
    }
 
@@ -350,20 +358,13 @@ plotPolytope2D <-
       else
          tmp$lbl <- 1:nrow(tmp)
       if (length(tmp$lbl)>0) {
-         #p <- p + geom_point(aes_string(x = 'x1', y = 'x2'), data=tmp)
+         #p <- p + do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=tmp), argsLabels$geom_point))
          nudgeS=-(max(tmp$x1)-min(tmp$x1))/100
          #if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) > 0)
             p <- p +
                do.call(ggrepel::geom_text_repel,
                        args = c(list(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp),
-                                argsLabels))
-               #ggrepel::geom_text_repel(aes_string(x = 'x1', y = 'x2', label = 'lbl'),data=tmp, size=3, colour = "gray50")
-         # if (anyDuplicated(cbind(tmp$x1,tmp$x2), MARGIN = 1) == 0)
-         #    p <- p +
-         #       do.call(geom_text,
-         #               args = c(list(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, nudge_x = nudgeS, nudge_y = nudgeS, hjust=1),
-         #                        argsLabels))
-               #geom_text(aes_string(x = 'x1', y = 'x2', label = 'lbl'), data=tmp, nudge_x = nudgeS, nudge_y = nudgeS, hjust=1, size=3, colour = "gray50")
+                                argsLabels$geom_text))
       }
    }
 
@@ -374,22 +375,19 @@ plotPolytope2D <-
          tmp$z <- as.matrix(points[,1:2]) %*% obj
          if (crit=="max") i <- which.max(tmp$z)
          if (crit=="min") i <- which.min(tmp$z)
-         # if (latex) str <- paste0("$x^* = (", tmp$x1[i], ",", tmp$x2[i], ")$")
-         # if (!latex) str <- paste0("x* = ", tmp$lbl[1])
          if (latex) str <- paste0("$z^* = ", round(tmp$z[i], 2) , "$")
          if (!latex) str <- paste0("z* = ", round(tmp$z[i],2) )
          if (obj[2]!=0) {
             p <- p +
-               do.call(geom_abline, args = c(list(intercept = tmp$z[i]/obj[2], slope = -obj[1]/obj[2]), argsOptimum))
-               #geom_abline(intercept = tmp$z[i]/obj[2], slope = -obj[1]/obj[2], lty="dashed")
+               do.call(geom_abline, args = c(list(intercept = tmp$z[i]/obj[2], slope = -obj[1]/obj[2]), argsOptimum$geom_abline))
          } else {
             p <- p +
                do.call(geom_abline, args = c(list(xintercept = tmp$x1[i]), argsOptimum))
-               #geom_vline(xintercept = tmp$x1[i], lty="dashed")
          }
          p <- p +
-            do.call(geom_label, args = c(list(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,]), argsLabels))
-            #geom_label(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,], nudge_x = 1.0)
+            do.call(geom_point, args = c(list(aes_string(x = 'x1', y = 'x2'), data=tmp[i,]), argsOptimum$geom_point))
+         p <- p +
+            do.call(geom_label, args = c(list(aes_string(x = 'x1', y = 'x2', label = 'str'), data = tmp[i,]), argsOptimum$geom_label))
       }
    }
 
