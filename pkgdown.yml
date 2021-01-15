@@ -2,12 +2,16 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  bi-objective: bi-objective.html
+  bi-objective_2x: bi-objective_2x.html
+  bi-objective_3x_ex1: bi-objective_3x_ex1.html
+  bi-objective_3x_ex2: bi-objective_3x_ex2.html
+  bi-objective_3x_ex3: bi-objective_3x_ex3.html
+  bi-objective_3x_ex4: bi-objective_3x_ex4.html
   intro: intro.html
   polytope_2d: polytope_2d.html
   polytope_3d_ex1: polytope_3d_ex1.html
   polytope_3d_ex2: polytope_3d_ex2.html
   polytope_3d_ex3: polytope_3d_ex3.html
   polytope_3d_ex4: polytope_3d_ex4.html
-last_built: 2021-01-15T10:06Z
+last_built: 2021-01-15T10:49Z
 
