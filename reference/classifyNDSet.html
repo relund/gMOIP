@@ -114,6 +114,9 @@
       <a href="../articles/intro.html">Introduction to gMOIP</a>
     </li>
     <li>
+      <a href="../articles/lb_ub_set.html">Lower and upper bound sets in multi-objective optimization</a>
+    </li>
+    <li>
       <a href="../articles/mo_costs.html">Generating costs in multi-objective programming</a>
     </li>
     <li>
@@ -240,14 +243,14 @@ i'th column of the <code>pts</code> minus a value greater than on equal zero (ma
 <span class='va'>pts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>, <span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>, <span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>0</span>, <span class='fl'>0.5</span>,<span class='fl'>0.2</span>,<span class='fl'>0.5</span>, <span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>0</span>, <span class='fl'>0.5</span>,<span class='fl'>0.2</span>,<span class='fl'>0.5</span>, <span class='fl'>0.25</span>,<span class='fl'>0.5</span>,<span class='fl'>0.25</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>3</span>,
               byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'>classifyNDSet</span><span class='op'>(</span><span class='va'>pts</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;     z1  z2   z3    se   sne    us cls
-#&gt; 1 0.00 0.0 1.00  TRUE FALSE FALSE  se
-#&gt; 2 0.00 0.0 1.00  TRUE FALSE FALSE  se
-#&gt; 3 0.00 1.0 0.00  TRUE FALSE FALSE  se
-#&gt; 4 0.50 0.2 0.50 FALSE FALSE  TRUE  us
-#&gt; 5 1.00 0.0 0.00  TRUE FALSE FALSE  se
-#&gt; 6 0.50 0.2 0.50 FALSE FALSE  TRUE  us
-#&gt; 7 0.25 0.5 0.25 FALSE  TRUE FALSE sne</div><div class='input'>
+</div><div class='output co'>#&gt;        z1  z2   z3    se   sne    us cls
+#&gt; 1    0.00 0.0 1.00  TRUE FALSE FALSE  se
+#&gt; ...2 0.00 0.0 1.00  TRUE FALSE FALSE  se
+#&gt; 2    0.00 1.0 0.00  TRUE FALSE FALSE  se
+#&gt; 3    0.50 0.2 0.50 FALSE FALSE  TRUE  us
+#&gt; 4    1.00 0.0 0.00  TRUE FALSE FALSE  se
+#&gt; ...6 0.50 0.2 0.50 FALSE FALSE  TRUE  us
+#&gt; 5    0.25 0.5 0.25 FALSE  TRUE FALSE sne</div><div class='input'>
 <span class='va'>pts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='genNDSet.html'>genNDSet</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>50</span><span class='op'>)</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span>
 <span class='fu'><a href='ini3D.html'>ini3D</a></span><span class='op'>(</span>argsPlot3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>pts</span><span class='op'>$</span><span class='va'>z1</span><span class='op'>)</span><span class='op'>+</span><span class='fl'>2</span><span class='op'>)</span>,
   ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>pts</span><span class='op'>$</span><span class='va'>z2</span><span class='op'>)</span><span class='op'>+</span><span class='fl'>2</span><span class='op'>)</span>,
