@@ -42,7 +42,7 @@ rglwidget()
 
 We define the sets $\mathbb{R}_{>} = \{ z\in \mathbb{R} \mid z > 0\}$, $\mathbb{R}_{\geqq} = \{ z\in \mathbb{R} \mid z \geqq 0\}$ and $\mathbb{R}_{\geqslant} = \{ z\in \mathbb{R} \mid z \geqslant 0\}$.
 
-```{r}
+```{r, eval=FALSE}
 #loadView(v = view)
 rgl::mfrow3d(nr = 1, nc = 3, sharedMouse = TRUE)
 ## Set R^3_>=
@@ -124,7 +124,7 @@ rglwidget()
 We may also plot reverse dominance cones:
 
 ```{r}
-ubSet <- genNDSet(3, 50, range = c(1,20))
+ubSet <- genNDSet(3, 50, range = c(1,20), dubND = FALSE)
 ini3D(F, argsPlot3d = list(
   xlim = c(min(ubSet$z1) - 2, max(ubSet$z1) + 2),
   ylim = c(min(ubSet$z2) - 2, max(ubSet$z2) + 2),
