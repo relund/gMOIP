@@ -199,7 +199,7 @@
    labels <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
 <p><img src="polytope_2d_files/figure-html/LP2-1.png" width="99%" style="display: block; margin: auto;"></p>
-<p>Note The package don’t plot feasible regions that are unbounded e.g if we drop the 2 and 3 constraint we get the wrong plot:</p>
+<p>Note The package don’t plot feasible regions that are unbounded e.g if we drop the second and third constraint we get the wrong plot:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
