@@ -1793,3 +1793,259 @@ finalize3D <- function(...){
    rgl.bringtotop()
    return(invisible(NULL))
 }
+
+
+#' Convert LaTeX to a png file
+#'
+#' @param tex TeX string. Remember to escape backslash with \\.
+#' @param viewPng View the result in the plots window.
+#' @param width Width of the png.
+#' @param height Height of the png (`width` are ignored).
+#' @param dpi Dpi of the png. Not used if `width` or `height` are specified.
+#' @param fontsize Front size used in the LaTeX document.
+#' @param calcM Estimate 1 em in pixels in the resulting png.
+#'
+#' @return The filename of the png or a list if `calcM = TRUE`.
+#' @export
+#'
+#' @examples
+#' tex <- "$\\mathbb{R}_{\\geqq}$"
+#' toPng(tex, viewPng = TRUE)
+#' toPng(tex, fontsize = 20, viewPng = TRUE)
+#' toPng(tex, height = 50, fontsize = 10, viewPng = TRUE)
+#' toPng(tex, height = 50, fontsize = 50, viewPng = TRUE)
+#' tex <- "MMM"
+#' toPng(tex, dpi=72, calcM = T)
+#' toPng(tex, width = 100, calcM = T)
+#' f <- toPng(tex, dpi=300)
+#' pngSize(f)
+toPng <- function(tex, width = NULL, height = NULL, dpi = 72, viewPng = FALSE, fontsize = 12,
+                  calcM = FALSE, crop = FALSE) {
+   texFile <- tempfile(fileext=".tex")
+   pdfFile <- gsub("[.]tex", ".pdf", texFile)
+   pngFile <- gsub("[.]tex", ".png", texFile)
+   writeLines(c(paste0("\\documentclass[class=scrreprt, fontsize = ", fontsize, "pt]{standalone}"),
+                "\\usepackage{amsfonts}",
+                "\\usepackage{amssymb}",
+                "\\begin{document}",
+                tex,
+                "\\end{document}"),
+              texFile)
+   system(paste0("pdflatex -shell-escape -output-directory=", tempdir(), " ", texFile))
+   if (crop) system(paste("pdfcrop", pdfFile, pdfFile))
+   tmp <- pdftools::pdf_pagesize(pdfFile)
+   z <- 1
+   if (!is.null(width)) z <- dpi/72 * tmp$width/width
+   if (!is.null(height)) z <- dpi/72 * tmp$height/height
+   dpi <- dpi * 1/z
+   if (calcM) em1 <- sizeM(dpi = dpi, fontsize = fontsize)$w
+   pdftools::pdf_convert(pdfFile, format = "png", dpi = dpi, antialias = TRUE, filenames = pngFile)
+   if (viewPng) {
+      img <- png::readPNG(pngFile)
+      grid::grid.newpage()
+      grid::grid.raster(img, just = "center", height = 0.2)
+   }
+   if (calcM) {
+      s <- pngSize(pngFile)
+      emPng <- s$w/em1
+      return(list(png=pngFile, emPx = em1, emLength = emPng, w = s$w, h = s$h))
+   }
+   return(pngFile)
+}
+
+
+#' Estimate 1 em in pixels in the resulting png.
+#'
+#' @param ... Arguments parsed on to `toPng`.
+#'
+#' @return The width and size of the png.
+#' @export
+#'
+#' @examples sizeM(fontsize=30)
+sizeM <- function(...) {
+   f <- toPng("M", ...)
+   return(pngSize(f))
+}
+
+
+#' To size of the png file.
+#'
+#' @param png Png file name.
+#'
+#' @return A list with width and height.
+#' @export
+#'
+#' @examples
+pngSize <- function(png) {
+   img <- png::readPNG(png)
+   w <- dim(img)[2]
+   h <- dim(img)[1]
+   return(list(w=w,h=h))
+}
+
+
+#' Draw boxes, axes and other text outside the data using TeX strings.
+#'
+#' @param main The main title for the plot.
+#' @param sub The subtitle for the plot.
+#' @param xlab The axis labels for the plot .
+#' @param ylab The axis labels for the plot .
+#' @param zlab The axis labels for the plot .
+#' @param line The ``line'' of the plot margin to draw the label on.
+#' @param ... Additional parameters which are passed to \code{\link{plotMTeX3D}}.
+#'
+#' @details The rectangular prism holding the 3D plot has 12 edges.  They are identified
+#' using 3 character strings.  The first character (`x', `y', or `z') selects
+#' the direction of the axis.  The next two characters are each `-' or `+',
+#' selecting the lower or upper end of one of the other coordinates.  If only
+#' one or two characters are given, the remaining characters default to `-'.
+#' For example \code{edge = 'x+'} draws an x-axis at the high level of y and the
+#' low level of z.
+#'
+#' By default, \code{axes3d} uses the \code{\link{bbox3d}} function to draw the axes.
+#' The labels will move so that they do not obscure the data.  Alternatively,
+#' a vector of arguments as described above may be used, in which case
+#' fixed axes are drawn using \code{axis3d}.
+#'
+#' If \code{pos} is a numeric vector of length 3, \code{edge} determines
+#' the direction of the axis and the tick marks, and the values of the
+#' other two coordinates in \code{pos} determine the position.  See the
+#' examples.
+#' @return The object IDs of objects added to the scene.
+#' @export
+#'
+#' @examples
+#' ini3D()
+#' plot3d(1:2,1:2,1:2, xlab = '', ylab = '', zlab = '', type = "n")
+#' plotTitleTeX3D(main = "\\LaTeX", sub = "subtitle $\\alpha$",
+#'                xlab = "$x^1_2$", ylab = "$\\beta$", zlab = "$x\\cdot y$")
+plotTitleTeX3D <- function (main = NULL, sub = NULL, xlab = NULL, ylab = NULL,
+                            zlab = NULL, line = NA, ...) {
+   save <- rgl::par3d(skipRedraw = TRUE, ignoreExtent = TRUE)
+   on.exit(rgl::par3d(save))
+   result <- numeric(0)
+   if (!is.null(main)) {
+      aline <- ifelse(is.na(line), 2, line)
+      result <- c(result, main = plotMTeX3D(main, "x++",
+                                            line = aline, ...))
+   }
+   if (!is.null(sub)) {
+      aline <- ifelse(is.na(line), 3, line)
+      result <- c(result, sub = plotMTeX3D(sub, "x", line = aline,
+                                           ...))
+   }
+   if (!is.null(xlab)) {
+      aline <- ifelse(is.na(line), 2, line)
+      result <- c(result, xlab = plotMTeX3D(xlab, "x", line = aline,
+                                            ...))
+   }
+   if (!is.null(ylab)) {
+      aline <- ifelse(is.na(line), 2, line)
+      result <- c(result, ylab = plotMTeX3D(ylab, "y", line = aline,
+                                            ...))
+   }
+   if (!is.null(zlab)) {
+      aline <- ifelse(is.na(line), 2, line)
+      result <- c(result, zlab = plotMTeX3D(zlab, "z", line = aline,
+                                            ...))
+   }
+   lowlevel(result)
+}
+
+
+
+
+#' Plot TeX in the margin
+#'
+#' @param tex TeX string
+#' @param edge The position at which to draw the axis or text.
+#' @param line The ``line'' of the plot margin to draw the label on.
+#' @param at The value of a coordinate at which to draw the axis.
+#' @param pos  The position at which to draw the axis or text.
+#' @param ...
+#'
+#' @return The object IDs of objects added to the scene.
+#' @export
+#'
+#' @examples
+plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
+   save <- rgl::par3d(ignoreExtent = TRUE)
+   on.exit(rgl::par3d(save))
+   ranges <- rgl:::.getRanges()
+   edge <- c(strsplit(edge, "")[[1]], "-", "-")[1:3]
+   coord <- match(toupper(edge[1]), c("X", "Y", "Z"))
+   if (coord == 2)
+      edge[1] <- edge[2]
+   else if (coord == 3)
+      edge[1:2] <- edge[2:3]
+   range <- ranges[[coord]]
+   if (is.null(at))
+      at <- mean(range)
+   newlen <- max(length(tex), length(line), length(at))
+   tex <- rep(tex, len = newlen)
+   line <- rep(line, len = newlen)
+   at <- rep(at, len = newlen)
+   if (all(is.na(pos))) {
+      pos <- matrix(NA, 3, length(at))
+      if (edge[1] == "+")
+         pos[1, ] <- ranges$x[2]
+      else pos[1, ] <- ranges$x[1]
+      if (edge[2] == "+")
+         pos[2, ] <- ranges$y[2]
+      else pos[2, ] <- ranges$y[1]
+      if (edge[3] == "+")
+         pos[3, ] <- ranges$z[2]
+      else pos[3, ] <- ranges$z[1]
+   }
+   else pos <- matrix(pos, 3, length(at))
+   pos[coord, ] <- at
+   ticksize <- 0.05 * (pos[, 1] - c(mean(ranges$x), mean(ranges$y),
+                                    mean(ranges$z)))
+   ticksize[coord] <- 0
+   plotTeX3D(pos[1, ] + 3 * ticksize[1] * line,
+             pos[2, ] + 3 * ticksize[2] * line,
+             pos[3, ] + 3 * ticksize[3] * line, tex,
+             ...)
+}
+
+
+
+#' Plot TeX at a position.
+#'
+#' @param x
+#' @param y
+#' @param z
+#' @param cex Expansion factor
+#' @param fixedSize
+#' @param tex TeX string
+#' @param size Size of the generated png.
+#' @param ... Arguments passed on to `sprites3d`.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' tex <- "$\\mathbb{R}_{\\geqq}$"
+#' tex <- "\\LaTeX"
+#' tex <- "This is a title"
+#' ini3D()
+#' plot3d(0:2,0:2,0:2)
+#' plotTeX3D(0.75,0.75,0.75, "MMM")
+#' plotTeX3D(0.5,0.5,0.5, "MMM", cex = 2)
+#' plotTeX3D(1,1,1, "This is a title")
+#' ini3D(T)
+#' plot3d(0:200,0:200,0:200)
+#' plotTeX3D(75,75,75, "MMM")
+#' plotTeX3D(50,50,50, "\\LaTeX")
+#' plotTeX3D(100,100,100, "This is a title")
+plotTeX3D <- function (x, y, z, tex, cex = par("cex"), fixedSize = FALSE, size = 480, ...) {
+   f <- toPng(tex, width = size, calcM = TRUE, ...)
+   # expand png so same width and height
+   system(paste0("convert ", f$png,
+                 " -background none -gravity center -extent ", max(f$w,f$h), "x", max(f$w,f$h), " ", f$png))
+   tmp <- rgl::par3d()$bbox
+   radius <- 1/2 * cex * f$emLength * 20/f$emPx * max(c(tmp[2]-tmp[1], tmp[4]-tmp[3],tmp[6]-tmp[5]) * rgl::par3d()$scale)
+   sprites3d(x, y, z, texture = f$png,
+             textype = "rgba", col = "white", lit = FALSE,
+             radius = radius, fixedSize = fixedSize, ...)
+}
