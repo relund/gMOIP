@@ -1,0 +1,312 @@
+---
+title: "Lower and upper bound sets in multi-objective optimization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lower and upper bound sets in multi-objective optimization}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE}
+library(knitr)
+library(rgl)
+rgl::setupKnitr()
+options(rgl.useNULL=TRUE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "ublb-",
+  warning=FALSE, message=FALSE, include = TRUE, 
+  out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
+)
+set.seed(1947)
+```
+
+```{r setup}
+library(gMOIP)
+rgl::par3d("family" = "serif")
+```
+
+Package `gMOIP` has different features for plotting multi-objective models in 2D and 3D. First of all we may plot the non-dominated set (red points are non-dominated and black dominated): 
+
+```{r nd points}
+pts <- genNDSet(3, 100, keep = TRUE)
+ini3D()
+plotPoints3D(pts[!pts$nd,1:3])
+plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red"))
+finalize3D()
+rglwidget()
+```
+
+We define the sets $\mathbb{R}_{>} = \{ z\in \mathbb{R} \mid z > 0\}$, $\mathbb{R}_{\geqq} = \{ z\in \mathbb{R} \mid z \geqq 0\}$ and $\mathbb{R}_{\geqslant} = \{ z\in \mathbb{R} \mid z \geqslant 0\}$.
+
+```{r}
+#loadView(v = view)
+rgl::mfrow3d(nr = 1, nc = 3, sharedMouse = TRUE)
+## Set R^3_>=
+ini3D(argsPlot3d = list(xlim = c(-1,100), ylim = c(-1,100), zlim = c(-1,100)))
+plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
+plotTitleTeX3D(main = "$\\mathbb{R}_{\\geqq}$", cex = 4, crop = TRUE)
+finalize3D()
+rgl::next3d()
+## Set R^3_>-
+ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-1,100), ylim = c(-1,100), zlim = c(-1,100)))
+plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
+rgl::spheres3d(0,0,0, radius = 1, alpha = 0.8, col="gray80")
+plotTitleTeX3D(main = "$\\mathbb{R}_{\\geq}$", cex = 4, crop = TRUE)
+finalize3D()
+rgl::next3d()
+## Set R^3_>
+ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-1,100), ylim = c(-1,100), zlim = c(-1,100)))
+plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.3, color = "red"))
+plotTitleTeX3D(main = "$\\mathbb{R}_{>}$", cex = 4, crop = TRUE)
+finalize3D()
+rglwidget()
+```
+
+A set of points $Z$ and $conv(Z + \mathbb{R}_{\geq})$:
+
+```{r withR3}
+ubSet <- genNDSet(3, 100, keep = T, dubND = F)
+ini3D(F, argsPlot3d = list(
+  xlim = c(min(ubSet$z1) - 2, max(ubSet$z1) + 2),
+  ylim = c(min(ubSet$z2) - 2, max(ubSet$z2) + 2),
+  zlim = c(min(ubSet$z3) - 2, max(ubSet$z3) + 2)
+))
+plotPoints3D(ubSet[!ubSet$nd, 1:3])
+ubSet <- ubSet[ubSet$nd, 1:3]
+plotHull3D(
+  ubSet[, 1:3],
+  addRays = 1,
+  drawPoints = T,
+  drawPolygons = T,
+  argsPlot3d = list(col = "blue"),
+  argsPolygon3d = list(color = "red", alpha = 0.3)
+)
+finalize3D()
+rglwidget()
+```
+
+We may also add dominance cones:
+
+```{r addDCones}
+plotCones3D(ubSet, argsPolygon3d = list(color = "grey100", alpha = 1), rectangle = T)
+rglwidget()
+```
+
+Another example with many unsupported points:
+
+```{r}
+ubSet <- genNDSet(3, 100, keep = T, argsSphere = list(below = F))
+ini3D(F, argsPlot3d = list(
+  xlim = c(min(ubSet$z1) - 2, max(ubSet$z1) + 2),
+  ylim = c(min(ubSet$z2) - 2, max(ubSet$z2) + 2),
+  zlim = c(min(ubSet$z3) - 2, max(ubSet$z3) + 2)
+))
+plotPoints3D(ubSet[!ubSet$nd, 1:3])
+ubSet <- ubSet[ubSet$nd, 1:3]
+plotHull3D(
+  ubSet[, 1:3],
+  addR3 = T,
+  drawPoints = T,
+  argsPlot3d = list(col = "blue"),
+  argsPolygon3d = list(color = "red", alpha = 0.5)
+)
+plotCones3D(ubSet,
+            argsPolygon3d = list(color = "grey100", alpha = 1),
+            rectangle = T)
+finalize3D()
+rglwidget()
+```
+
+We may also plot reverse dominance cones:
+
+```{r}
+ubSet <- genNDSet(3, 50, range = c(1,20))
+ini3D(F, argsPlot3d = list(
+  xlim = c(min(ubSet$z1) - 2, max(ubSet$z1) + 2),
+  ylim = c(min(ubSet$z2) - 2, max(ubSet$z2) + 2),
+  zlim = c(min(ubSet$z3) - 2, max(ubSet$z3) + 2)
+))
+plotCones3D(
+  ubSet[,1:3],
+  drawPoint = T,
+  argsPolygon3d = list(alpha = 1, color = "red"),
+  rectangle = TRUE
+)
+plotCones3D(
+  ubSet[,1:3],
+  drawPoint = T,
+  argsPolygon3d = list(alpha = 1, color = "green"),
+  reverse = T,
+  rectangle = TRUE
+)
+finalize3D()
+rglwidget()
+```
+
+
+```{r Example in Dachert17, eval=FALSE}
+ubSet <- matrix( c(4,0,4, 3,3,1, 2,2,2), ncol = 3, byrow = TRUE)
+row.names(ubSet) <- paste0("z", 1:3)
+ini3D(argsPlot3d = list(
+  xlim = c(min(ubSet[,1])-10,max(ubSet[,1])+10), 
+  ylim = c(min(ubSet[,2])-10,max(ubSet[,2])+10), 
+  zlim = c(min(ubSet[,3])-10,max(ubSet[,3])+10) ))
+m <- rgl::par3d()$bbox[c(1,3,5)]
+M <- rgl::par3d()$bbox[c(2,4,6)]
+augment <- function(idx, a, b, prefix = "") {
+  res <- NULL
+  for (i in idx) {
+    c <- b
+    c[i] <- a[i]
+    res <- rbind(res,c)
+  }
+  row.names(res) <- paste0(prefix,idx)
+  return(res)
+}
+zHat <- augment(1:3, M, m)
+# iteration 0
+U <- matrix(M, ncol = 3, byrow = T)
+row.names(U) <- "u0"
+N <- NULL
+NHat <- rbind(N,zHat)
+plotRectangle3D(m,M, argsPolygon3d = list(alpha = 0.01, color="red"))
+plotPoints3D(m, addText = "m", argsPlot3d = list(alpha = 1, size=15), argsText3d = list(adj = c(1.5,1.5)))
+plotPoints3D(U, addText = "both", argsPlot3d = list(alpha = 1, col = "blue", size=15), argsText3d = list(col = "blue", adj = c(1.1,1)))
+plotPoints3D(zHat, addText = c("zH1", "zH2", "zH3"), argsPlot3d = list(type="s", col = "green", radius=0.25), argsText3d = list(col = "green", adj = c(1.3,1)))
+# iteration 1
+z <- ubSet[1,1:3]
+u0 <- M
+U <- augment(1:3, z, u0, "u")
+N<- rbind(N, ubSet[1,1:3, drop=F])
+plotCones3D(N, drawPoint = F, argsPolygon3d = list(alpha = 1), rectangle = T)
+plotPoints3D(N, addText = "both", argsPlot3d = list(type="p", col = "red", size = 12, alpha=1, lit = T))
+plotPoints3D(U, addText = "both", argsPlot3d = list(type="s", col = "blue", radius=0.25), argsText3d = list(col = "blue", adj = c(1,1)))
+# iteration 2
+z <- ubSet[2,1:3]
+u1 <- U[1,]
+u3 <- U[3,]
+U <- U[2,,drop=F]
+U <- rbind(U,augment(1:3, z, u1, "u1"))
+U <- rbind(U,augment(1:3, z, u3, "u3"))
+N<- rbind(N, ubSet[2,1:3, drop=F])
+U <- U[c(-4,-5),]
+plotCones3D(N, drawPoint = F, argsPolygon3d = list(alpha = 1), rectangle = T)
+plotPoints3D(N, addText = "both", argsPlot3d = list(type="s", col = "red", radius = 0.25))
+plotPoints3D(U, addText = "both", argsPlot3d = list(type="s", col = "blue", radius=0.25), argsText3d = list(col = "blue", adj = c(1,1)))
+# iteration 3
+z <- ubSet[3,1:3]
+u11 <- U[2,]
+u12 <- U[3,]
+u32 <- U[4,]
+U <- U[-c(2:4),]
+U <- rbind(U,augment(1:3, z, u11, "u11"))
+U <- rbind(U,augment(1:3, z, u12, "u12"))
+U <- rbind(U,augment(1:3, z, u32, "u32"))
+U <- U[-c(4,6,8,9),]
+N<- rbind(N, ubSet[3,1:3, drop=F])
+plotCones3D(N, drawPoint = F, argsPolygon3d = list(alpha = 1), rectangle = T)
+plotPoints3D(N, addText = "both", argsPlot3d = list(type="s", col = "red", radius = 0.25))
+plotPoints3D(U, addText = "both", argsPlot3d = list(type="s", col = "blue", radius=0.25), argsText3d = list(col = "blue", adj = c(1,1)))
+# plotCones3D(U, reverse = T, cube = T, drawPoint = F, argsPolygon3d = list(alpha = 1), rectangle = T)
+finalize3D()
+```
+
+```{r Example in Forget20, eval=FALSE}
+ubSet <- matrix( c(1,1,1), ncol = 3, byrow = TRUE)
+row.names(ubSet) <- paste0("z", 1)
+lim <- c(0,7)
+m <- rep(lim[1],3)
+M <-rep(lim[2],3)
+augment <- function(idx, a, b, prefix = "") {
+  res <- NULL
+  for (i in idx) {
+    c <- b
+    c[i] <- a[i]
+    res <- rbind(res,c)
+  }
+  row.names(res) <- paste0(prefix,idx)
+  return(res)
+}
+zHat <- augment(1:3, M, m)
+# iteration 0
+U <- matrix(M, ncol = 3, byrow = T)
+row.names(U) <- "u0"
+N <- NULL
+NHat <- rbind(N,zHat)
+lim <- c(-2,15)
+ini3D(argsPlot3d = list(xlim = lim, ylim = lim, zlim = lim))
+# plotRectangle3D(m,M, argsPolygon3d = list(alpha = 0.01, color="red", fill = F))
+# plotPoints3D(m, addText = "m", argsPlot3d = list(alpha = 1, size=15), argsText3d = list(adj = c(1.5,1.5)))
+# plotPoints3D(U, addText = "both", argsPlot3d = list(alpha = 1, col = "blue", size=15), argsText3d = list(col = "blue", adj = c(1.1,1)))
+# plotPoints3D(zHat, addText = c("zH1", "zH2", "zH3"), argsPlot3d = list(type="s", col = "green", radius=0.25), argsText3d = list(col = "green", adj = c(1.3,1)))
+z <- ubSet[1,1:3]
+u0 <- M
+U <- augment(1:3, z, u0, "u")
+N<- rbind(N, ubSet[1,1:3, drop=F])
+plotCones3D(N, drawPoint = F, argsPolygon3d = list(alpha =0.04), rectangle = F, drawLines = F, drawPolygons = F)
+plotPoints3D(N, addText = F, argsPlot3d = list(type="p", col = "red", size = 12))
+plotPoints3D(U, addText = F, argsPlot3d = list(type="p", col = "blue", size = 8), argsText3d = list(col = "blue", adj = c(1,1)))
+plotPlane3D(c(1,1,1), point = c(2,2,2), argsPlanes3d = list(alpha = 0.8, col = "blue"))
+plotCones3D(U[1:3,], drawPoint = F, argsPolygon3d = list(alpha =0.9, color = "green"), rectangle = T, reverse = T, drawLines = F)
+finalize3D()
+
+
+# p <- 3
+# r <- 1
+# n <- 100
+# s <- matrix(rnorm(p*n), ncol = n, byrow = TRUE)
+# x1 <- apply(s, 2, function(x){x * r/sqrt(sum(x^2))})
+# apply(x1,2, function(x){sqrt(sum(x^2))})
+# ini3D()
+# rgl::spheres3d(c(0,0,0), radius=1, color = "grey100", alpha=0.1)
+# plotPoints3D(t(x1))
+# finalize3D()
+```
+
+
+```{r rgl problems, eval=FALSE}
+## Ex1 (don't work)
+open3d()
+a <- b <- c <- 1
+d <- -0.5
+planes3d(a, b, c, d)
+## Ex2 (output not good)
+open3d()
+x <- y <- z <- 1
+plot3d(x, y, z)
+## Ex3 (output not good)
+open3d()
+x <- y <- z <- 1
+plot3d(x, y, z, type="s")
+## Ex4 (last line don't work)
+open3d()
+x <- y <- z <- c(0,4)
+plot3d(x, y ,z)
+planes3d(a, b, c, d)
+x <- y <- z <- 1
+plot3d(x, y, z, add = T)
+x <- y <- z <- 2
+plot3d(x, y, z, type = "s", add = T, radius = 0.25)
+x <- y <- z <- 3
+plot3d(x, y, z, type = "s", add = T)
+## Ex5 (work)
+open3d()
+x <- y <- z <- c(0,1,4)
+plot3d(x, y ,z, size = 10)
+d <- -3
+planes3d(a, b, c, d)
+## Ex6 (don't work)
+open3d()
+x <- y <- z <- c(0,1,3)
+plot3d(x, y ,z, size = 10)
+d <- -3
+planes3d(a, b, c, d)
+```
+
+
+
+
