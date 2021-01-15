@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   warning=FALSE, message=FALSE, include = TRUE, 
-  fig.show="hold", out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
+  out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
 )
 ```
 
@@ -119,7 +119,7 @@ plotPolytope(
 )
 ```
 
-Note The package don't plot feasible regions that are unbounded e.g if we drop the 2 and 3 
+Note The package don't plot feasible regions that are unbounded e.g if we drop the second and third 
 constraint we get the wrong plot:
 
 ```{r unbounded1}
