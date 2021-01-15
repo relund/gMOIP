@@ -31,8 +31,6 @@ First we load the package:
 library(gMOIP)
 ```
 
-## Example 1
-
 We define the model  $\max \{cx | Ax \leq b\}$ (could also be minimized) with three variables:
 
 ```{r ex1Model}

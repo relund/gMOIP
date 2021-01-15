@@ -30,8 +30,6 @@ First we load the package:
 library(gMOIP)
 ```
 
-## Example 3
-
 We define the model:
 
 ```{r ex3Model}
