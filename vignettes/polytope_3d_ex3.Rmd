@@ -61,9 +61,9 @@ loadView(v = view, close = F, zoom = 0.75)
 plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
 ```
 
-Note in the html file you can zoom/turn/twist the figure with your mouse (`rglwidget`).
+Note you can zoom/turn/twist the figure with your mouse (`rglwidget`).
 
-The ILP model:
+The ILP model (note since the vertices are integer the LP and ILP faces are equal):
 
 ```{r ex3ILP, webgl = TRUE}
 loadView(v = view, close = F, zoom = 0.75)
