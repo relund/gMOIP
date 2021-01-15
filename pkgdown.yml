@@ -8,10 +8,13 @@ articles:
   bi-objective_3x_ex3: bi-objective_3x_ex3.html
   bi-objective_3x_ex4: bi-objective_3x_ex4.html
   intro: intro.html
+  mo_costs: mo_costs.html
+  mo_shapes: mo_shapes.html
   polytope_2d: polytope_2d.html
   polytope_3d_ex1: polytope_3d_ex1.html
   polytope_3d_ex2: polytope_3d_ex2.html
   polytope_3d_ex3: polytope_3d_ex3.html
   polytope_3d_ex4: polytope_3d_ex4.html
-last_built: 2021-01-15T10:49Z
+  tri-objective: tri-objective.html
+last_built: 2021-01-15T13:32Z
 
