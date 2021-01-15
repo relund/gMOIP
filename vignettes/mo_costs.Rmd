@@ -1,0 +1,99 @@
+---
+title: "Generating costs in multi-objective programming"
+author: "Lars Relund Nielsen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating costs in multi-objective programming}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+library(rgl)
+library(ggsci)
+library(tidyverse)
+library(magrittr)
+rgl::setupKnitr()
+options(rgl.useNULL=TRUE)
+#rgl::par3d("family" = "serif")
+opts_chunk$set(
+  collapse = TRUE,
+  warning=FALSE, message=FALSE, include = TRUE, 
+  out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
+)
+```
+
+First we load the package:
+
+```{r, cache=FALSE}
+library(gMOIP)
+```
+
+Points in $\mathbb{R}_n$ can be generated using function `genSample`. Different methods can be used for generation:
+
+**Random**
+
+The coefficient are generated randomly with a uniform distribution in the range $[a,b]$. For three objectives, random generated coefficients looks as follows.
+
+```{r}
+range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
+pts <- genSample(3, 1000, range = range, random = TRUE)
+ini3D()
+plotPoints3D(pts)
+finalize3D()
+rglwidget()
+```
+
+**Sphere down**
+
+The coefficients are generated on the lower part of a sphere (see next picture). Note that the sphere is adjusted such that the coefficients are in the range $[a,b]$, i.e. the sphere is not necessarily included in $[a,b]^p$.
+
+```{r, eval=T}
+cent <- c(1000,1000,1000)
+r <- 750
+planeC <- c(cent-r/3)
+planeC <- c(planeC, -sum(planeC^2))
+pts <- genSample(3, 500,
+  argsSphere = list(center = cent, radius = r, below = TRUE, plane = planeC, factor = 6))
+ini3D()
+plotPoints3D(pts)
+planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
+spheres3d(cent, radius=r, color = "grey100", alpha=0.1)
+finalize3D()
+rglwidget(reuse = F)
+```
+
+**Sphere up**
+
+The coefficients are generated on the upper part of a sphere (see next picture). Note that the sphere is adjusted such that the coefficients are in the range $[a,b]$, i.e. the sphere is not necessarily included in $[a,b]^p$.
+
+```{r}
+cent <- c(1000,1000,1000)
+r <- 750
+planeC <- c(cent+r/3)
+planeC <- c(planeC, -sum(planeC^2))
+pts <- genSample(3, 500,
+  argsSphere = list(center = cent, radius = r, below = FALSE, plane = planeC, factor = 6))
+ini3D()
+spheres3d(cent, radius=r, color = "grey100", alpha=0.1)
+plotPoints3D(pts)
+planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
+finalize3D()
+rglwidget(reuse = F)
+```
+
+**2box**
+
+The coefficients are generated randomly but in two specific parts of $[a,b]^p$ (see next picture).
+
+```{r, webgl = TRUE, cache=FALSE}
+range <- matrix(c(1,1000, 1,1000, 1,1000), ncol = 2, byrow = TRUE )
+ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
+pts <- genSample(3, 300, range = range, box = TRUE)
+plotPoints3D(pts)
+finalize3D()
+```
