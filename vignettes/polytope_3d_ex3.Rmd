@@ -113,3 +113,7 @@ loadView(v = view, zoom = 0.75)
 plotPolytope(A, b, type = c("c","c","i"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 ```
 
+```{r, include=F, eval=FALSE}
+detach(package:gMOIP, unload=TRUE)
+detach(package:rgl, unload=TRUE)
+```

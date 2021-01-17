@@ -97,3 +97,8 @@ pts <- genSample(3, 300, range = range, box = TRUE)
 plotPoints3D(pts)
 finalize3D()
 ```
+
+```{r, include=F, eval=FALSE}
+detach(package:gMOIP, unload=TRUE)
+detach(package:rgl, unload=TRUE)
+```

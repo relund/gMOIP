@@ -243,3 +243,8 @@ plotCones3D(pts[pts$nd,c("z1","z2","z3")], argsPolygon3d = list(alpha = 1, color
 useSubscene3d(root)
 axes3d()
 ```
+
+```{r, include=F, eval=FALSE}
+detach(package:gMOIP, unload=TRUE)
+detach(package:rgl, unload=TRUE)
+```
