@@ -288,7 +288,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='cn'>NULL</span>,
    argsFaces <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>argsGeom_polygon <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='img'><img src='plotPolytope-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># With optimum and labels:</span>
+</div><div class='img'><img src='plotPolytope-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># With optimum and labels:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -302,7 +302,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='st'>"coord"</span>,
    argsOptimum <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>lty<span class='op'>=</span><span class='st'>"solid"</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># Minimize:</span>
+</div><div class='img'><img src='plotPolytope-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># Minimize:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -315,7 +315,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"n"</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># Note return a ggplot so can e.g. add other labels on e.g. the axes:</span>
+</div><div class='img'><img src='plotPolytope-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># Note return a ggplot so can e.g. add other labels on e.g. the axes:</span>
 <span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -329,7 +329,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
 <span class='va'>p</span> <span class='op'>+</span> <span class='fu'>ggplot2</span><span class='fu'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span><span class='op'>(</span><span class='st'>"x"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>ggplot2</span><span class='fu'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ylab</a></span><span class='op'>(</span><span class='st'>"y"</span><span class='op'>)</span>
-
+</div><div class='img'><img src='plotPolytope-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># More examples</span>
 <span class='co'># \donttest{</span>
 <span class='co'>## LP-model with no non-negativity constraints</span>
@@ -349,7 +349,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>FALSE</span>,
    labels <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
+</div><div class='img'><img src='plotPolytope-5.png' alt='' width='700' height='433' /></div><div class='input'>
 
 
 <span class='co'>## The package don't plot feasible regions that are unbounded e.g if we drop the 2 and 3 constraint</span>
@@ -369,7 +369,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>FALSE</span>,
    labels <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># One solution is to add a bounding box and check if the bounding box is binding</span>
+</div><div class='img'><img src='plotPolytope-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># One solution is to add a bounding box and check if the bounding box is binding</span>
 <span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>A</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>0</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>b</span>, <span class='fl'>10</span>, <span class='fl'>10</span><span class='op'>)</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
@@ -384,7 +384,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>FALSE</span>,
    labels <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
+</div><div class='img'><img src='plotPolytope-7.png' alt='' width='700' height='433' /></div><div class='input'>
 
 <span class='co'>## ILP model</span>
 <span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>9</span>,<span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>2</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -405,7 +405,7 @@ otherwise you may see strange results.</p>
    argsLabels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>4</span>, color <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span>,
    argsFeasible <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"red"</span>, size <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'>#ILP model with IP faces:</span>
+</div><div class='img'><img src='plotPolytope-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'>#ILP model with IP faces:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -418,7 +418,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
+</div><div class='img'><img src='plotPolytope-9.png' alt='' width='700' height='433' /></div><div class='input'>
 
 <span class='co'>## MILP model</span>
 <span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>9</span>,<span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>2</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -438,7 +438,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='st'>"coord"</span>,
    argsFeasible <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
+</div><div class='img'><img src='plotPolytope-10.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -451,7 +451,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
+</div><div class='img'><img src='plotPolytope-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -464,7 +464,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
+</div><div class='img'><img src='plotPolytope-12.png' alt='' width='700' height='433' /></div><div class='input'>
 
 
 
