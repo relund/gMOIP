@@ -116,7 +116,6 @@ plotPolytope(A, b, type = c("c","c","i"), plotOptimum = TRUE, obj = obj, plotFac
 ```
 
 ```{r, include=F}
-detach(package:gMOIP, unload=TRUE)
-detach(package:rgl, unload=TRUE)
+rm(list = ls(all.names = TRUE))
 ```
 
