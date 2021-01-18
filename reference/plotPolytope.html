@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gMOIP</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.6</span>
       </span>
     </div>
 
@@ -113,13 +113,10 @@
       <a href="../articles/intro.html">Introduction to gMOIP</a>
     </li>
     <li>
-      <a href="../articles/lb_ub_set.html">Lower and upper bound sets in multi-objective optimization</a>
-    </li>
-    <li>
       <a href="../articles/mo_costs.html">Generating costs in multi-objective programming</a>
     </li>
     <li>
-      <a href="../articles/mo_shapes.html">3D plots in tri-objective programming</a>
+      <a href="../articles/mo_shapes.html">Shapes in multi-objective programming</a>
     </li>
     <li>
       <a href="../articles/polytope_2d.html">Plotting polytopes in 2D</a>
@@ -253,11 +250,11 @@ only one is shown) and add the iso profit line.</p></td>
       <td><p>If 2D, further arguments passed on the the ggplot plotting functions. This must be
 done as lists. Currently the following arguments are supported:</p><ul>
 <li><p><code>argsFaces</code>: A list of arguments for <code><a href='plotHull2D.html'>plotHull2D</a></code>.</p></li>
-<li><p><code>argsFeasible</code>: A list of arguments for <code>ggplotl2</code> functions:</p><ul>
+<li><p><code>argsFeasible</code>: A list of arguments for <code>ggplot2</code> functions:</p><ul>
 <li><p><code>geom_point</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>ggplot2::geom_point</a></code>.</p></li>
 <li><p><code>geom_line</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>ggplot2::geom_line</a></code>.</p></li>
 </ul></li>
-<li><p><code>argsLabels</code>: A list of arguments for <code>ggplotl2</code> functions:</p><ul>
+<li><p><code>argsLabels</code>: A list of arguments for <code>ggplot2</code> functions:</p><ul>
 <li><p><code>geom_text</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>ggplot2::geom_text</a></code>.</p></li>
 </ul></li>
 <li><p><code>argsOptimum</code>:</p><ul>
@@ -268,10 +265,10 @@ done as lists. Currently the following arguments are supported:</p><ul>
 <li><p><code>argsTheme</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/theme.html'>ggplot2::theme</a></code>.</p></li>
 </ul>
 
-<p>If 3D further arguments passed on the the rgl plotting functions. This must be done as
+<p>If 3D further arguments passed on the the RGL plotting functions. This must be done as
 lists. Currently the following arguments are supported:</p><ul>
 <li><p><code>argsAxes3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/axes3d.html'>rgl::axes3d</a></code>.</p></li>
-<li><p><code>argsPlot3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/plot3d.html'>rgl::plot3d</a></code> to open the rgl window.</p></li>
+<li><p><code>argsPlot3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/plot3d.html'>rgl::plot3d</a></code> to open the RGL window.</p></li>
 <li><p><code>argsTitle3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/axes3d.html'>rgl::title3d</a></code>.</p></li>
 <li><p><code>argsFaces</code>: A list of arguments for <code><a href='plotHull3D.html'>plotHull3D</a></code>.</p></li>
 <li><p><code>argsFeasible</code>: A list of arguments for rgl functions:</p><ul>
@@ -292,7 +289,7 @@ lists. Currently the following arguments are supported:</p><ul>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If 2D a ggplot2 object. If 3D a rgl window with the 3D plot.</p>
+    <p>If 2D a ggplot2 object. If 3D a RGL window with the 3D plot.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The feasible region defined by the constraints must be bounded (i.e. no extreme rays)

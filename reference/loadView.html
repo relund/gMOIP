@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gMOIP</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.6</span>
       </span>
     </div>
 
@@ -113,13 +113,10 @@
       <a href="../articles/intro.html">Introduction to gMOIP</a>
     </li>
     <li>
-      <a href="../articles/lb_ub_set.html">Lower and upper bound sets in multi-objective optimization</a>
-    </li>
-    <li>
       <a href="../articles/mo_costs.html">Generating costs in multi-objective programming</a>
     </li>
     <li>
-      <a href="../articles/mo_shapes.html">3D plots in tri-objective programming</a>
+      <a href="../articles/mo_shapes.html">Shapes in multi-objective programming</a>
     </li>
     <li>
       <a href="../articles/polytope_2d.html">Plotting polytopes in 2D</a>
@@ -196,11 +193,11 @@
     </tr>
     <tr>
       <th>clear</th>
-      <td><p>Call clear3d.</p></td>
+      <td><p>Call rgl::clear3d.</p></td>
     </tr>
     <tr>
       <th>close</th>
-      <td><p>Call rgl.close.</p></td>
+      <td><p>Call <a href='https://rdrr.io/pkg/rgl/man/rgl.open.html'>rgl::rgl.close</a>.</p></td>
     </tr>
     <tr>
       <th>zoom</th>
@@ -208,7 +205,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional parameters passed to view3d.</p></td>
+      <td><p>Additional parameters passed to rgl::view3d.</p></td>
     </tr>
     </table>
 
@@ -228,7 +225,7 @@
 <span class='fu'><a href='plotPolytope.html'>plotPolytope</a></span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span>, plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>, obj <span class='op'>=</span> <span class='va'>obj</span>, labels <span class='op'>=</span> <span class='st'>"coord"</span><span class='op'>)</span>
 
 <span class='co'># Try to modify the angle in the RGL window</span>
-<span class='fu'><a href='saveView.html'>saveView</a></span><span class='op'>(</span>print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># get the viewangle to insert into R code</span>
+<span class='fu'><a href='saveView.html'>saveView</a></span><span class='op'>(</span>print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># get the view angle to insert into R code</span>
 </div><div class='output co'>#&gt; view &lt;- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087, -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405, 0.231208890676498, 0, 0, 0, 0, 1), nc = 4)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

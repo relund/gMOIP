@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gMOIP</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.6</span>
       </span>
     </div>
 
@@ -113,13 +113,10 @@
       <a href="../articles/intro.html">Introduction to gMOIP</a>
     </li>
     <li>
-      <a href="../articles/lb_ub_set.html">Lower and upper bound sets in multi-objective optimization</a>
-    </li>
-    <li>
       <a href="../articles/mo_costs.html">Generating costs in multi-objective programming</a>
     </li>
     <li>
-      <a href="../articles/mo_shapes.html">3D plots in tri-objective programming</a>
+      <a href="../articles/mo_shapes.html">Shapes in multi-objective programming</a>
     </li>
     <li>
       <a href="../articles/polytope_2d.html">Plotting polytopes in 2D</a>
@@ -218,7 +215,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code>sprites3d</code>.</p></td>
+      <td><p>Arguments passed on to rgl::sprites3d and <a href='texToPng.html'>texToPng</a>.</p></td>
     </tr>
     </table>
 
@@ -232,14 +229,14 @@
 <span class='va'>tex2</span> <span class='op'>&lt;-</span> <span class='st'>"This is a title"</span>
 <span class='fu'><a href='ini3D.html'>ini3D</a></span><span class='op'>(</span>argsPlot3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>0.75</span>,<span class='fl'>0.75</span>,<span class='fl'>0.75</span>, <span class='va'>tex0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpKiC6JH/fileaa361f9def1.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>0.5</span>,<span class='fl'>0.5</span>,<span class='fl'>0.5</span>, <span class='va'>tex0</span>, cex <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpKiC6JH/fileaa35b9bd277.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>, <span class='va'>tex2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpKiC6JH/fileaa35316b19d.pdf": No such file or directory</span></div><div class='input'><span class='fu'><a href='finalize3D.html'>finalize3D</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp80hMa5/filea1426e5e28e.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>0.5</span>,<span class='fl'>0.5</span>,<span class='fl'>0.5</span>, <span class='va'>tex0</span>, cex <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp80hMa5/filea143e7cec95.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>, <span class='va'>tex2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp80hMa5/filea147b904a3f.pdf": No such file or directory</span></div><div class='input'><span class='fu'><a href='finalize3D.html'>finalize3D</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='fu'><a href='ini3D.html'>ini3D</a></span><span class='op'>(</span>new <span class='op'>=</span> <span class='cn'>TRUE</span>, argsPlot3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>200</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>200</span><span class='op'>)</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>200</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>75</span>,<span class='fl'>75</span>,<span class='fl'>75</span>, <span class='va'>tex0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpKiC6JH/fileaa37e294e39.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>50</span>,<span class='fl'>50</span>,<span class='fl'>50</span>, <span class='va'>tex1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpKiC6JH/fileaa349cec0e4.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>100</span>,<span class='fl'>100</span>,<span class='fl'>100</span>, <span class='va'>tex2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpKiC6JH/fileaa324d9de97.pdf": No such file or directory</span></div><div class='input'><span class='fu'><a href='finalize3D.html'>finalize3D</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp80hMa5/filea1465e49c2.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>50</span>,<span class='fl'>50</span>,<span class='fl'>50</span>, <span class='va'>tex1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp80hMa5/filea14183c62d2.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>100</span>,<span class='fl'>100</span>,<span class='fl'>100</span>, <span class='va'>tex2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp80hMa5/filea14247bd56c.pdf": No such file or directory</span></div><div class='input'><span class='fu'><a href='finalize3D.html'>finalize3D</a></span><span class='op'>(</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
