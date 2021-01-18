@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a plot of a discrete non-dominated set. — plotNDSet2D • gMOIP</title>
+<title>To size of the png file. — pngSize • gMOIP</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create a plot of a discrete non-dominated set. — plotNDSet2D" />
-<meta property="og:description" content="Create a plot of a discrete non-dominated set." />
+<meta property="og:title" content="To size of the png file. — pngSize" />
+<meta property="og:description" content="To size of the png file." />
 
 
 
@@ -165,76 +165,30 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a plot of a discrete non-dominated set.</h1>
+    <h1>To size of the png file.</h1>
     <small class="dont-index">Source: <a href='https://github.com/relund/gMOIP/blob/master/R/plot.R'><code>R/plot.R</code></a></small>
-    <div class="hidden name"><code>plotNDSet2D.Rd</code></div>
+    <div class="hidden name"><code>pngSize.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a plot of a discrete non-dominated set.</p>
+    <p>To size of the png file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotNDSet2D</span><span class='op'>(</span>
-  <span class='va'>points</span>,
-  <span class='va'>crit</span>,
-  addTriangles <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  addHull <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  latex <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  labels <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>pngSize</span><span class='op'>(</span><span class='va'>png</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>points</th>
-      <td><p>Data frame with non-dominated points.</p></td>
-    </tr>
-    <tr>
-      <th>crit</th>
-      <td><p>Either max or min (only used if add the iso profit line). A vector is currently not
-supported.</p></td>
-    </tr>
-    <tr>
-      <th>addTriangles</th>
-      <td><p>Add search triangles defined by the non-dominated extreme points.</p></td>
-    </tr>
-    <tr>
-      <th>addHull</th>
-      <td><p>Add the convex hull and the rays.</p></td>
-    </tr>
-    <tr>
-      <th>latex</th>
-      <td><p>If true make latex math labels for TikZ.</p></td>
-    </tr>
-    <tr>
-      <th>labels</th>
-      <td><p>If <code>NULL</code> don't add any labels. If 'n' no labels but show the points. If
-'coord' add coordinates to the points. Otherwise number all points from one.</p></td>
+      <th>png</th>
+      <td><p>Png file name.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The ggplot2 object.</p>
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+    <p>A list with width and height.</p>
 
-    <p>Currently only points are checked for dominance. That is, for MILP models some
-nondominated points may in fact be dominated by a segment.</p>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Lars Relund <a href='mailto:lars@relund.dk'>lars@relund.dk</a></p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>z1<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>12</span>,<span class='fl'>14</span>,<span class='fl'>16</span>,<span class='fl'>18</span>,<span class='fl'>18</span>,<span class='fl'>18</span>,<span class='fl'>14</span>,<span class='fl'>15</span>,<span class='fl'>15</span><span class='op'>)</span>, z2<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>18</span>,<span class='fl'>16</span>,<span class='fl'>12</span>,<span class='fl'>4</span>,<span class='fl'>2</span>,<span class='fl'>6</span>,<span class='fl'>14</span>,<span class='fl'>14</span>,<span class='fl'>16</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='addNDSet.html'>addNDSet</a></span><span class='op'>(</span><span class='va'>dat</span>, crit <span class='op'>=</span> <span class='st'>"min"</span>, keepDom <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>plotNDSet2D</span><span class='op'>(</span><span class='va'>points</span>, crit <span class='op'>=</span> <span class='st'>"min"</span>, addTriangles <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='img'><img src='plotNDSet2D-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plotNDSet2D</span><span class='op'>(</span><span class='va'>points</span>, crit <span class='op'>=</span> <span class='st'>"min"</span>, addTriangles <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='fu'>plotNDSet2D</span><span class='op'>(</span><span class='va'>points</span>, crit <span class='op'>=</span> <span class='st'>"min"</span>, addTriangles <span class='op'>=</span> <span class='cn'>TRUE</span>, addHull <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='addNDSet.html'>addNDSet</a></span><span class='op'>(</span><span class='va'>dat</span>, crit <span class='op'>=</span> <span class='st'>"max"</span>, keepDom <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>plotNDSet2D</span><span class='op'>(</span><span class='va'>points</span>, crit <span class='op'>=</span> <span class='st'>"max"</span>, addTriangles <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='fu'>plotNDSet2D</span><span class='op'>(</span><span class='va'>points</span>, crit <span class='op'>=</span> <span class='st'>"max"</span>, addHull <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

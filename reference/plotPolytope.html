@@ -250,14 +250,49 @@ only one is shown) and add the iso profit line.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>If 2D arguments passed to the <a href='https://ggplot2.tidyverse.org/reference/aes_.html'>aes_string</a> function in
-<a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a> or <a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a>.</p></td>
+      <td><p>If 2D, further arguments passed on the the ggplot plotting functions. This must be
+done as lists. Currently the following arguments are supported:</p><ul>
+<li><p><code>argsFaces</code>: A list of arguments for <code><a href='plotHull2D.html'>plotHull2D</a></code>.</p></li>
+<li><p><code>argsFeasible</code>: A list of arguments for <code>ggplotl2</code> functions:</p><ul>
+<li><p><code>geom_point</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>ggplot2::geom_point</a></code>.</p></li>
+<li><p><code>geom_line</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>ggplot2::geom_line</a></code>.</p></li>
+</ul></li>
+<li><p><code>argsLabels</code>: A list of arguments for <code>ggplotl2</code> functions:</p><ul>
+<li><p><code>geom_text</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>ggplot2::geom_text</a></code>.</p></li>
+</ul></li>
+<li><p><code>argsOptimum</code>:</p><ul>
+<li><p><code>geom_point</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>ggplot2::geom_point</a></code>.</p></li>
+<li><p><code>geom_abline</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>ggplot2::geom_abline</a></code>.</p></li>
+<li><p><code>geom_label</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>ggplot2::geom_label</a></code>.</p></li>
+</ul></li>
+<li><p><code>argsTheme</code>: A list of arguments for <code><a href='https://ggplot2.tidyverse.org/reference/theme.html'>ggplot2::theme</a></code>.</p></li>
+</ul>
+
+<p>If 3D further arguments passed on the the rgl plotting functions. This must be done as
+lists. Currently the following arguments are supported:</p><ul>
+<li><p><code>argsAxes3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/axes3d.html'>rgl::axes3d</a></code>.</p></li>
+<li><p><code>argsPlot3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/plot3d.html'>rgl::plot3d</a></code> to open the rgl window.</p></li>
+<li><p><code>argsTitle3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/axes3d.html'>rgl::title3d</a></code>.</p></li>
+<li><p><code>argsFaces</code>: A list of arguments for <code><a href='plotHull3D.html'>plotHull3D</a></code>.</p></li>
+<li><p><code>argsFeasible</code>: A list of arguments for rgl functions:</p><ul>
+<li><p><code>points3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/3dobjects.html'>rgl::points3d</a></code>.</p></li>
+<li><p><code>segments3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/3dobjects.html'>rgl::segments3d</a></code>.</p></li>
+<li><p><code>triangles3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/3dobjects.html'>rgl::triangles3d</a></code>.</p></li>
+</ul></li>
+<li><p><code>argsLabels</code>: A list of arguments for rgl functions:</p><ul>
+<li><p><code>points3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/3dobjects.html'>rgl::points3d</a></code>.</p></li>
+<li><p><code>text3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/texts.html'>rgl::text3d</a></code>.</p></li>
+</ul></li>
+<li><p><code>argsOptimum</code>: A list of arguments for rgl functions:</p><ul>
+<li><p><code>points3d</code>: A list of arguments for <code><a href='https://rdrr.io/pkg/rgl/man/3dobjects.html'>rgl::points3d</a></code>.</p></li>
+</ul></li>
+</ul></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If 2D a ggplot2 object. If 3D a rgl window with 3D plot.</p>
+    <p>If 2D a ggplot2 object. If 3D a rgl window with the 3D plot.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The feasible region defined by the constraints must be bounded (i.e. no extreme rays)
@@ -267,7 +302,7 @@ otherwise you may see strange results.</p>
     <p>Lars Relund <a href='mailto:lars@relund.dk'>lars@relund.dk</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>### 2D examples</span>
+    <pre class="examples"><div class='input'><span class='co'>#### 2D examples ####</span>
 <span class='co'># Define the model max/min coeff*x st. Ax&lt;=b, x&gt;=0</span>
 <span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>9</span>,<span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>2</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>27</span>,<span class='fl'>90</span><span class='op'>)</span>
@@ -288,7 +323,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='cn'>NULL</span>,
    argsFaces <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>argsGeom_polygon <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># With optimum and labels:</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='img'><img src='plotPolytope-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># With optimum and labels:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -302,7 +337,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='st'>"coord"</span>,
    argsOptimum <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>lty<span class='op'>=</span><span class='st'>"solid"</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># Minimize:</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># Minimize:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -315,7 +350,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"n"</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># Note return a ggplot so can e.g. add other labels on e.g. the axes:</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># Note return a ggplot so can e.g. add other labels on e.g. the axes:</span>
 <span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -329,7 +364,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
 <span class='va'>p</span> <span class='op'>+</span> <span class='fu'>ggplot2</span><span class='fu'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span><span class='op'>(</span><span class='st'>"x"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>ggplot2</span><span class='fu'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ylab</a></span><span class='op'>(</span><span class='st'>"y"</span><span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-4.png' alt='' width='700' height='433' /></div><div class='input'>
+
 <span class='co'># More examples</span>
 <span class='co'># \donttest{</span>
 <span class='co'>## LP-model with no non-negativity constraints</span>
@@ -349,7 +384,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>FALSE</span>,
    labels <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-5.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
 
 
 <span class='co'>## The package don't plot feasible regions that are unbounded e.g if we drop the 2 and 3 constraint</span>
@@ -369,7 +404,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>FALSE</span>,
    labels <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># One solution is to add a bounding box and check if the bounding box is binding</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># One solution is to add a bounding box and check if the bounding box is binding</span>
 <span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>A</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>0</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>b</span>, <span class='fl'>10</span>, <span class='fl'>10</span><span class='op'>)</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
@@ -384,7 +419,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>FALSE</span>,
    labels <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-7.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
 
 <span class='co'>## ILP model</span>
 <span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>9</span>,<span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>2</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -405,7 +440,7 @@ otherwise you may see strange results.</p>
    argsLabels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>4</span>, color <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span>,
    argsFeasible <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"red"</span>, size <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'>#ILP model with IP faces:</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'>#ILP model with IP faces:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -418,7 +453,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-9.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
 
 <span class='co'>## MILP model</span>
 <span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>9</span>,<span class='fl'>10</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>2</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -438,7 +473,7 @@ otherwise you may see strange results.</p>
    labels <span class='op'>=</span> <span class='st'>"coord"</span>,
    argsFeasible <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-10.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -451,7 +486,7 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'><span class='co'># First coordinate integer and with LP faces:</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span>
    <span class='va'>A</span>,
    <span class='va'>b</span>,
@@ -464,11 +499,11 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-12.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y,     resolveHJust(x$just, x$hjust), resolveVJust(x$just, x$vjust),     x$rot, 0): polygon edge not found (zero-width or zero-height?)</span></div><div class='input'>
 
 
 
-<span class='co'>### 3D examples</span>
+<span class='co'>#### 3D examples ####</span>
 <span class='co'># Ex 1</span>
 <span class='va'>view</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>0.412063330411911</span>, <span class='op'>-</span><span class='fl'>0.228006735444069</span>, <span class='fl'>0.882166087627411</span>, <span class='fl'>0</span>, <span class='fl'>0.910147845745087</span>,
                   <span class='op'>-</span><span class='fl'>0.0574885793030262</span>, <span class='fl'>0.410274744033813</span>, <span class='fl'>0</span>, <span class='op'>-</span><span class='fl'>0.042830865830183</span>, <span class='fl'>0.97196090221405</span>,
@@ -484,6 +519,9 @@ otherwise you may see strange results.</p>
 <span class='va'>obj</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>15</span><span class='op'>)</span>
 <span class='co'># LP model</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span>, plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>, obj <span class='op'>=</span> <span class='va'>obj</span>, labels <span class='op'>=</span> <span class='st'>"coord"</span><span class='op'>)</span>
+<span class='fu'>plotPolytope</span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span>, plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>, obj <span class='op'>=</span> <span class='va'>obj</span>, labels <span class='op'>=</span> <span class='st'>"coord"</span>,
+             argsFaces <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>drawLines <span class='op'>=</span> <span class='cn'>FALSE</span>, argsPolygon3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span><span class='op'>)</span>,
+             argsLabels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>points3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='co'># ILP model</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span>, faces <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"c"</span>,<span class='st'>"c"</span>,<span class='st'>"c"</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"i"</span>,<span class='st'>"i"</span>,<span class='st'>"i"</span><span class='op'>)</span>, plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>, obj <span class='op'>=</span> <span class='va'>obj</span><span class='op'>)</span>
 <span class='co'># MILP model</span>
