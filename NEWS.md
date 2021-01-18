@@ -1,3 +1,7 @@
+# gMOIP 1.4.6
+
+* Added support for plotting rectangles, points, planes, hulls in 3D. 
+
 # gMOIP 1.4.5
 
 * Added support for plotting rectangles, points, planes, hulls in 2D. 
