@@ -418,7 +418,7 @@ example("gMOIP-package")
 
 
 ```{r, include=F}
-detach(package:gMOIP, unload=TRUE)
-detach(package:rgl, unload=TRUE)
+rgl.quit() 
+rm(list = ls(all.names = TRUE))
 ```
 

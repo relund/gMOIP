@@ -114,8 +114,8 @@ pts
 The classification is done using the qhull algorithm that find the convex hull of the points including the rays. If a vertex then if must be supported extreme. Next we use the `inHull` algorithm to find out if the remaining are on the border or not (supported non-extreme and unsupported). 
 
 ```{r, include=F}
-detach(package:gMOIP, unload=TRUE)
-detach(package:rgl, unload=TRUE)
+rgl.quit() 
+rm(list = ls(all.names = TRUE))
 ```
 
 

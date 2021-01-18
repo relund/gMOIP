@@ -111,5 +111,6 @@ plotPolytope(A, b, type = c("c","c","i"), plotOptimum = TRUE, obj = obj, plotFac
 ```
 
 ```{r, include=F}
+rgl.quit() 
 rm(list = ls(all.names = TRUE))
 ```
