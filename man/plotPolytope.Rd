@@ -56,12 +56,12 @@ only one is shown) and add the iso profit line.}
 done as lists. Currently the following arguments are supported:
 \itemize{
 \item \code{argsFaces}: A list of arguments for \code{\link{plotHull2D}}.
-\item \code{argsFeasible}: A list of arguments for \code{ggplotl2} functions:
+\item \code{argsFeasible}: A list of arguments for \code{ggplot2} functions:
 \itemize{
 \item \code{geom_point}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.
 \item \code{geom_line}: A list of arguments for \code{\link[ggplot2:geom_path]{ggplot2::geom_line}}.
 }
-\item \code{argsLabels}: A list of arguments for \code{ggplotl2} functions:
+\item \code{argsLabels}: A list of arguments for \code{ggplot2} functions:
 \itemize{
 \item \code{geom_text}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_text}}.
 }
@@ -74,11 +74,11 @@ done as lists. Currently the following arguments are supported:
 \item \code{argsTheme}: A list of arguments for \code{\link[ggplot2:theme]{ggplot2::theme}}.
 }
 
-If 3D further arguments passed on the the rgl plotting functions. This must be done as
+If 3D further arguments passed on the the RGL plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{
 \item \code{argsAxes3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::axes3d}}.
-\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}} to open the rgl window.
+\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}} to open the RGL window.
 \item \code{argsTitle3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::title3d}}.
 \item \code{argsFaces}: A list of arguments for \code{\link{plotHull3D}}.
 \item \code{argsFeasible}: A list of arguments for rgl functions:
@@ -99,7 +99,7 @@ lists. Currently the following arguments are supported:
 }}
 }
 \value{
-If 2D a ggplot2 object. If 3D a rgl window with the 3D plot.
+If 2D a ggplot2 object. If 3D a RGL window with the 3D plot.
 }
 \description{
 Plot the polytope (bounded convex set) of a linear mathematical program

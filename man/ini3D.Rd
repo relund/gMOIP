@@ -2,16 +2,16 @@
 % Please edit documentation in R/plot.R
 \name{ini3D}
 \alias{ini3D}
-\title{Initialize the rgl window.}
+\title{Initialize the RGL window.}
 \usage{
 ini3D(new = FALSE, clear = TRUE, ...)
 }
 \arguments{
 \item{new}{A new window is opened (otherwise the current is cleared).}
 
-\item{clear}{Clear the current rgl window.}
+\item{clear}{Clear the current RGL window.}
 
-\item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
+\item{...}{Further arguments passed on the the RGL plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{
 \item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
@@ -22,7 +22,7 @@ lists. Currently the following arguments are supported:
 NULL (invisible).
 }
 \description{
-Initialize the rgl window.
+Initialize the RGL window.
 }
 \examples{
 ini3D()

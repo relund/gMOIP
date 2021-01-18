@@ -172,10 +172,10 @@ plotHull2D <- function(pts,
 #'   done as lists. Currently the following arguments are supported:
 #'
 #'   * `argsFaces`: A list of arguments for [`plotHull2D`].
-#'   * `argsFeasible`: A list of arguments for `ggplotl2` functions:
+#'   * `argsFeasible`: A list of arguments for `ggplot2` functions:
 #'      - `geom_point`: A list of arguments for [`ggplot2::geom_point`].
 #'      - `geom_line`: A list of arguments for [`ggplot2::geom_line`].
-#'   * `argsLabels`: A list of arguments for `ggplotl2` functions:
+#'   * `argsLabels`: A list of arguments for `ggplot2` functions:
 #'      - `geom_text`: A list of arguments for [`ggplot2::geom_text`].
 #'   * `argsOptimum`:
 #'      - `geom_point`: A list of arguments for [`ggplot2::geom_point`].
@@ -183,11 +183,11 @@ plotHull2D <- function(pts,
 #'      - `geom_label`: A list of arguments for [`ggplot2::geom_label`].
 #'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
 #'
-#' If 3D further arguments passed on the the rgl plotting functions. This must be done as
+#' If 3D further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
 #'   * `argsAxes3d`: A list of arguments for [`rgl::axes3d`].
-#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`] to open the rgl window.
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`] to open the RGL window.
 #'   * `argsTitle3d`: A list of arguments for [`rgl::title3d`].
 #'   * `argsFaces`: A list of arguments for [`plotHull3D`].
 #'   * `argsFeasible`: A list of arguments for rgl functions:
@@ -203,7 +203,7 @@ plotHull2D <- function(pts,
 #' @note The feasible region defined by the constraints must be bounded (i.e. no extreme rays)
 #'   otherwise you may see strange results.
 #'
-#' @return If 2D a ggplot2 object. If 3D a rgl window with the 3D plot.
+#' @return If 2D a ggplot2 object. If 3D a RGL window with the 3D plot.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @import rgl ggplot2
@@ -412,17 +412,17 @@ plotPolytope2D <-
 #'   Useful if e.g. want to show the linear relaxation of an IP.
 #' @param plotFaces If \code{True} then plot the faces.
 #' @param plotFeasible If \code{True} then plot the feasible points/segments
-#'   (relevant for IPLP/MILP).
+#'   (relevant for ILP/MILP).
 #' @param plotOptimum Show the optimum corner solution point (if alternative solutions
 #'   only one is shown) and add the iso profit line.
 #' @param latex If \code{True} make latex math labels for TikZ.
 #' @param labels If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 #'   'coord' add coordinates to the points. Otherwise number all points from one.
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
 #'   * `argsAxes3d`: A list of arguments for [`rgl::axes3d`].
-#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`] to open the rgl window.
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`] to open the RGL window.
 #'   * `argsTitle3d`: A list of arguments for [`rgl::title3d`].
 #'   * `argsFaces`: A list of arguments for [`plotHull3D`].
 #'   * `argsFeasible`: A list of arguments for rgl functions:
@@ -438,7 +438,7 @@ plotPolytope2D <-
 #' @note The feasible region defined by the constraints must be bounded otherwise you may see
 #'   strange results.
 #'
-#' @return A rgl window with 3D plot.
+#' @return A RGL window with 3D plot.
 #' @export
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import rgl
@@ -797,10 +797,10 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #'
 #' @param fname The file name of the view.
 #' @param v The view matrix.
-#' @param clear Call \link{clear3d}.
-#' @param close Call \link{rgl.close}.
+#' @param clear Call [rgl::clear3d].
+#' @param close Call [rgl::rgl.close].
 #' @param zoom Zoom level.
-#' @param ... Additional parameters passed to \link{view3d}.
+#' @param ... Additional parameters passed to [rgl::view3d].
 #'
 #' @return NULL
 #' @author Lars Relund \email{lars@@relund.dk}
@@ -817,7 +817,7 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #' plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
 #'
 #' # Try to modify the angle in the RGL window
-#' saveView(print = TRUE)  # get the viewangle to insert into R code
+#' saveView(print = TRUE)  # get the view angle to insert into R code
 loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE, zoom = 1, ...) {
    if (clear) rgl::clear3d()
    if (close) rgl::rgl.close()
@@ -971,7 +971,7 @@ plotNDSet2D <- function(points,
 #'
 #' @param a A vector of length 3.
 #' @param b A vector of length 3.
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
 #'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
@@ -1019,7 +1019,7 @@ plotRectangle3D <- function(a, b, ...) {
 #' @param useLines Plot lines inside the polygon.
 #' @param usePoints Plot point shapes inside the polygon.
 #' @param useFrame Plot a frame around the polygon.
-#' @param ... Further arguments passed on the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the RGL plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
 #'   * `argsShade`: A list of arguments for [`rgl::polygon3d`] (n > 4 vertices),
@@ -1140,7 +1140,7 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
       limits <- rgl::par3d()$bbox
       m <- c(limits[1], limits[3], limits[5])
       M <- c(limits[2], limits[4], limits[6])
-      if (all(m == M)) stop("The rgl window's bounding box is not valid!")
+      if (all(m == M)) stop("The RGL window's bounding box is not valid!")
       # do the mesh
       x <- seq(m[1], M[1], length.out = argsLines$lines)
       y <- seq(m[2], M[2], length.out = argsLines$lines)
@@ -1201,7 +1201,7 @@ getTexture <- function(pch = 16, cex = 10, ...) {
 #'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 #'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param useRGLBBox Use the RGL bounding box as ray limits for the cone.
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
 #'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
@@ -1333,7 +1333,7 @@ plotCones2D <-
 #'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 #'   i'th column of `pts` minus a value greater than on equal zero (maximize objective $i$).
 #' @param drawBBoxHull If addRays then draw the hull areas hitting the bounding box also.
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
 #'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
@@ -1560,7 +1560,7 @@ plotHull3D <- function(pts,
 #' @param pts A vector or matrix with the points.
 #' @param addText Add text to the points. Currently `coord` (coordinates), `rownames` (rownames)
 #'   and `both` supported or a vector with the text.
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
 #'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
@@ -1627,7 +1627,7 @@ plotPoints3D <- function(pts, addText = FALSE, ...) {
 #' @param useShade Plot shade of the plane.
 #' @param useLines Plot lines inside the plane.
 #' @param usePoints Plot point shapes inside the plane.
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
 #'   * `argsPlanes3d`: A list of arguments for [rgl::planes3d] used when `useShade = TRUE`.
@@ -1723,11 +1723,11 @@ gMOIPTheme <- function(...) {
 }
 
 
-#' Initialize the rgl window.
+#' Initialize the RGL window.
 #'
 #' @param new A new window is opened (otherwise the current is cleared).
-#' @param clear Clear the current rgl window.
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param clear Clear the current RGL window.
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
 #'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`].
@@ -1761,9 +1761,9 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
    return(invisible(NULL))
 }
 
-#' Finalize the rgl window.
+#' Finalize the RGL window.
 #'
-#' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
+#' @param ... Further arguments passed on the the RGL plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
 #'   * `argsAxes3d`: A list of arguments for [`rgl::axes3d`].

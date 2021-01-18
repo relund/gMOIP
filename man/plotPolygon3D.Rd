@@ -24,7 +24,7 @@ plotPolygon3D(
 
 \item{useFrame}{Plot a frame around the polygon.}
 
-\item{...}{Further arguments passed on the rgl plotting functions. This must be done as
+\item{...}{Further arguments passed on the RGL plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsShade}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}} (n > 4 vertices),

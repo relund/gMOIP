@@ -172,6 +172,5 @@ plotCrit(A, b, obj, type = c("c","c","i"))
 ```
 
 ```{r, include=F}
-rgl.quit() 
 rm(list = ls(all.names = TRUE))
 ```

@@ -32,7 +32,7 @@ i'th column of \code{pts} minus a value greater than on equal zero (maximize obj
 
 \item{useRGLBBox}{Use the RGL bounding box as ray limits for the cone.}
 
-\item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
+\item{...}{Further arguments passed on the the RGL plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.

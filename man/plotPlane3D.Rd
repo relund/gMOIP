@@ -27,7 +27,7 @@ plotPlane3D(
 
 \item{usePoints}{Plot point shapes inside the plane.}
 
-\item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
+\item{...}{Further arguments passed on the the RGL plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsPlanes3d}: A list of arguments for \link[rgl:planes]{rgl::planes3d} used when \code{useShade = TRUE}.

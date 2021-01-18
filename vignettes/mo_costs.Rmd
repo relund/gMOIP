@@ -94,6 +94,5 @@ finalize3D()
 ```
 
 ```{r, include=F}
-rgl.quit() 
 rm(list = ls(all.names = TRUE))
 ```
