@@ -186,19 +186,19 @@ plotHull2D <- function(pts,
 #' If 3D further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
-#'   * `argsAxes3d`: A list of arguments for [rgl::axes3d].
-#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d] to open the rgl window.
-#'   * `argsTitle3d`: A list of arguments for [rgl::title3d].
+#'   * `argsAxes3d`: A list of arguments for [`rgl::axes3d`].
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`] to open the rgl window.
+#'   * `argsTitle3d`: A list of arguments for [`rgl::title3d`].
 #'   * `argsFaces`: A list of arguments for [`plotHull3D`].
 #'   * `argsFeasible`: A list of arguments for rgl functions:
-#'      - `points3d`: A list of arguments for [`rgl::points3d].
-#'      - `segments3d`: A list of arguments for [`rgl::segments3d].
-#'      - `triangles3d`: A list of arguments for [`rgl::triangles3d].
+#'      - `points3d`: A list of arguments for [`rgl::points3d`].
+#'      - `segments3d`: A list of arguments for [`rgl::segments3d`].
+#'      - `triangles3d`: A list of arguments for [`rgl::triangles3d`].
 #'   * `argsLabels`: A list of arguments for rgl functions:
-#'      - `points3d`: A list of arguments for [`rgl::points3d].
-#'      - `text3d`: A list of arguments for [`rgl::text3d].
+#'      - `points3d`: A list of arguments for [`rgl::points3d`].
+#'      - `text3d`: A list of arguments for [`rgl::text3d`].
 #'   * `argsOptimum`: A list of arguments for rgl functions:
-#'      - `points3d`: A list of arguments for [`rgl::points3d].
+#'      - `points3d`: A list of arguments for [`rgl::points3d`].
 #'
 #' @note The feasible region defined by the constraints must be bounded (i.e. no extreme rays)
 #'   otherwise you may see strange results.
@@ -421,19 +421,19 @@ plotPolytope2D <-
 #' @param ... Further arguments passed on the the rgl plotting functions. This must be done as
 #'   lists. Currently the following arguments are supported:
 #'
-#'   * `argsAxes3d`: A list of arguments for [rgl::axes3d].
-#'   * `argsPlot3d`: A list of arguments for [rgl::plot3d] to open the rgl window.
-#'   * `argsTitle3d`: A list of arguments for [rgl::title3d].
+#'   * `argsAxes3d`: A list of arguments for [`rgl::axes3d`].
+#'   * `argsPlot3d`: A list of arguments for [`rgl::plot3d`] to open the rgl window.
+#'   * `argsTitle3d`: A list of arguments for [`rgl::title3d`].
 #'   * `argsFaces`: A list of arguments for [`plotHull3D`].
 #'   * `argsFeasible`: A list of arguments for rgl functions:
-#'      - `points3d`: A list of arguments for [`rgl::points3d].
-#'      - `segments3d`: A list of arguments for [`rgl::segments3d].
-#'      - `triangles3d`: A list of arguments for [`rgl::triangles3d].
+#'      - `points3d`: A list of arguments for [`rgl::points3d`].
+#'      - `segments3d`: A list of arguments for [`rgl::segments3d`].
+#'      - `triangles3d`: A list of arguments for [`rgl::triangles3d`].
 #'   * `argsLabels`: A list of arguments for rgl functions:
-#'      - `points3d`: A list of arguments for [`rgl::points3d].
-#'      - `text3d`: A list of arguments for [`rgl::text3d].
+#'      - `points3d`: A list of arguments for [`rgl::points3d`].
+#'      - `text3d`: A list of arguments for [`rgl::text3d`].
 #'   * `argsOptimum`: A list of arguments for rgl functions:
-#'      - `points3d`: A list of arguments for [`rgl::points3d].
+#'      - `points3d`: A list of arguments for [`rgl::points3d`].
 #'
 #' @note The feasible region defined by the constraints must be bounded otherwise you may see
 #'   strange results.
@@ -1804,6 +1804,7 @@ finalize3D <- function(...){
 #' @param dpi Dpi of the png. Not used if `width` or `height` are specified.
 #' @param fontsize Front size used in the LaTeX document.
 #' @param calcM Estimate 1 em in pixels in the resulting png.
+#' @param crop Call pdfcrop.
 #'
 #' @return The filename of the png or a list if `calcM = TRUE`.
 #' @export
@@ -1838,7 +1839,7 @@ toPng <- function(tex, width = NULL, height = NULL, dpi = 72, viewPng = FALSE, f
    if (!is.null(width)) z <- dpi/72 * tmp$width/width
    if (!is.null(height)) z <- dpi/72 * tmp$height/height
    dpi <- dpi * 1/z
-   if (calcM) em1 <- sizeM(dpi = dpi, fontsize = fontsize)$w
+   if (calcM) em1 <- .sizeM(dpi = dpi, fontsize = fontsize)$w
    pdftools::pdf_convert(pdfFile, format = "png", dpi = dpi, antialias = TRUE, filenames = pngFile)
    if (viewPng) {
       img <- png::readPNG(pngFile)
@@ -1859,10 +1860,7 @@ toPng <- function(tex, width = NULL, height = NULL, dpi = 72, viewPng = FALSE, f
 #' @param ... Arguments parsed on to `toPng`.
 #'
 #' @return The width and size of the png.
-#' @export
-#'
-#' @examples sizeM(fontsize=30)
-sizeM <- function(...) {
+.sizeM <- function(...) {
    f <- toPng("M", ...)
    return(pngSize(f))
 }
@@ -1873,9 +1871,6 @@ sizeM <- function(...) {
 #' @param png Png file name.
 #'
 #' @return A list with width and height.
-#' @export
-#'
-#' @examples
 pngSize <- function(png) {
    img <- png::readPNG(png)
    w <- dim(img)[2]
@@ -1915,10 +1910,10 @@ pngSize <- function(png) {
 #' @export
 #'
 #' @examples
-#' ini3D()
-#' plot3d(1:2,1:2,1:2, xlab = '', ylab = '', zlab = '', type = "n")
+#' ini3D(argsPlot3d = list(xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 2)))
 #' plotTitleTeX3D(main = "\\LaTeX", sub = "subtitle $\\alpha$",
 #'                xlab = "$x^1_2$", ylab = "$\\beta$", zlab = "$x\\cdot y$")
+#' finalize3D()
 plotTitleTeX3D <- function (main = NULL, sub = NULL, xlab = NULL, ylab = NULL,
                             zlab = NULL, line = NA, ...) {
    save <- rgl::par3d(skipRedraw = TRUE, ignoreExtent = TRUE)
@@ -1953,6 +1948,36 @@ plotTitleTeX3D <- function (main = NULL, sub = NULL, xlab = NULL, ylab = NULL,
 }
 
 
+#' Get ranges of the bounding box margins
+#'
+#' @param expand Expand margins.
+#' @param ranges The bounding box.
+#'
+#' @return A list with ranges.
+.getRanges <- function (expand = 1.03, ranges = par3d("bbox"))
+{
+   ranges <- list(xlim = ranges[1:2], ylim = ranges[3:4], zlim = ranges[5:6])
+   strut <- FALSE
+   ranges <- lapply(ranges, function(r) {
+      d <- diff(r)
+      if (d > 0)
+         return(r)
+      strut <<- TRUE
+      if (d < 0)
+         return(c(0, 1))
+      else if (r[1] == 0)
+         return(c(-1, 1))
+      else return(r[1] + 0.4 * abs(r[1]) * c(-1, 1))
+   })
+   ranges$strut <- strut
+   ranges$x <- (ranges$xlim - mean(ranges$xlim)) * expand +
+      mean(ranges$xlim)
+   ranges$y <- (ranges$ylim - mean(ranges$ylim)) * expand +
+      mean(ranges$ylim)
+   ranges$z <- (ranges$zlim - mean(ranges$zlim)) * expand +
+      mean(ranges$zlim)
+   ranges
+}
 
 
 #' Plot TeX in the margin
@@ -1962,16 +1987,13 @@ plotTitleTeX3D <- function (main = NULL, sub = NULL, xlab = NULL, ylab = NULL,
 #' @param line The ``line'' of the plot margin to draw the label on.
 #' @param at The value of a coordinate at which to draw the axis.
 #' @param pos  The position at which to draw the axis or text.
-#' @param ...
+#' @param ... Further arguments passed to [plotTeX3D].
 #'
 #' @return The object IDs of objects added to the scene.
-#' @export
-#'
-#' @examples
 plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
    save <- rgl::par3d(ignoreExtent = TRUE)
    on.exit(rgl::par3d(save))
-   ranges <- rgl:::.getRanges()
+   ranges <- .getRanges()
    edge <- c(strsplit(edge, "")[[1]], "-", "-")[1:3]
    coord <- match(toupper(edge[1]), c("X", "Y", "Z"))
    if (coord == 2)
@@ -2012,40 +2034,40 @@ plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
 
 #' Plot TeX at a position.
 #'
-#' @param x
-#' @param y
-#' @param z
-#' @param cex Expansion factor
-#' @param fixedSize
-#' @param tex TeX string
+#' @param x Coordinate.
+#' @param y Coordinate.
+#' @param z Coordinate.
+#' @param cex Expansion factor (you properly have to fine tune it).
+#' @param fixedSize Fix the size of the object (no scaling when zoom).
+#' @param tex TeX string.
 #' @param size Size of the generated png.
 #' @param ... Arguments passed on to `sprites3d`.
 #'
-#' @return
+#' @return The shape ID of the displayed object is returned.
 #' @export
 #'
 #' @examples
-#' tex <- "$\\mathbb{R}_{\\geqq}$"
-#' tex <- "\\LaTeX"
-#' tex <- "This is a title"
-#' ini3D()
-#' plot3d(0:2,0:2,0:2)
-#' plotTeX3D(0.75,0.75,0.75, "MMM")
-#' plotTeX3D(0.5,0.5,0.5, "MMM", cex = 2)
-#' plotTeX3D(1,1,1, "This is a title")
-#' ini3D(T)
-#' plot3d(0:200,0:200,0:200)
-#' plotTeX3D(75,75,75, "MMM")
-#' plotTeX3D(50,50,50, "\\LaTeX")
-#' plotTeX3D(100,100,100, "This is a title")
-plotTeX3D <- function (x, y, z, tex, cex = par("cex"), fixedSize = FALSE, size = 480, ...) {
-   f <- toPng(tex, width = size, calcM = TRUE, ...)
+#' tex0 <- "$\\mathbb{R}_{\\geqq}$"
+#' tex1 <- "\\LaTeX"
+#' tex2 <- "This is a title"
+#' ini3D(argsPlot3d = list(xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 2)))
+#' plotTeX3D(0.75,0.75,0.75, tex0)
+#' plotTeX3D(0.5,0.5,0.5, tex0, cex = 2)
+#' plotTeX3D(1,1,1, tex2)
+#' finalize3D()
+#' ini3D(new = TRUE, argsPlot3d = list(xlim = c(0, 200), ylim = c(0, 200), zlim = c(0, 200)))
+#' plotTeX3D(75,75,75, tex0)
+#' plotTeX3D(50,50,50, tex1)
+#' plotTeX3D(100,100,100, tex2)
+#' finalize3D()
+plotTeX3D <- function (x, y, z, tex, cex = graphics::par("cex"), fixedSize = FALSE, size = 480, ...) {
+   f <- toPng(tex, width = size, calcM = TRUE)
    # expand png so same width and height
    system(paste0("convert ", f$png,
                  " -background none -gravity center -extent ", max(f$w,f$h), "x", max(f$w,f$h), " ", f$png))
    tmp <- rgl::par3d()$bbox
    radius <- 1/2 * cex * f$emLength * 20/f$emPx * max(c(tmp[2]-tmp[1], tmp[4]-tmp[3],tmp[6]-tmp[5]) * rgl::par3d()$scale)
-   sprites3d(x, y, z, texture = f$png,
+   rgl::sprites3d(x, y, z, texture = f$png,
              textype = "rgba", col = "white", lit = FALSE,
              radius = radius, fixedSize = fixedSize, ...)
 }
