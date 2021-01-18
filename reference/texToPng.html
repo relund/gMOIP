@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot TeX at a position. — plotTeX3D • gMOIP</title>
+<title>Convert LaTeX to a png file — texToPng • gMOIP</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Plot TeX at a position. — plotTeX3D" />
-<meta property="og:description" content="Plot TeX at a position." />
+<meta property="og:title" content="Convert LaTeX to a png file — texToPng" />
+<meta property="og:description" content="Convert LaTeX to a png file" />
 
 
 
@@ -165,82 +165,79 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot TeX at a position.</h1>
+    <h1>Convert LaTeX to a png file</h1>
     <small class="dont-index">Source: <a href='https://github.com/relund/gMOIP/blob/master/R/plot.R'><code>R/plot.R</code></a></small>
-    <div class="hidden name"><code>plotTeX3D.Rd</code></div>
+    <div class="hidden name"><code>texToPng.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot TeX at a position.</p>
+    <p>Convert LaTeX to a png file</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotTeX3D</span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  <span class='va'>y</span>,
-  <span class='va'>z</span>,
+    <pre class="usage"><span class='fu'>texToPng</span><span class='op'>(</span>
   <span class='va'>tex</span>,
-  cex <span class='op'>=</span> <span class='fu'>graphics</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='st'>"cex"</span><span class='op'>)</span>,
-  fixedSize <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  size <span class='op'>=</span> <span class='fl'>480</span>,
-  <span class='va'>...</span>
+  width <span class='op'>=</span> <span class='cn'>NULL</span>,
+  height <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dpi <span class='op'>=</span> <span class='fl'>72</span>,
+  viewPng <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  fontsize <span class='op'>=</span> <span class='fl'>12</span>,
+  calcM <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  crop <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Coordinate.</p></td>
-    </tr>
-    <tr>
-      <th>y</th>
-      <td><p>Coordinate.</p></td>
-    </tr>
-    <tr>
-      <th>z</th>
-      <td><p>Coordinate.</p></td>
-    </tr>
-    <tr>
       <th>tex</th>
-      <td><p>TeX string.</p></td>
+      <td><p>TeX string. Remember to escape backslash with \.</p></td>
     </tr>
     <tr>
-      <th>cex</th>
-      <td><p>Expansion factor (you properly have to fine tune it).</p></td>
+      <th>width</th>
+      <td><p>Width of the png.</p></td>
     </tr>
     <tr>
-      <th>fixedSize</th>
-      <td><p>Fix the size of the object (no scaling when zoom).</p></td>
+      <th>height</th>
+      <td><p>Height of the png (<code>width</code> are ignored).</p></td>
     </tr>
     <tr>
-      <th>size</th>
-      <td><p>Size of the generated png.</p></td>
+      <th>dpi</th>
+      <td><p>Dpi of the png. Not used if <code>width</code> or <code>height</code> are specified.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Arguments passed on to <code>sprites3d</code>.</p></td>
+      <th>viewPng</th>
+      <td><p>View the result in the plots window.</p></td>
+    </tr>
+    <tr>
+      <th>fontsize</th>
+      <td><p>Front size used in the LaTeX document.</p></td>
+    </tr>
+    <tr>
+      <th>calcM</th>
+      <td><p>Estimate 1 em in pixels in the resulting png.</p></td>
+    </tr>
+    <tr>
+      <th>crop</th>
+      <td><p>Call pdfcrop.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The shape ID of the displayed object is returned.</p>
+    <p>The filename of the png or a list if <code>calcM = TRUE</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>tex0</span> <span class='op'>&lt;-</span> <span class='st'>"$\\mathbb{R}_{\\geqq}$"</span>
-<span class='va'>tex1</span> <span class='op'>&lt;-</span> <span class='st'>"\\LaTeX"</span>
-<span class='va'>tex2</span> <span class='op'>&lt;-</span> <span class='st'>"This is a title"</span>
-<span class='fu'><a href='ini3D.html'>ini3D</a></span><span class='op'>(</span>argsPlot3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>0.75</span>,<span class='fl'>0.75</span>,<span class='fl'>0.75</span>, <span class='va'>tex0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea34556b9bb5.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>0.5</span>,<span class='fl'>0.5</span>,<span class='fl'>0.5</span>, <span class='va'>tex0</span>, cex <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea34bbbb3e3.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>, <span class='va'>tex2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea34501f0219.pdf": No such file or directory</span></div><div class='input'><span class='fu'><a href='finalize3D.html'>finalize3D</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='fu'><a href='ini3D.html'>ini3D</a></span><span class='op'>(</span>new <span class='op'>=</span> <span class='cn'>TRUE</span>, argsPlot3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>200</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>200</span><span class='op'>)</span>, zlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>200</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>75</span>,<span class='fl'>75</span>,<span class='fl'>75</span>, <span class='va'>tex0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea34639be483.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>50</span>,<span class='fl'>50</span>,<span class='fl'>50</span>, <span class='va'>tex1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea34fb7878c.pdf": No such file or directory</span></div><div class='input'><span class='fu'>plotTeX3D</span><span class='op'>(</span><span class='fl'>100</span>,<span class='fl'>100</span>,<span class='fl'>100</span>, <span class='va'>tex2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea345a240063.pdf": No such file or directory</span></div><div class='input'><span class='fu'><a href='finalize3D.html'>finalize3D</a></span><span class='op'>(</span><span class='op'>)</span>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>tex</span> <span class='op'>&lt;-</span> <span class='st'>"$\\mathbb{R}_{\\geqq}$"</span>
+<span class='fu'>texToPng</span><span class='op'>(</span><span class='va'>tex</span>, viewPng <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea344582a34b.pdf": No such file or directory</span></div><div class='input'><span class='fu'>texToPng</span><span class='op'>(</span><span class='va'>tex</span>, fontsize <span class='op'>=</span> <span class='fl'>20</span>, viewPng <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea343aeb494.pdf": No such file or directory</span></div><div class='input'><span class='fu'>texToPng</span><span class='op'>(</span><span class='va'>tex</span>, height <span class='op'>=</span> <span class='fl'>50</span>, fontsize <span class='op'>=</span> <span class='fl'>10</span>, viewPng <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea3442d1626f.pdf": No such file or directory</span></div><div class='input'><span class='fu'>texToPng</span><span class='op'>(</span><span class='va'>tex</span>, height <span class='op'>=</span> <span class='fl'>50</span>, fontsize <span class='op'>=</span> <span class='fl'>50</span>, viewPng <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea34409587ae.pdf": No such file or directory</span></div><div class='input'><span class='va'>tex</span> <span class='op'>&lt;-</span> <span class='st'>"MMM"</span>
+<span class='fu'>texToPng</span><span class='op'>(</span><span class='va'>tex</span>, dpi<span class='op'>=</span><span class='fl'>72</span>, calcM <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea3418fed1a2.pdf": No such file or directory</span></div><div class='input'><span class='fu'>texToPng</span><span class='op'>(</span><span class='va'>tex</span>, width <span class='op'>=</span> <span class='fl'>100</span>, calcM <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea34174ef80.pdf": No such file or directory</span></div><div class='input'><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'>texToPng</span><span class='op'>(</span><span class='va'>tex</span>, dpi<span class='op'>=</span><span class='fl'>300</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: error in running command</span></div><div class='output co'>#&gt; <span class='error'>Error in normalizePath(pdf, mustWork = TRUE): path[1]="/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpzFMZRi/filea342417bd3f.pdf": No such file or directory</span></div><div class='input'><span class='fu'><a href='pngSize.html'>pngSize</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in pngSize(f): could not find function "pngSize"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
