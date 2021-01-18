@@ -162,7 +162,8 @@ Install the latest stable release from CRAN:
 install.packages("gMOIP")
 ```
 
-Alternatively, install the latest development version from GitHub:
+Alternatively, install the latest development version from GitHub
+(recommended):
 
 ``` r
 install.packages("remotes")

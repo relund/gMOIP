@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
@@ -43,20 +43,20 @@ rgl::mfrow3d(nr = 1, nc = 3, sharedMouse = TRUE)
 ## Set R^3_>=
 ini3D(argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
 plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
-plotTitleTeX3D(main = "$\\mathbb{R}_{\\geqq}$", cex = 5, crop = TRUE)
+title3d(main = "R_>=")
 finalize3D()
 next3d()
 ## Set R^3_>-
 ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
 plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
 rgl::spheres3d(0,0,0, radius = 2, alpha = 0.8, col="gray80")
-plotTitleTeX3D(main = "$\\mathbb{R}_{\\geq}$", cex = 5, crop = TRUE)
+title3d(main = "R_>-")
 finalize3D()
 next3d()
 ## Set R^3_>
 ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
 plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.3, color = "red"))
-plotTitleTeX3D(main = "$\\mathbb{R}_{>}$", cex = 5, crop = TRUE)
+title3d(main = "R_>")
 finalize3D()
 rglwidget()
 close3d()
