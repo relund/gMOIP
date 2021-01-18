@@ -9,8 +9,13 @@
 
 ## R CMD check results
 R CMD check results
-0 errors | 0 warnings | 0 note
+0 errors | 0 warnings | 1 note
 
+checking installed package size ... NOTE
+  installed size is 14.7Mb
+  sub-directories of 1Mb or more:
+    doc  13.4Mb
+    
 R CMD check succeeded
 
 
@@ -25,4 +30,5 @@ devtools::check(run_dont_test = TRUE)
 devtools::check_win_release(quiet = TRUE)
  # Push files to GitHub for GitHub actions check
 devtools::release()
+
 
