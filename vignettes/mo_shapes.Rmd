@@ -244,7 +244,7 @@ useSubscene3d(root)
 axes3d()
 ```
 
-```{r, include=F, eval=FALSE}
+```{r, include=F}
 detach(package:gMOIP, unload=TRUE)
 detach(package:rgl, unload=TRUE)
 ```

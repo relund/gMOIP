@@ -27,19 +27,14 @@ opts_chunk$set(
 )
 ```
 
-First we load the package:
-
-```{r, cache=FALSE}
-library(gMOIP)
-```
-
-Points in $\mathbb{R}_n$ can be generated using function `genSample`. Different methods can be used for generation:
+When generating instances for testing in multi-objective programming the cost structure of the objective coefficients may have a huge impact on the difficulty of the instance. Points in $\mathbb{R}_n$ can be generated using function `genSample`. Different methods can be used for generation:
 
 **Random**
 
 The coefficient are generated randomly with a uniform distribution in the range $[a,b]$. For three objectives, random generated coefficients looks as follows.
 
 ```{r}
+library(gMOIP)
 range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
 pts <- genSample(3, 1000, range = range, random = TRUE)
 ini3D()
@@ -98,7 +93,7 @@ plotPoints3D(pts)
 finalize3D()
 ```
 
-```{r, include=F, eval=FALSE}
+```{r, include=F}
 detach(package:gMOIP, unload=TRUE)
 detach(package:rgl, unload=TRUE)
 ```

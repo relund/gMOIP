@@ -28,3 +28,9 @@ reference:
   - genNDSet
   - genSample
   - addRays
+- title: Other
+- contents:
+  - texToPng
+  - pngSize
+  - df2String
+  - mergeLists

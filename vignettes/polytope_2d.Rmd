@@ -315,8 +315,3 @@ plotPolytope(
 )
 dev.off()
 ```
-
-```{r, include=F, eval=FALSE}
-detach(package:gMOIP, unload=TRUE)
-detach(package:rgl, unload=TRUE)
-```

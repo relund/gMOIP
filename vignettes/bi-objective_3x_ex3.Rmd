@@ -171,7 +171,7 @@ MILP model with variable 3 integer (criterion space):
 plotCrit(A, b, obj, type = c("c","c","i"))
 ```
 
-```{r, include=F, eval=FALSE}
+```{r, include=F}
 detach(package:gMOIP, unload=TRUE)
 detach(package:rgl, unload=TRUE)
 ```

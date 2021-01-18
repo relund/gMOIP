@@ -52,8 +52,29 @@ only one is shown) and add the iso profit line.}
 \item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 'coord' add coordinates to the points. Otherwise number all points from one.}
 
-\item{...}{Arguments passed to axes3d, plot3d, title3d, text3d. Parsed using lists argsAxes3d,
-argsPlot3d, argsText3d and argsTitle3d.}
+\item{...}{Further arguments passed on the the rgl plotting functions. This must be done as
+lists. Currently the following arguments are supported:
+\itemize{
+\item \code{argsAxes3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::axes3d}}.
+\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}} to open the rgl window.
+\item \code{argsTitle3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::title3d}}.
+\item \code{argsFaces}: A list of arguments for \code{\link{plotHull3D}}.
+\item \code{argsFeasible}: A list of arguments for rgl functions:
+\itemize{
+\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+\item \code{segments3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::segments3d}}.
+\item \code{triangles3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::triangles3d}}.
+}
+\item \code{argsLabels}: A list of arguments for rgl functions:
+\itemize{
+\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+\item \code{text3d}: A list of arguments for \code{\link[rgl:texts]{rgl::text3d}}.
+}
+\item \code{argsOptimum}: A list of arguments for rgl functions:
+\itemize{
+\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+}
+}}
 }
 \value{
 A rgl window with 3D plot.

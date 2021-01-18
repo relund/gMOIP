@@ -56,10 +56,21 @@ only one is shown) and add the iso profit line.}
 lists. Currently the following arguments are supported:
 \itemize{
 \item \code{argsFaces}: A list of arguments for \code{\link{plotHull2D}}.
-\item \code{argsFeasible}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}} (if ILP)
-and for \code{\link[ggplot2:geom_path]{ggplot2::geom_line}} (if MILP).
-\item \code{argsLabels}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_text}}.
-\item \code{argsOptimum}: A list of arguments for \code{\link[ggplot2:geom_abline]{ggplot2::geom_abline}}.
+\item \code{argsFeasible}: A list of arguments for \code{ggplotl2} functions:
+\itemize{
+\item \code{geom_point}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.
+\item \code{geom_line}: A list of arguments for \code{\link[ggplot2:geom_path]{ggplot2::geom_line}}.
+}
+\item \code{argsLabels}: A list of arguments for \code{ggplotl2} functions:
+\itemize{
+\item \code{geom_text}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_text}}.
+}
+\item \code{argsOptimum}:
+\itemize{
+\item \code{geom_point}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.
+\item \code{geom_abline}: A list of arguments for \code{\link[ggplot2:geom_abline]{ggplot2::geom_abline}}.
+\item \code{geom_label}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_label}}.
+}
 \item \code{argsTheme}: A list of arguments for \code{\link[ggplot2:theme]{ggplot2::theme}}.
 }}
 }

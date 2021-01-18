@@ -307,7 +307,7 @@ d <- -3
 planes3d(a, b, c, d)
 ```
 
-```{r, include=F, eval=FALSE}
+```{r, include=F}
 detach(package:gMOIP, unload=TRUE)
 detach(package:rgl, unload=TRUE)
 ```

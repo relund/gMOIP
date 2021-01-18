@@ -52,11 +52,54 @@ only one is shown) and add the iso profit line.}
 \item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
 'coord' add coordinates to the points. Otherwise number all points from one.}
 
-\item{...}{If 2D arguments passed to the \link{aes_string} function in
-\link{geom_point} or \link{geom_line}.}
+\item{...}{If 2D, further arguments passed on the the ggplot plotting functions. This must be
+done as lists. Currently the following arguments are supported:
+\itemize{
+\item \code{argsFaces}: A list of arguments for \code{\link{plotHull2D}}.
+\item \code{argsFeasible}: A list of arguments for \code{ggplotl2} functions:
+\itemize{
+\item \code{geom_point}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.
+\item \code{geom_line}: A list of arguments for \code{\link[ggplot2:geom_path]{ggplot2::geom_line}}.
+}
+\item \code{argsLabels}: A list of arguments for \code{ggplotl2} functions:
+\itemize{
+\item \code{geom_text}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_text}}.
+}
+\item \code{argsOptimum}:
+\itemize{
+\item \code{geom_point}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.
+\item \code{geom_abline}: A list of arguments for \code{\link[ggplot2:geom_abline]{ggplot2::geom_abline}}.
+\item \code{geom_label}: A list of arguments for \code{\link[ggplot2:geom_text]{ggplot2::geom_label}}.
+}
+\item \code{argsTheme}: A list of arguments for \code{\link[ggplot2:theme]{ggplot2::theme}}.
+}
+
+If 3D further arguments passed on the the rgl plotting functions. This must be done as
+lists. Currently the following arguments are supported:
+\itemize{
+\item \code{argsAxes3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::axes3d}}.
+\item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}} to open the rgl window.
+\item \code{argsTitle3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::title3d}}.
+\item \code{argsFaces}: A list of arguments for \code{\link{plotHull3D}}.
+\item \code{argsFeasible}: A list of arguments for rgl functions:
+\itemize{
+\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+\item \code{segments3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::segments3d}}.
+\item \code{triangles3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::triangles3d}}.
+}
+\item \code{argsLabels}: A list of arguments for rgl functions:
+\itemize{
+\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+\item \code{text3d}: A list of arguments for \code{\link[rgl:texts]{rgl::text3d}}.
+}
+\item \code{argsOptimum}: A list of arguments for rgl functions:
+\itemize{
+\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+}
+}}
 }
 \value{
-If 2D a ggplot2 object. If 3D a rgl window with 3D plot.
+If 2D a ggplot2 object. If 3D a rgl window with the 3D plot.
 }
 \description{
 Plot the polytope (bounded convex set) of a linear mathematical program
@@ -66,7 +109,7 @@ The feasible region defined by the constraints must be bounded (i.e. no extreme 
 otherwise you may see strange results.
 }
 \examples{
-### 2D examples
+#### 2D examples ####
 # Define the model max/min coeff*x st. Ax<=b, x>=0
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
@@ -267,7 +310,7 @@ plotPolytope(
 
 
 
-### 3D examples
+#### 3D examples ####
 # Ex 1
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
@@ -283,6 +326,9 @@ b <- c(55, 26, 30, 57)
 obj <- c(20, 10, 15)
 # LP model
 plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
+plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord",
+             argsFaces = list(drawLines = FALSE, argsPolygon3d = list(alpha = 0.95)),
+             argsLabels = list(points3d = list(color = "blue")))
 # ILP model
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj)
 # MILP model
