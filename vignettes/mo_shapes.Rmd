@@ -1,14 +1,14 @@
 ---
-title: "3D plots in tri-objective programming"
+title: "Shapes in multi-objective programming"
 author: "Lars Relund Nielsen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{3D plots in tri-objective programming}
+  %\VignetteIndexEntry{Shapes in multi-objective programming}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r setup, include = FALSE}
@@ -22,60 +22,365 @@ options(rgl.useNULL=TRUE)
 rgl::par3d("family" = "serif")
 opts_chunk$set(
   collapse = TRUE,
-  
+  echo = FALSE, 
   comment = "#>",
   warning=FALSE, message=FALSE, include = TRUE, 
-  cache = TRUE,
   out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
 )
+set.seed(78974)
 ```
 
-The `gMOIP` package can be used to make 2D and 3D plots of linear programming (LP), integer linear
-programming (ILP), or mixed integer linear programming (MILP) models with up to three objectives.
-This include the polytope, integer points, ranges and iso profit curve. Plots of both the solution
-and criterion space are possible. For instance the non-dominated (Pareto) set for bi-objective
-LP/ILP/MILP programming models.
+Package `gMOIP` has different features for plotting different shapes in 3D. 
 
-The package also include an `inHull` function for checking if a set of points is inside/at/outside
-the convex hull of a set of vertices (for arbitrary dimension).
-
-Finally, the package also contains functions for generating (non-dominated) points in $\mathbb{R}_n$
-and classifying non-dominated points as supported extreme, supported non-extreme and unsupported.
-
-
-## Installation
-
-Install the latest stable release from CRAN:
-
-``` r
-install.packages("gMOIP")
-```
-
-Alternatively, install the latest development version from GitHub:
-
-``` r
-install.packages("devtools")
-devtools::install_github("relund/gMOIP")
+```{r}
 library(gMOIP)
 ```
 
-```{r, cache=FALSE, include=FALSE}
-library(gMOIP)
+We define the sets $\mathbb{R}_{>} = \{ z\in \mathbb{R} \mid z > 0\}$, $\mathbb{R}_{\geqq} = \{ z\in \mathbb{R} \mid z \geqq 0\}$ and $\mathbb{R}_{\geqslant} = \{ z\in \mathbb{R} \mid z \geqslant 0\}$:
+
+```{r}
+rgl::mfrow3d(nr = 1, nc = 3, sharedMouse = TRUE)
+## Set R^3_>=
+ini3D(argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
+plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
+plotTitleTeX3D(main = "$\\mathbb{R}_{\\geqq}$", cex = 5, crop = TRUE)
+finalize3D()
+next3d()
+## Set R^3_>-
+ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
+plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
+rgl::spheres3d(0,0,0, radius = 2, alpha = 0.8, col="gray80")
+plotTitleTeX3D(main = "$\\mathbb{R}_{\\geq}$", cex = 5, crop = TRUE)
+finalize3D()
+next3d()
+## Set R^3_>
+ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
+plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.3, color = "red"))
+plotTitleTeX3D(main = "$\\mathbb{R}_{>}$", cex = 5, crop = TRUE)
+finalize3D()
+rglwidget()
+close3d()
 ```
 
-## Drawing shapes related to MO
+The non-dominated set (red points are non-dominated and black dominated): 
+
+```{r nd points}
+library(gMOIP)
+pts <- genNDSet(3, 100, keep = TRUE, dubND = FALSE)
+ini3D()
+plotPoints3D(pts[!pts$nd,1:3])
+plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red"))
+finalize3D()
+rglwidget()
+```
+
+
+We may also add dominance cones and the hull:
+
+```{r addDCones}
+lim <- as.data.frame(apply(pts, 2, function(x) c(min(x)-5, max(x)+5)))
+ini3D(argsPlot3d = list(xlim = lim$z1, ylim = lim$z2, zlim = lim$z3))
+plotHull3D(
+  pts[pts$nd, 1:3],
+  addRays = T,
+  drawPoints = T,
+  argsPlot3d = list(col = "red"),
+  argsPolygon3d = list(color = "red", alpha = 0.5)
+)
+plotCones3D(pts[pts$nd,1:3], argsPolygon3d = list(color = "grey100", alpha = 1), rectangle = TRUE)
+finalize3D()
+rglwidget()
+```
+
+Note the area between the hull and the cones is the search area where further nondominated points may be found.
+
+Another example with more unsupported points:
+
+```{r}
+pts1 <- genNDSet(3, 100, keep = T, argsSphere = list(below = F))
+lim1 <- as.data.frame(apply(pts1, 2, function(x) c(min(x)-5, max(x)+5)))
+ini3D(argsPlot3d = list(xlim = lim1$z1, ylim = lim1$z2, zlim = lim1$z3))
+plotPoints3D(pts1[!pts1$nd, 1:3])
+plotHull3D(
+  pts1[pts1$nd, 1:3],
+  addRays = T,
+  drawPoints = T,
+  argsPlot3d = list(col = "red"),
+  argsPolygon3d = list(color = "red", alpha = 0.5)
+)
+plotCones3D(pts1[pts1$nd, 1:3],
+            argsPolygon3d = list(color = "grey100", alpha = 1),
+            rectangle = T)
+finalize3D()
+rglwidget()
+```
+
+We may also plot reverse dominance cones:
+
+```{r}
+pts2 <- genNDSet(3, 50, range = c(1,20), dubND = FALSE)
+lim2 <- as.data.frame(apply(pts2, 2, function(x) c(min(x)-5, max(x)+5)))
+ini3D(argsPlot3d = list(xlim = lim2$z1, ylim = lim2$z2, zlim = lim2$z3))
+plotCones3D(
+  pts2[,1:3],
+  drawPoint = T,
+  argsPolygon3d = list(alpha = 1, color = "red"),
+  rectangle = TRUE
+)
+plotCones3D(
+  pts2[,1:3],
+  argsPolygon3d = list(alpha = 1, color = "green"),
+  direction = -1,
+  rectangle = TRUE
+)
+finalize3D()
+rglwidget()
+```
 
 ```{r color scales, include=FALSE}
+# https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html
 mypal <- pal_npg("nrc", alpha = 0.7)(9)
 mypal <- pal_simpsons()(9)
 # mypal
 library("scales")
-# show_col(mypal)
+show_col(mypal)
 ```
 
-Complex shapes can be drawn using cones, hulls etc. Plot of a single non-dominated point and its corresponding local upper bounds given the bounding box. Green areas are overlapping if branch on each local upper bound.
+```{r Define theme and color scales, include=FALSE, eval=FALSE}
+theme_publish <- function() {
+  library(grid)
+  library(ggthemes)
+  return(theme_foundation(base_size = 10) +
+    theme(
+      # plot.title = element_text(face = "bold", size = rel(1.2), hjust = 0.5),
+      text = element_text(face = "plain"),
+      # panel.background = element_rect(colour = NA),
+      panel.spacing = unit(0.5, "cm"),
+      plot.background = element_blank(),
+      # panel.border = element_rect(colour = NA),
+      axis.title = element_text(face = "plain",size = rel(1)),
+      # axis.title.y = element_text(angle=90,vjust =2),
+      # axis.title.x = element_text(vjust = -0.2),
+      axis.text = element_text(),
+      axis.line = element_line(colour="black"),
+      axis.ticks = element_line(),
+      panel.grid.major = element_line(colour="#f0f0f0"),
+      panel.grid.minor = element_blank(),
+      legend.key = element_rect(colour = NA),
+      legend.position = "bottom",
+      legend.direction = "horizontal",
+      # legend.key.size = unit(0.2, "cm"),
+      legend.key.height = unit(0.2, "cm"), 
+      legend.key.width = unit(0.75, "cm"),
+      # legend.margin = unit(0, "cm"),
+      legend.title = element_blank(), #element_text(face="italic"),
+      # plot.margin=unit(c(10,5,5,5),"mm"),
+      # strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
+      # strip.text = element_text(face="bold"),
+    )
+  )
+}
 
-```{r Fig3 in Forget20, webgl = TRUE, echo=FALSE, cache=FALSE}
+
+
+
+
+# display.brewer.pal(n = 11, name = "RdYlBu")
+pal <- brewer.pal(n = 11, name = "RdYlBu")
+# algConfigs <- algConfigs[c(2,5, 3,6, 1,4, 8,11, 9,12, 7,10)]
+palAlgConfigs <- wes_palette("Zissou1", algConfigsN, type = "continuous")
+palAlgConfigs <- c(brewer.pal(n =  algConfigsN/2, name = "Reds"), brewer.pal(n =  algConfigsN/2, name = "Blues"))
+
+scale_color_algConfig <- scale_color_manual(
+  values = setNames(palAlgConfigs, algConfigs),
+  drop = F)
+scale_fill_algConfig <- scale_fill_manual(
+  values = setNames(palAlgConfigs, algConfigs),
+  drop = F)
+
+scale_color_nodesel_varsel <- scale_color_manual(
+  values = setNames(pal[c(1,3,9,11)], nodeselVarselConfigs),
+  drop = F)
+
+scale_color_ob <- scale_color_manual(
+  values = setNames(pal[c(1,3,9,11)], c("C", "F", "N", "OSS")),
+  drop = F)
+
+scale_fill_ob <- scale_fill_manual(
+  values = setNames(pal[c(1,3,9,11)], c("C", "F", "N", "Unsolved")),
+  drop = F)
+
+scale_linetype_ob <- scale_linetype_manual(
+  values = c("C" = 1, "F" = 2, "N" = 3),
+  drop = F)
+
+# scale_color_nodesel <- scale_color_manual(
+#   values = c("breadth" = "red", "depth" = "green"),
+#   drop = F)
+
+# scale_alpha_varsel <- scale_alpha_manual(
+#   values = c("mof" = 1, "mfavg" = 0.75),
+#   drop = F)
+
+# scale_linetype_valsel <- scale_linetype_manual(
+#   values = c("mof" = 1, "mfavg" = 2),
+#   drop = F)
+  
+
+scale_linetype_nodesel_varsel <- scale_linetype_manual(
+  values = c("B" = 1, "D" = 2, "OSS" = 3, "Unsolved" = 1),
+  drop = F)
+```
+
+Given a lower bound set $L$ (the line segments) and an upper bound set $U$ with local upper bounds $N(U)$, the search region $A$ is given by the closure of the gray area:
+
+```{r}
+bBox <- list(m = c(0,0), M = c(12,14))
+lb <- 
+  tibble(z1 = c(1, 2, 4, 8), 
+         z2 = c(8, 4, 2, 1))
+ub <- 
+  tibble(z1 = c(2, 4, 6, 9), 
+         z2 = c(7, 4, 3, 2))
+lUb <- 
+  tibble(z1 = c(2,  4, 6, 9, 12), 
+         z2 = c(14, 7, 4, 3, 2 ))
+conesLB <- plotHull2D(lb, drawPoints = F, addRays = T, m = bBox$m, M = bBox$M, drawPlot = F, drawLines = F,
+                   argsGeom_polygon = list(fill = mypal[2], alpha = 0.5)) 
+ptsUB <- geom_point(aes(x = z1, y = z2, shape = "rou"), data = ub, show.legend = T) 
+conesLUB <- plotCones2D(lUb, drawPlot = F, m = bBox$m, M = bBox$M, drawLines = F, direction = -1,
+                     drawPoint = F, argsGeom_polygon = list(fill = mypal[1], alpha = 0.5))
+lbLines <- geom_line(aes(x = z1, y = z2), data = lb)
+ptsLUB <- geom_point(aes(x = z1, y = z2, shape = "sq"), data = lUb, show.legend = T)
+layO <- ggplot() +
+  xlim(bBox$m[1], bBox$M[1]) + ylim(bBox$m[2], bBox$M[2]) +
+  gMOIPTheme() +
+  theme(
+    legend.position = c(0.85,0.85),
+    legend.background = element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.text.y=element_blank(),
+    axis.ticks.y=element_blank()) +
+  xlab("z1") + ylab("z2")
+
+p <- layO + conesLUB + conesLB + ptsUB + ptsLUB + lbLines +
+  geom_text(aes(2.75,5.5, label = "A")) + 
+  geom_text(aes(lb$z1[1], lb$z2[1]-2, label = "L"), nudge_x = 0.15) + 
+  scale_shape_manual(
+    values = c(rou = 19, sq = 15), 
+    labels = c("U", "N(U)"), name = NULL)
+p  
+```
+
+A lower bound set (solid and dashed lines) partially dominated by the upper bound set. The dominated area of the lower bound set is represented by the dashed lines. Three disjoint subproblems are created in the objective space by applying objective branching on $y1$, $y2$ and $y3$, represented by the red circles. The constraints added when applying objective branching are represented by the dotted lines. A new non-dominated point feasible for the corresponding problem can only be found in one of these subproblems (gray areas):
+
+```{r}
+bBox <- list(m = c(0,0), M = c(14,11))
+lb <- 
+  tibble(z1 = c(2, 4, 13), 
+         z2 = c(9, 5, 0.5))
+lUb <- 
+  tibble(z1 = c(1,  3, 5, 7, 8, 9, 14), 
+         z2 = c(11, 9, 6, 5, 3, 2, 1))
+ub <- 
+  tibble(z1 = c(1, 3, 5, 7, 8, 9), 
+         z2 = c(9, 6, 5, 3, 2, 1))
+ob <-   
+  tibble(z1 = c(3, 7, 14), 
+         z2 = c(9, 6, 1))
+ptsOB <- geom_point(aes(x = z1, y = z2), data = ob, shape = 21, size = 5, color = mypal[5])
+ptsOBText <- geom_text(aes(x = z1, y = z2), data = ob, label = c("y1", "y2", "y3"), nudge_y = 0.5)
+conesOB <- plotCones2D(ob, drawPlot = F, m = bBox$m, M = bBox$M, drawLines = T, direction = -1,
+                     drawPoint = F, argsGeom_polygon = list(fill = NA, alpha = 0.5), argsGeom_path = list(linetype = 3, size = 0.9))
+conesLB <- plotHull2D(lb, drawPoints = F, addRays = T, m = bBox$m, M = bBox$M, drawPlot = F, drawLines = F,
+                   argsGeom_polygon = list(fill = mypal[2], alpha = 0.5)) 
+ptsUB <- geom_point(aes(x = z1, y = z2, shape = "rou"), data = ub, show.legend = T) 
+conesLUB <- plotCones2D(lUb, drawPlot = F, m = bBox$m, M = bBox$M, drawLines = F, direction = -1,
+                     drawPoint = F, argsGeom_polygon = list(fill = mypal[1], alpha = 0.5))
+lb1 <- tibble(z1 = c(12,13), z2 = 7 - 0.5*c(12,13))
+lbLines1 <- geom_line(aes(x = z1, y = z2), data = lb1, linetype = 1)
+lb2 <- tibble(z1 = c(3.5, 4), z2 = 13 - 2*c(3.5, 4))
+lbLines2 <- geom_line(aes(x = z1, y = z2), data = lb2, linetype = 1)
+lb3 <- tibble(z1 = c(4,7), z2 = 7 - 0.5*c(4,7))
+lbLines3 <- geom_line(aes(x = z1, y = z2), data = lb3, linetype = 1)
+lb4 <- tibble(z1 = c(2, 3), z2 = 13 - 2*c(2, 3))
+lbLines4 <- geom_line(aes(x = z1, y = z2), data = lb4, linetype = 1)
+lb5 <- tibble(z1 = c(7,12), z2 = 7 - 0.5*c(7,12))
+lbLines5 <- geom_line(aes(x = z1, y = z2), data = lb5, linetype = 2)
+lb6 <- tibble(z1 = c(3, 3.5), z2 = 13 - 2*c(3, 3.5))
+lbLines6 <- geom_line(aes(x = z1, y = z2), data = lb6, linetype = 2)
+ptsLUB <- geom_point(aes(x = z1, y = z2, shape = "sq"), data = lUb, show.legend = T)
+layO <- ggplot() +
+  xlim(bBox$m[1], bBox$M[1]) + ylim(bBox$m[2], bBox$M[2]) +
+  gMOIPTheme() +
+  theme(
+    legend.position = c(0.85,0.85),
+    legend.background = element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.text.y=element_blank(),
+    axis.ticks.y=element_blank()) +
+  xlab("z1") + ylab("z2")
+p <- layO + conesLUB + conesLB + conesOB + ptsUB + ptsOB + ptsLUB + ptsOBText +
+  lbLines1 + lbLines2 + lbLines3 + lbLines4 + lbLines5 + lbLines6 +
+  scale_shape_manual(
+    values = c(rou = 19, sq = 15), 
+    labels = c("U", "N(U)"), name = NULL)
+p  
+```
+
+Bi-objective case: The dominated part of the lower bound set is represented by the dashed line. When objective branching is applied on each local upper bound, the search areas (gray) are disjoint:
+
+```{r}
+bBox <- list(m = c(0,0), M = c(7,7))
+lb <- 
+  tibble(z1 = c(1, 6), 
+         z2 = c(6, 1))
+lUb <- 
+  tibble(z1 = c(3, 7), 
+         z2 = c(7, 3))
+ub <- 
+  tibble(z1 = c(3), 
+         z2 = c(3))
+ob <-   
+  tibble(z1 = c(3, 3, 7), 
+         z2 = c(7, 3, 3))
+lb1 <- tibble(z1 = c(1,3), z2 = 7 - c(1,3))
+lb2 <- tibble(z1 = c(3,4), z2 = 7 - c(3,4))
+lb3 <- tibble(z1 = c(4,6), z2 = 7 - c(4,6))
+conesOB <- plotCones2D(ob, drawPlot = F, m = bBox$m, M = bBox$M, drawLines = T, direction = -1,
+                     drawPoint = F, argsGeom_polygon = list(fill = NA, alpha = 0.5), argsGeom_path = list(linetype = 3, size = 0.5))
+conesLB <- plotHull2D(lb, drawPoints = F, addRays = T, m = bBox$m, M = bBox$M, drawPlot = F, drawLines = F,
+                   argsGeom_polygon = list(fill = mypal[2], alpha = 0.5)) 
+ptsUB <- geom_point(aes(x = z1, y = z2, shape = "rou"), data = ub, show.legend = T) 
+conesLUB <- plotCones2D(lUb, drawPlot = F, m = bBox$m, M = bBox$M, drawLines = F, direction = -1,
+                     drawPoint = F, argsGeom_polygon = list(fill = mypal[1], alpha = 0.5))
+lbLines1 <- geom_line(aes(x = z1, y = z2), data = lb1, linetype = 1)
+lbLines2 <- geom_line(aes(x = z1, y = z2), data = lb2, linetype = 2)
+lbLines3 <- geom_line(aes(x = z1, y = z2), data = lb3, linetype = 1)
+ptsLUB <- geom_point(aes(x = z1, y = z2, shape = "sq"), color = mypal[8], data = lUb)
+layO <- ggplot() +
+  xlim(bBox$m[1], bBox$M[1]) + ylim(bBox$m[2], bBox$M[2]) +
+  gMOIPTheme() +
+  theme(
+    legend.background = element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),
+    axis.text.y=element_blank(),
+    axis.ticks.y=element_blank()) +
+  xlab("z1") + ylab("z2")
+p <- layO + conesLUB + conesLB + conesOB + ptsUB + ptsLUB + 
+  lbLines1 + lbLines2 + lbLines3 +
+  scale_shape_manual(
+    values = c(rou = 19, sq = 19), 
+    labels = c("U", "N(U)"), name = NULL)
+p  
+```
+
+Three-objective case: The dominated part of the lower bound set is the blue area in the middle. When objective branching is applied on each local upper bound, there are redundancies between the subproblems (each subproblem defines a gray search area). Every point in the red areas is included in the search area of more than one subproblem:
+
+```{r}
 ubSet <- matrix( c(1,1,1), ncol = 3, byrow = TRUE)
 row.names(ubSet) <- paste0("z", 1)
 lim <- c(0,7)  # bounding box for problem
@@ -104,23 +409,7 @@ N<- rbind(N, ubSet[1,1:3, drop=F])
 
 view <- matrix( c(-0.640044808387756, -0.205455526709557, 0.740358412265778, 0, 0.767741799354553, -0.208960145711899, 0.605729579925537, 0, 0.0302549730986357, 0.956098079681396, 0.29148057103157, 0, 0, 0, 0, 1), nc = 4)
 
-rgl::mfrow3d(nr = 1, nc = 2, sharedMouse = F)
-
 lim <- c(lim[1]-0.05,lim[2]+0.05)
-## First plot
-ini3D(argsPlot3d = list(xlim = lim, ylim = lim, zlim = lim))
-# plotRectangle3D(m,M)
-plotPoints3D(N, addText = "coord", argsPlot3d = list(type="p", col = "black", size = 8))
-plotPoints3D(U, addText = "coord", argsPlot3d = list(type="p", col = mypal[3], size = 8), argsText3d = list(col = "blue", adj = c(1,1)))
-plotPlane3D(c(1,1,1), point = c(2,2,2), argsPersp3d = list(col = mypal[2]), usePersp3d = T, lines = 50)
-plotPlane3D(c(1,1,1), point = c(2,2,2), argsPlanes3d = list(alpha = 0.7, col = mypal[8]))
-plotCones3D(U[1:3,], drawPoint = F, argsPolygon3d = list(alpha =0.3, color = mypal[1]), rectangle = F, direction = -1, drawLines = F)
-finalize3D(argsAxes3d = list(edges = "bbox", box = F))
-#rglwidget()
-
-
-loadView(v = view, clear = FALSE)
-
 ## all relevant points for drawing search areas
 vtx <- matrix(c(
   1,1,4,
@@ -155,46 +444,123 @@ vtx <- matrix(c(
   1,7,7
 ), ncol = 3, byrow = T)
 vtx <- vtx %>% set_colnames(c("x", "y", "z")) %>% as_tibble() %>% arrange(x,y,z)
-# plotPoints3D(vtx, addText = "coord")
-# print(vtx, n=100)
-
-## Second plot
-ini3D(clear = FALSE, argsPlot3d = list(xlim = lim, ylim = lim, zlim = lim))
-plotPoints3D(N, addText = "coord", argsPlot3d = list(type="p", col = "black", size = 8))
-plotPoints3D(U, addText = "coord", argsPlot3d = list(type="p", col = mypal[7], size = 8), argsText3d = list(col = "blue", adj = c(1,1)))
-# plotPlane3D(c(1,1,1), point = c(2,2,2), argsPersp3d = list(col = mypal[2]), usePersp3d = T, lines = 50)
-plotPlane3D(c(1,1,1), point = c(2,2,2), argsPlanes3d = list(alpha = 0.3, col = mypal[8]))
-
-args <- list(color = mypal[9], alpha = 0.7)
+ini3D(argsPlot3d = list(xlim = lim, ylim = lim, zlim = lim))
+# Points
+plotPoints3D(N, argsPlot3d = list(type="p", col = "black", size = 10))
+plotPoints3D(U, argsPlot3d = list(type="p", col = mypal[8], size = 10), argsText3d = list(col = "blue", adj = c(1,1)))
+# Plane
+plotPlane3D(c(1,1,1), point = c(2,2,2), argsPlanes3d = list(alpha = 0.75, col = mypal[2]))
+plotPlane3D(c(1,1,1), point = c(2,2,2), argsLines = list(col = "black", lines = 100, alpha = 0.75), useLines = T, useShade = F)
+# Overlapping areas
+args <- list(color = mypal[5], alpha = 0.9)
 plotHull3D(vtx[c(19:24,26:27),], drawPolygons = T, argsPolygon3d = args)
 vtx <- vtx %>% arrange(y,x,z)
 plotHull3D(vtx[c(19:24,26:27),], drawPolygons = T, argsPolygon3d = args)
 vtx <- vtx %>% arrange(z,y,x)
 plotHull3D(vtx[c(19:24,26:27),], drawPolygons = T, argsPolygon3d = args)
-
-args <- list(color = mypal[4], alpha = 0.2)
+# Non-overlapping areas
+args <- list(color = mypal[3], alpha = 0.4)
 plotHull3D(vtx[c(10,11,12,13,19,20,24,25,27,28),] , drawPolygons = T, argsPolygon3d = args)
 vtx <- vtx %>% arrange(y,x,z)
 plotHull3D(vtx[c(10,11,12,13,19,20,24,25,27,28),] , drawPolygons = T, argsPolygon3d = args)
 vtx <- vtx %>% arrange(y,z,x)
 plotHull3D(vtx[c(10,11,12,13,19,20,24,25,27,28),] , drawPolygons = T, argsPolygon3d = args)
-finalize3D(argsAxes3d = list(edges = "bbox", box = F))
-loadView(v = view, clear = FALSE)
+finalize3D(argsAxes3d = list(edges = c("x", "y", "z"), box = F, labels=FALSE, tick=FALSE))
+# finalize3D(argsAxes3d = list(edges = "bbox"))
+view <- matrix( c(-0.601261854171753, -0.375613540410995, 0.705264508724213, 0, 0.79587709903717, -0.36011865735054, 0.48671817779541, 0, 0.071161076426506, 0.853949129581451, 0.515467822551727, 0, 0, 0, 0, 1), nc = 4)
+loadView(v = view, clear = F, zoom = 0.8)
+rglwidget()
 ```
 
-A set of non-dominated points and the areas they dominate. Light blue plane are a lower bound.
 
-```{r Fig4, webgl = TRUE, echo=FALSE, cache=FALSE}
-pts <- data.frame(
-          z1 = c(-2, -2, -2, -1, -1, 0, 0, 1, 1, 2, 3, 4, 4, 5, 5, 6, 6, 6),
-          z2 = c(2, 4, 5, 1, 6, 0, 6, -1, 6, 5, -2, -2, 4, -2, 3, -1, 0, 2),
-          z3 = c(5, 4, 3, 6, 2, 6, 0, 6, -1, -2, 5, 4, -2, 3, -2, 1, 0, -1),
-          nd = c(TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,
-                 TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE)
-)
+Lower bound set (hyperplane) partially dominated by the upper bound set (black points with red dominance cones). Note the two disjoint search areas above the hyperplane:
+
+```{r}
+pts <- tibble::tribble(
+   ~z1, ~z2, ~z3,  ~nd,
+    -2,   2,   5, TRUE,
+    -2,   4,   4, TRUE,
+    -2,   5,   3, TRUE,
+    -1,   1,   6, TRUE,
+    -1,   6,   2, TRUE,
+     0,   0,   6, TRUE,
+     0,   6,   0, TRUE,
+     1,  -1,   6, TRUE,
+     1,   6,  -1, TRUE,
+     2,   5,  -2, TRUE,
+     3,  -2,   5, TRUE,
+     4,  -2,   4, TRUE,
+     4,   4,  -2, TRUE,
+     5,  -2,   3, TRUE,
+     5,   3,  -2, TRUE,
+     6,  -1,   1, TRUE,
+     6,   0,   0, TRUE,
+     6,   2,  -1, TRUE
+   )
 
 ## First plot
-open3d()
+ini3D(argsPlot3d = list(xlim = c(min(pts$z1)-2,max(pts$z1)+10), 
+                        ylim = c(min(pts$z2)-2,max(pts$z2)+10), 
+                        zlim = c(min(pts$z3)-2,max(pts$z3)+10)))
+lub <- Rfast::colMinsMaxs(as.matrix(pts[,1:3]))[2,]
+M <- rgl::par3d()$bbox
+lub <- rbind(lub, c(M[2],M[4],M[6])-0.01)
+llb <- c(M[1],M[3],M[5])+ 0.01
+plotCones3D(pts[pts$nd,c("z1","z2","z3")], argsPolygon3d = list(alpha = 1, color = mypal[8]), drawPoint = T, rectangle = T, argsPlot3d = list(size = 10))
+plotCones3D(lub[2,], direction = -1, argsPolygon3d = list(alpha = 0.4, color = mypal[1]), drawPoint = F)
+plotPlane3D(c(1,1,1), point = c(3,3,3), argsPlanes3d = list(alpha = 0.6, col = mypal[7]))
+root <- currentSubscene3d()
+newSubscene3d(
+  "inherit",
+  "inherit",
+  "inherit",
+  copyShapes = T,
+  copyBBoxDeco = F,
+  parent = root
+)
+plotCones3D(llb, argsPolygon3d = list(alpha = 0.75, color = mypal[3]), drawPoint = F)
+clipplanes3d(1, 1, 1, -9)
+useSubscene3d(root)
+finalize3D(argsAxes3d = list(edges = "bbox"), argsTitle3d = list(xlab = "", ylab = "", zlab = ""))
+view <- matrix( c(0.710081100463867, -0.417695313692093, -0.566847920417786, 0, -0.695306360721588, -0.288975149393082, -0.658059477806091, 0, 0.111063443124294, 0.861408114433289, -0.495621830224991, 0, 0, 0, 0, 1), nc = 4)
+loadView(v = view, clear = FALSE, zoom = 0.7)
+rglwidget()
+```
+
+Objective branching applied to $y^1$ and $y^2$. One subproblem is fully included in the other subproblem:
+
+```{r}
+## Second plot
+ini3D(clear = T, argsPlot3d = list(xlim = c(min(pts$z1)-2,max(pts$z1)+10), 
+                        ylim = c(min(pts$z2)-2,max(pts$z2)+10), 
+                        zlim = c(min(pts$z3)-2,max(pts$z3)+10)))
+
+plotPlane3D(c(1,1,1), point = c(3,3,3), argsPlanes3d = list(alpha = 0.6, col = mypal[7]))
+plotCones3D(lub, direction = -1, argsPolygon3d = list(alpha = 1, color = mypal[1]), drawPoint = T)
+plotmath3d(lub-1, text = expression(y^1, y^2), cex = 1.2, font = 3)
+root <- currentSubscene3d()
+newSubscene3d(
+  "inherit",
+  "inherit",
+  "inherit",
+  copyShapes = T,
+  copyBBoxDeco = F,
+  parent = root
+)
+plotCones3D(pts[pts$nd,c("z1","z2","z3")], argsPolygon3d = list(alpha = 1, color = mypal[8]), drawPoint = T, drawLines = T, argsPlot3d = list(size = 10))
+clipplanes3d(-1, -1, -1, 9)
+useSubscene3d(root)
+finalize3D(argsAxes3d = list(edges = "bbox"), argsTitle3d = list(xlab = "", ylab = "", zlab = ""))
+view <- matrix( c(0.860876560211182, -0.30657571554184, -0.406083613634109, 0, -0.448700070381165, -0.081096462905407, -0.889995634555817, 0, 0.239919260144234, 0.948385238647461, -0.207374647259712, 0, 0, 0, 0, 1), nc = 4)
+loadView(v = view, clear = FALSE, zoom = 0.7)
+rglwidget()
+```
+
+Another view:
+
+```{r}
+## First plot
+id <- open3d()
 mfrow3d(nr = 1, nc = 2, sharedMouse = F)
 ini3D(argsPlot3d = list(xlim = c(min(pts$z1)-2,max(pts$z1)+10),
                         ylim = c(min(pts$z2)-2,max(pts$z2)+10),
@@ -203,10 +569,8 @@ lub <- Rfast::colMinsMaxs(as.matrix(pts[,1:3]))[2,]
 M <- rgl::par3d()$bbox
 lub <- rbind(lub, c(M[2],M[4],M[6])-0.01)
 llb <- c(M[1],M[3],M[5])+ 0.01
-# plotPoints3D(pts)
 plotCones3D(pts[pts$nd,c("z1","z2","z3")], argsPolygon3d = list(alpha = 1, color = mypal[1]), drawPoint = T, rectangle = T)
 plotCones3D(lub[2,], direction = -1, argsPolygon3d = list(alpha = 0.4, color = mypal[7]), drawPoint = F)
-# plotHull3D(unique(pts))
 plotPlane3D(c(1,1,1), point = c(3,3,3), argsPlanes3d = list(alpha = 0.4, col = mypal[7]))
 root <- currentSubscene3d()
 newSubscene3d(
@@ -222,7 +586,7 @@ plotCones3D(llb, argsPolygon3d = list(alpha = 0.4, color = mypal[4]), drawPoint 
 clipplanes3d(1, 1, 1, -9)
 useSubscene3d(root)
 axes3d()
-
+next3d()
 ## Second plot
 ini3D(clear = FALSE, argsPlot3d = list(xlim = c(min(pts$z1)-2,max(pts$z1)+10),
                         ylim = c(min(pts$z2)-2,max(pts$z2)+10),
@@ -242,6 +606,8 @@ newSubscene3d(
 plotCones3D(pts[pts$nd,c("z1","z2","z3")], argsPolygon3d = list(alpha = 1, color = mypal[1]), drawPoint = T, drawLines = F)
 useSubscene3d(root)
 axes3d()
+rglwidget()
+close3d()
 ```
 
 ```{r, include=F}

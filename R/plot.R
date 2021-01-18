@@ -1741,6 +1741,11 @@ gMOIPTheme <- function(...) {
 #' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pts)
 #' finalize3D()
+#'
+#' lim <- c(-1, 7)
+#' ini3D(argsPlot3d = list(xlim = lim, ylim = lim, zlim = lim))
+#' plotPoints3D(pts)
+#' finalize3D()
 ini3D <- function(new = FALSE, clear = TRUE, ...){
    args <- list(...)
    argsPlot3d <-
@@ -1840,7 +1845,7 @@ texToPng <- function(tex, width = NULL, height = NULL, dpi = 72, viewPng = FALSE
    if (!is.null(height)) z <- dpi/72 * tmp$height/height
    dpi <- dpi * 1/z
    if (calcM) em1 <- .sizeM(dpi = dpi, fontsize = fontsize)$w
-   pdftools::pdf_convert(pdfFile, format = "png", dpi = dpi, antialias = TRUE, filenames = pngFile)
+   pdftools::pdf_convert(pdfFile, format = "png", dpi = dpi, antialias = TRUE, filenames = pngFile, verbose = FALSE)
    if (viewPng) {
       img <- png::readPNG(pngFile)
       grid::grid.newpage()
@@ -2042,7 +2047,7 @@ plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
 #' @param fixedSize Fix the size of the object (no scaling when zoom).
 #' @param tex TeX string.
 #' @param size Size of the generated png.
-#' @param ... Arguments passed on to `sprites3d`.
+#' @param ... Arguments passed on to [rgl::sprites3d] and [texToPng].
 #'
 #' @return The shape ID of the displayed object is returned.
 #' @export
@@ -2062,7 +2067,7 @@ plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
 #' plotTeX3D(100,100,100, tex2)
 #' finalize3D()
 plotTeX3D <- function (x, y, z, tex, cex = graphics::par("cex"), fixedSize = FALSE, size = 480, ...) {
-   f <- texToPng(tex, width = size, calcM = TRUE)
+   f <- texToPng(tex, width = size, calcM = TRUE, ...)
    # expand png so same width and height
    system(paste0("convert ", f$png,
                  " -background none -gravity center -extent ", max(f$w,f$h), "x", max(f$w,f$h), " ", f$png))
