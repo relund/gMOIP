@@ -39,7 +39,7 @@ The filename of the png or a list if \code{calcM = TRUE}.
 Convert LaTeX to a png file
 }
 \examples{
-\donttest{
+\dontrun{
 tex <- "$\\\\mathbb{R}_{\\\\geqq}$"
 texToPng(tex, viewPng = TRUE)
 texToPng(tex, fontsize = 20, viewPng = TRUE)

@@ -39,7 +39,7 @@ The shape ID of the displayed object is returned.
 Plot TeX at a position.
 }
 \examples{
-\donttest{
+\dontrun{
 tex0 <- "$\\\\mathbb{R}_{\\\\geqq}$"
 tex1 <- "\\\\LaTeX"
 tex2 <- "This is a title"

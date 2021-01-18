@@ -1815,7 +1815,7 @@ finalize3D <- function(...){
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' tex <- "$\\mathbb{R}_{\\geqq}$"
 #' texToPng(tex, viewPng = TRUE)
 #' texToPng(tex, fontsize = 20, viewPng = TRUE)
@@ -1917,7 +1917,7 @@ pngSize <- function(png) {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ini3D(argsPlot3d = list(xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 2)))
 #' plotTitleTeX3D(main = "\\LaTeX", sub = "subtitle $\\alpha$",
 #'                xlab = "$x^1_2$", ylab = "$\\beta$", zlab = "$x\\cdot y$")
@@ -2057,7 +2057,7 @@ plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' tex0 <- "$\\mathbb{R}_{\\geqq}$"
 #' tex1 <- "\\LaTeX"
 #' tex2 <- "This is a title"
