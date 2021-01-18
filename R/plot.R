@@ -1815,16 +1815,18 @@ finalize3D <- function(...){
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' tex <- "$\\mathbb{R}_{\\geqq}$"
 #' texToPng(tex, viewPng = TRUE)
 #' texToPng(tex, fontsize = 20, viewPng = TRUE)
 #' texToPng(tex, height = 50, fontsize = 10, viewPng = TRUE)
 #' texToPng(tex, height = 50, fontsize = 50, viewPng = TRUE)
 #' tex <- "MMM"
-#' texToPng(tex, dpi=72, calcM = T)
-#' texToPng(tex, width = 100, calcM = T)
+#' texToPng(tex, dpi=72, calcM = TRUE)
+#' texToPng(tex, width = 100, calcM = TRUE)
 #' f <- texToPng(tex, dpi=300)
 #' pngSize(f)
+#' }
 texToPng <- function(tex, width = NULL, height = NULL, dpi = 72, viewPng = FALSE, fontsize = 12,
                   calcM = FALSE, crop = FALSE) {
    texFile <- tempfile(fileext=".tex")
@@ -1915,10 +1917,12 @@ pngSize <- function(png) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D(argsPlot3d = list(xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 2)))
 #' plotTitleTeX3D(main = "\\LaTeX", sub = "subtitle $\\alpha$",
 #'                xlab = "$x^1_2$", ylab = "$\\beta$", zlab = "$x\\cdot y$")
 #' finalize3D()
+#' }
 plotTitleTeX3D <- function (main = NULL, sub = NULL, xlab = NULL, ylab = NULL,
                             zlab = NULL, line = NA, ...) {
    save <- rgl::par3d(skipRedraw = TRUE, ignoreExtent = TRUE)
@@ -2053,6 +2057,7 @@ plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' tex0 <- "$\\mathbb{R}_{\\geqq}$"
 #' tex1 <- "\\LaTeX"
 #' tex2 <- "This is a title"
@@ -2066,6 +2071,7 @@ plotMTeX3D <- function (tex, edge, line = 0, at = NULL, pos = NA, ...) {
 #' plotTeX3D(50,50,50, tex1)
 #' plotTeX3D(100,100,100, tex2)
 #' finalize3D()
+#' }
 plotTeX3D <- function (x, y, z, tex, cex = graphics::par("cex"), fixedSize = FALSE, size = 480, ...) {
    f <- texToPng(tex, width = size, calcM = TRUE, ...)
    # expand png so same width and height

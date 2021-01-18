@@ -39,14 +39,16 @@ The filename of the png or a list if \code{calcM = TRUE}.
 Convert LaTeX to a png file
 }
 \examples{
+\donttest{
 tex <- "$\\\\mathbb{R}_{\\\\geqq}$"
 texToPng(tex, viewPng = TRUE)
 texToPng(tex, fontsize = 20, viewPng = TRUE)
 texToPng(tex, height = 50, fontsize = 10, viewPng = TRUE)
 texToPng(tex, height = 50, fontsize = 50, viewPng = TRUE)
 tex <- "MMM"
-texToPng(tex, dpi=72, calcM = T)
-texToPng(tex, width = 100, calcM = T)
+texToPng(tex, dpi=72, calcM = TRUE)
+texToPng(tex, width = 100, calcM = TRUE)
 f <- texToPng(tex, dpi=300)
 pngSize(f)
+}
 }

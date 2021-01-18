@@ -52,8 +52,10 @@ other two coordinates in \code{pos} determine the position.  See the
 examples.
 }
 \examples{
+\donttest{
 ini3D(argsPlot3d = list(xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 2)))
 plotTitleTeX3D(main = "\\\\LaTeX", sub = "subtitle $\\\\alpha$",
                xlab = "$x^1_2$", ylab = "$\\\\beta$", zlab = "$x\\\\cdot y$")
 finalize3D()
+}
 }
