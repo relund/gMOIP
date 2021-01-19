@@ -20,3 +20,12 @@
 ^docs$
 ^pkgdown$
 ^tmp$
+^check\.R$
+^vignettes/bi-objective_3x_ex2.Rmd$
+^vignettes/bi-objective_3x_ex3.Rmd$
+^vignettes/bi-objective_3x_ex4.Rmd$
+^vignettes/mo_costs.Rmd$
+^vignettes/mo_shapes.Rmd$
+^vignettes/polytope_3d_ex2.Rmd$
+^vignettes/polytope_3d_ex3.Rmd$
+^vignettes/polytope_3d_ex4.Rmd$
