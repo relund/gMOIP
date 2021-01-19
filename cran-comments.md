@@ -25,10 +25,9 @@ R CMD check succeeded
 
 ## Steps for releasing to CRAN
 devtools::spell_check()
-devtools::check(run_dont_test = TRUE)
-# devtools::check_rhub(platforms = c("windows-x86_64-release"), interactive = F) # is down
+devtools::check(env_vars = c(NOT_CRAN = "true", RGL_USE_NULL = "true"))
 devtools::check_win_release(quiet = TRUE)
- # Push files to GitHub for GitHub actions check
-devtools::release()
+  # Push files to GitHub for GitHub actions check
+devtools::release() 
 
 

@@ -362,7 +362,7 @@ dev.off()
 
 ## Further examples
 
-For further examples see the documentation and the vignettes.
+For further examples see the [documentation](https://relund.github.io/gMOIP/), the vignettes and the [articles](https://relund.github.io/gMOIP/).
 
 ``` r
 library(gMOIP)
