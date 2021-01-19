@@ -30,6 +30,7 @@ obj <- matrix(
    nrow = 2)
 plotBiObj2D(A, b, obj, addTriangles = FALSE)
 
+\donttest{
 ## ILP models with different criteria (maximize)
 obj <- matrix(c(7, -10, -10, -10), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
@@ -40,7 +41,6 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 
-\donttest{
 ## ILP models with different criteria (minimize)
 obj <- matrix(c(7, -10, -10, -10), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
