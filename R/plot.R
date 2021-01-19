@@ -272,7 +272,6 @@ plotPolytope <- function(A,
 #'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
 #'
 #' @return A ggplot2 object.
-#' @export
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import ggplot2
 plotPolytope2D <-
@@ -439,7 +438,6 @@ plotPolytope2D <-
 #'   strange results.
 #'
 #' @return A RGL window with 3D plot.
-#' @export
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import rgl
 plotPolytope3D <-
