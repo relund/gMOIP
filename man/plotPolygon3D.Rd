@@ -44,6 +44,7 @@ Object ids (invisible).
 Plot a polygon.
 }
 \examples{
+\donttest{
 pts0 <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
 pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
 
@@ -72,7 +73,6 @@ ids <- plotPolygon3D(pts, usePoints = TRUE, useShade = TRUE,
 finalize3D()
 # rgl.pop(id = ids) # remove object again
 
-\donttest{
 # In general you have to finetune size and numbers when you use textures
 # Different pch
 for (i in 0:3) {

@@ -28,6 +28,7 @@ The rectangle is defined by {x|a <= x <= b} where a is the minimum values and
 b is the maximum values.
 }
 \examples{
+\donttest{
 ini3D()
 plotRectangle3D(c(0,0,0), c(1,1,1))
 plotRectangle3D(c(1,1,1), c(4,4,3), drawPoints = TRUE, drawLines = FALSE,
@@ -35,4 +36,5 @@ plotRectangle3D(c(1,1,1), c(4,4,3), drawPoints = TRUE, drawLines = FALSE,
 ids <- plotRectangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
 finalize3D()
 # rgl.pop(id = ids) remove last object
+}
 }

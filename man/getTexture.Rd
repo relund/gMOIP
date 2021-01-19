@@ -20,6 +20,7 @@ The file name.
 Save a pch symbol as a temporary file.
 }
 \examples{
+\donttest{
 # Pch shapes
 generateRPointShapes<-function(){
    oldPar<-par()
@@ -34,4 +35,5 @@ generateRPointShapes<-function(){
 generateRPointShapes()
 
 getTexture()
+}
 }

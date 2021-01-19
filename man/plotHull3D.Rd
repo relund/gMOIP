@@ -56,6 +56,7 @@ A list with hull, \code{pts} classified and object ids (invisible).
 Plot the convex hull of a set of points in 3D.
 }
 \examples{
+\donttest{
 ini3D()
 pts<-matrix(c(0,0,0), ncol = 3, byrow = TRUE)
 plotHull3D(pts) # a point
@@ -101,7 +102,6 @@ plotHull3D(pts, drawPoints = TRUE, addText = "coord")
 plotHull3D(pts, addRays = TRUE)
 finalize3D()
 
-\donttest{
 pts <- genNDSet(3, 100, dubND = FALSE)
 pts <- as.data.frame(pts[,1:3])
 

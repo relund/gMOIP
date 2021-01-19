@@ -42,6 +42,7 @@ NULL (invisible)
 Plot a plane in 3D.
 }
 \examples{
+\donttest{
 ini3D(argsPlot3d = list(xlim = c(-1,10), ylim = c(-1,10), zlim = c(-1,10)) )
 plotPlane3D(c(1,1,1), point = c(1,1,1))
 plotPoints3D(c(1,1,1))
@@ -57,4 +58,5 @@ ids <- plotPlane3D(c(1,2,1), point = c(2,2,2), argsLines = list(col="blue", line
             useLines = TRUE)
 finalize3D()
 # rgl.pop(id = ids) # remove last plane
+}
 }

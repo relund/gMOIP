@@ -27,6 +27,7 @@ Object ids (invisible).
 Plot points in 3D.
 }
 \examples{
+\donttest{
 ini3D()
 pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 plotPoints3D(pts)
@@ -38,4 +39,5 @@ ids <- plotPoints3D(c(3,3,3, 4,4,4), addText = "rownames")
 finalize3D()
 rgl::rglwidget()
 # rgl.pop(ids) # remove the last again
+}
 }

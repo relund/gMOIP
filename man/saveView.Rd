@@ -23,6 +23,7 @@ Help function to save the view angle for the RGL 3D plot
 Only save if the file name don't exists.
 }
 \examples{
+\donttest{
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0,
 0.910147845745087, -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183,
 0.97196090221405, 0.231208890676498, 0, 0, 0, 0, 1), nc = 4)
@@ -34,7 +35,8 @@ obj <- c(20, 10, 15)
 plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
 
 # Try to modify the angle in the RGL window
-saveView(print = TRUE)  # get the viewangle to insert into R code
+saveView(print = TRUE)  # get the view angle to insert into R code
+}
 }
 \author{
 Lars Relund \email{lars@relund.dk}

@@ -25,6 +25,7 @@ NULL (invisible).
 Initialize the RGL window.
 }
 \examples{
+\donttest{
 ini3D()
 pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 plotPoints3D(pts)
@@ -34,4 +35,5 @@ lim <- c(-1, 7)
 ini3D(argsPlot3d = list(xlim = lim, ylim = lim, zlim = lim))
 plotPoints3D(pts)
 finalize3D()
+}
 }

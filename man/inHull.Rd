@@ -36,7 +36,7 @@ An integer vector of length \eqn{n} with values 1 (inside hull), -1 (outside hul
 Efficient test for points inside a convex hull in p dimensions.
 }
 \note{
-Some of the code are inspired by the \href{http://www.mathworks.com/matlabcentral/fileexchange/10226-inhull}{Matlab code} by
+Some of the code are inspired by the \href{https://www.mathworks.com/matlabcentral/fileexchange/10226-inhull}{Matlab code} by
 John D'Errico and
 \href{https://stat.ethz.ch/pipermail/r-help/2009-December/415377.html}{how to find a point inside a hull}.
 If the dimension of the hull is below \eqn{p} then PCA may be used to check (a

@@ -47,6 +47,7 @@ Object ids (invisible).
 The cones are defined as the point plus R3+.
 }
 \examples{
+\donttest{
 ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
 plotCones3D(c(4,4,4), drawLines = FALSE, drawPoint = TRUE,
            argsPlot3d = list(col = "red", size = 10),
@@ -62,4 +63,5 @@ plotCones3D(c(4,2,2), direction = c(1,-1,-1))
 ids <- plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 finalize3D()
 # rgl.pop(id = ids) # remove last cone
+}
 }

@@ -768,6 +768,7 @@ plotCriterion2D <- function(A,
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @examples
+#' \donttest{
 #' view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0,
 #' 0.910147845745087, -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183,
 #' 0.97196090221405, 0.231208890676498, 0, 0, 0, 0, 1), nc = 4)
@@ -779,7 +780,8 @@ plotCriterion2D <- function(A,
 #' plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
 #'
 #' # Try to modify the angle in the RGL window
-#' saveView(print = TRUE)  # get the viewangle to insert into R code
+#' saveView(print = TRUE)  # get the view angle to insert into R code
+#' }
 saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
    if (print) {
       view <- rgl::par3d()$userMatrix
@@ -806,6 +808,7 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @examples
+#' \donttest{
 #' view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0,
 #' 0.910147845745087, -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183,
 #' 0.97196090221405, 0.231208890676498, 0, 0, 0, 0, 1), nc = 4)
@@ -818,6 +821,7 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #'
 #' # Try to modify the angle in the RGL window
 #' saveView(print = TRUE)  # get the view angle to insert into R code
+#' }
 loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE, zoom = 1, ...) {
    if (clear) rgl::clear3d()
    if (close) rgl::rgl.close()
@@ -983,6 +987,7 @@ plotNDSet2D <- function(points,
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D()
 #' plotRectangle3D(c(0,0,0), c(1,1,1))
 #' plotRectangle3D(c(1,1,1), c(4,4,3), drawPoints = TRUE, drawLines = FALSE,
@@ -990,6 +995,7 @@ plotNDSet2D <- function(points,
 #' ids <- plotRectangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
 #' finalize3D()
 #' # rgl.pop(id = ids) remove last object
+#' }
 plotRectangle3D <- function(a, b, ...) {
    args <- list(...)
    argsSegments3d <- mergeLists(list(), args$argsSegments3d)
@@ -1036,6 +1042,7 @@ plotRectangle3D <- function(a, b, ...) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' pts0 <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
 #' pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
 #'
@@ -1064,7 +1071,6 @@ plotRectangle3D <- function(a, b, ...) {
 #' finalize3D()
 #' # rgl.pop(id = ids) # remove object again
 #'
-#' \donttest{
 #' # In general you have to finetune size and numbers when you use textures
 #' # Different pch
 #' for (i in 0:3) {
@@ -1164,6 +1170,7 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Pch shapes
 #' generateRPointShapes<-function(){
 #'    oldPar<-par()
@@ -1178,6 +1185,7 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
 #' generateRPointShapes()
 #'
 #' getTexture()
+#' }
 getTexture <- function(pch = 16, cex = 10, ...) {
    filename <- tempfile(fileext = ".png")
    grDevices::png(filename = filename)
@@ -1212,6 +1220,7 @@ getTexture <- function(pch = 16, cex = 10, ...) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
 #' plotCones3D(c(4,4,4), drawLines = FALSE, drawPoint = TRUE,
 #'            argsPlot3d = list(col = "red", size = 10),
@@ -1227,6 +1236,7 @@ getTexture <- function(pch = 16, cex = 10, ...) {
 #' ids <- plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 #' finalize3D()
 #' # rgl.pop(id = ids) # remove last cone
+#' }
 plotCones3D <-
    function(pts,
             drawPoint = TRUE,
@@ -1346,6 +1356,7 @@ plotCones2D <-
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D()
 #' pts<-matrix(c(0,0,0), ncol = 3, byrow = TRUE)
 #' plotHull3D(pts) # a point
@@ -1391,7 +1402,6 @@ plotCones2D <-
 #' plotHull3D(pts, addRays = TRUE)
 #' finalize3D()
 #'
-#' \donttest{
 #' pts <- genNDSet(3, 100, dubND = FALSE)
 #' pts <- as.data.frame(pts[,1:3])
 #'
@@ -1571,6 +1581,7 @@ plotHull3D <- function(pts,
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D()
 #' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pts)
@@ -1582,6 +1593,7 @@ plotHull3D <- function(pts,
 #' finalize3D()
 #' rgl::rglwidget()
 #' # rgl.pop(ids) # remove the last again
+#' }
 plotPoints3D <- function(pts, addText = FALSE, ...) {
    args <- list(...)
    argsPlot3d <- mergeLists(list(size = 5, col = "black", type="p"), args$argsPlot3d)
@@ -1638,6 +1650,7 @@ plotPoints3D <- function(pts, addText = FALSE, ...) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D(argsPlot3d = list(xlim = c(-1,10), ylim = c(-1,10), zlim = c(-1,10)) )
 #' plotPlane3D(c(1,1,1), point = c(1,1,1))
 #' plotPoints3D(c(1,1,1))
@@ -1653,6 +1666,7 @@ plotPoints3D <- function(pts, addText = FALSE, ...) {
 #'             useLines = TRUE)
 #' finalize3D()
 #' # rgl.pop(id = ids) # remove last plane
+#' }
 plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = TRUE, useLines = FALSE,
                         usePoints = FALSE, ...) {
    args <- list(...)
@@ -1737,6 +1751,7 @@ gMOIPTheme <- function(...) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D()
 #' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pts)
@@ -1746,6 +1761,7 @@ gMOIPTheme <- function(...) {
 #' ini3D(argsPlot3d = list(xlim = lim, ylim = lim, zlim = lim))
 #' plotPoints3D(pts)
 #' finalize3D()
+#' }
 ini3D <- function(new = FALSE, clear = TRUE, ...){
    args <- list(...)
    argsPlot3d <-
@@ -1778,6 +1794,7 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' ini3D()
 #' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pts)
@@ -1787,6 +1804,7 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
 #' pts<-matrix(c(1,1,1,5,5,5), ncol = 3, byrow = TRUE)
 #' plotPoints3D(pts)
 #' finalize3D(argsAxes3d = list(edges = "bbox"))
+#' }
 finalize3D <- function(...){
    args <- list(...)
    argsAxes3d <- mergeLists(list(edges = c('x', 'y', 'z')), args$argsAxes3d)

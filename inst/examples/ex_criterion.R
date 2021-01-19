@@ -72,9 +72,10 @@ obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
-
+}
 
 ### Set up 3D plot
+\dontrun{
 # Function for plotting the solution and criterion space in one plot (three variables)
 plotBiObj3D <- function(A, b, obj,
                         type = rep("c", ncol(A)),
