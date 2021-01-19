@@ -496,12 +496,13 @@ otherwise you may see strange results.</p>
    plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>,
    labels <span class='op'>=</span> <span class='st'>"coord"</span>
 <span class='op'>)</span>
-</div><div class='img'><img src='plotPolytope-12.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='img'><img src='plotPolytope-12.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 
 
 <span class='co'>#### 3D examples ####</span>
 <span class='co'># Ex 1</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>view</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>0.412063330411911</span>, <span class='op'>-</span><span class='fl'>0.228006735444069</span>, <span class='fl'>0.882166087627411</span>, <span class='fl'>0</span>, <span class='fl'>0.910147845745087</span>,
                   <span class='op'>-</span><span class='fl'>0.0574885793030262</span>, <span class='fl'>0.410274744033813</span>, <span class='fl'>0</span>, <span class='op'>-</span><span class='fl'>0.042830865830183</span>, <span class='fl'>0.97196090221405</span>,
                   <span class='fl'>0.231208890676498</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, nc <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>
@@ -606,7 +607,7 @@ otherwise you may see strange results.</p>
 <span class='fu'>plotPolytope</span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span>, type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"i"</span>,<span class='st'>"c"</span>,<span class='st'>"c"</span><span class='op'>)</span>, plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>, obj <span class='op'>=</span> <span class='va'>obj</span>, plotFaces <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span>, type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"c"</span>,<span class='st'>"i"</span>,<span class='st'>"c"</span><span class='op'>)</span>, plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>, obj <span class='op'>=</span> <span class='va'>obj</span>, plotFaces <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'>plotPolytope</span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>b</span>, faces <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"c"</span>,<span class='st'>"c"</span>,<span class='st'>"c"</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"c"</span>,<span class='st'>"c"</span>,<span class='st'>"i"</span><span class='op'>)</span>, plotOptimum <span class='op'>=</span> <span class='cn'>TRUE</span>, obj <span class='op'>=</span> <span class='va'>obj</span><span class='op'>)</span>
-<span class='co'># }</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

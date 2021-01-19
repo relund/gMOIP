@@ -191,7 +191,8 @@ lists. Currently the following arguments are supported:</p><ul>
     <p>NULL (invisible).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='ini3D.html'>ini3D</a></span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='fu'><a href='ini3D.html'>ini3D</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>pts</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>5</span>,<span class='fl'>5</span>,<span class='fl'>5</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>3</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'><a href='plotPoints3D.html'>plotPoints3D</a></span><span class='op'>(</span><span class='va'>pts</span><span class='op'>)</span>
 <span class='fu'>finalize3D</span><span class='op'>(</span><span class='op'>)</span>
@@ -200,6 +201,7 @@ lists. Currently the following arguments are supported:</p><ul>
 <span class='va'>pts</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>5</span>,<span class='fl'>5</span>,<span class='fl'>5</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>3</span>, byrow <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'><a href='plotPoints3D.html'>plotPoints3D</a></span><span class='op'>(</span><span class='va'>pts</span><span class='op'>)</span>
 <span class='fu'>finalize3D</span><span class='op'>(</span>argsAxes3d <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>edges <span class='op'>=</span> <span class='st'>"bbox"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
