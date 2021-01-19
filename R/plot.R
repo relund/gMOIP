@@ -1,6 +1,6 @@
 ## Functions for plotting
 
-#' Plot the convex hull of a set of points in 3D.
+#' Plot the convex hull of a set of points in 2D.
 #'
 #' @param pts A matrix with a point in each row.
 #' @param drawPoints Draw the points.
