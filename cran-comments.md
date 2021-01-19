@@ -3,7 +3,6 @@
 * Mac OS (latest) on GitHub Actions, R (release)
 * Windows (latest) on GitHub Actions, R (release)
 * Ubuntu 16.04 on GitHub Actions, R (release, devel, oldrel)
-* RHub (windows-x86_64-release)
 * Win-builder (check_win_release)
 
 
