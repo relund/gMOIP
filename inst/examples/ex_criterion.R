@@ -75,7 +75,7 @@ plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 }
 
 ### Set up 3D plot
-\dontrun{
+\donttest{
 # Function for plotting the solution and criterion space in one plot (three variables)
 plotBiObj3D <- function(A, b, obj,
                         type = rep("c", ncol(A)),
