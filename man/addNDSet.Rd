@@ -49,6 +49,7 @@ addNDSet(c(2,2), nDSet, crit = "min")
 
 addNDSet(c(2,2), crit = "min")
 
+\donttest{
 nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(1,7,0,6))
 pts <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(2,2,2,6))
 crit = c("min", "min", "max")
@@ -65,6 +66,7 @@ addNDSet(pts, nDSet, crit, dubND = FALSE)
 addNDSet(pts, nDSet, crit, dubND = TRUE)
 addNDSet(pts, nDSet, crit, dubND = TRUE, keepDom = TRUE)
 addNDSet(pts, nDSet, crit, dubND = TRUE, keepDom = TRUE, classify = FALSE)
+}
 }
 \author{
 Lars Relund \email{lars@relund.dk}

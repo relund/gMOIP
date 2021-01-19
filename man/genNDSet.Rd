@@ -45,6 +45,7 @@ A data frame with \code{p+1} columns (last one indicate if dominated or not).
 Generate a sample of nondominated points.
 }
 \examples{
+\donttest{
 range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
 pts <- genNDSet(3, 50, range = range, random = TRUE, keep = TRUE)
 head(pts)
@@ -57,7 +58,6 @@ plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red", size = 10))
 plotCones3D(pts[pts$nd,1:3], argsPolygon3d = list(alpha = 1))
 finalize3D()
 
-\donttest{
 ini3D()
 range <- c(1,100)
 cent <- rep(range[1] + (range[2]-range[1])/2, 3)

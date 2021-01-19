@@ -25,6 +25,7 @@ The classification is supported (true/false), extreme (true/false), supported no
 It is assumed that \code{pts} are nondominated.
 }
 \examples{
+\donttest{
 pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
 ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+2),
   ylim = c(min(pts[,2])-2,max(pts[,2])+2),
@@ -68,4 +69,5 @@ plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
 plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
 finalize3D()
 pts
+}
 }

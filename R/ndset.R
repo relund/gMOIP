@@ -185,6 +185,7 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #'
 #' addNDSet(c(2,2), crit = "min")
 #'
+#' \donttest{
 #' nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(1,7,0,6))
 #' pts <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(2,2,2,6))
 #' crit = c("min", "min", "max")
@@ -201,6 +202,7 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #' addNDSet(pts, nDSet, crit, dubND = TRUE)
 #' addNDSet(pts, nDSet, crit, dubND = TRUE, keepDom = TRUE)
 #' addNDSet(pts, nDSet, crit, dubND = TRUE, keepDom = TRUE, classify = FALSE)
+#' }
 addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FALSE,
                    classify = TRUE)
 {
@@ -608,6 +610,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' Rfast::colMinsMaxs(as.matrix(pts))
 #' plot(pts)
 #'
+#' \donttest{
 #' ## p = 3
 #' range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
 #' ini3D()
@@ -616,6 +619,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' Rfast::colMinsMaxs(as.matrix(pts))
 #' plotPoints3D(pts)
 #' finalize3D()
+#' }
 #'
 #' ## other p
 #' p <- 10
@@ -624,8 +628,6 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' head(pts)
 #' Rfast::colMinsMaxs(as.matrix(pts))
 #'
-#'
-#' \donttest{
 #' ### Using sphere
 #' ## p = 2
 #' range <- c(1,100)
@@ -652,6 +654,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' Rfast::colMinsMaxs(as.matrix(pts))
 #' plot(pts, asp=1)
 #'
+#' \donttest{
 #' ## p = 3
 #' ini3D()
 #' range <- c(1,100)
@@ -682,6 +685,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' rgl::spheres3d(cent, radius=r, color = "grey100", alpha=0.1)
 #' plotPoints3D(pts)
 #' finalize3D()
+#' }
 #'
 #' ## Other p
 #' p <- 10
@@ -717,6 +721,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' pts <- genSample(2, 1000, range = range, box = TRUE, argsBox = list(cor = "idxSplit"))
 #' plot(pts)
 #'
+#' \donttest{
 #' ## p = 3
 #' range <- matrix(c(1,100, 1,200, 1,50), ncol = 2, byrow = TRUE )
 #' ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
@@ -744,6 +749,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' pts <- genSample(3, 1000, range = range, box = TRUE, , argsBox = list(cor = "idxSplit"))
 #' plotPoints3D(pts)
 #' finalize3D()
+#' }
 #'
 #' ## other p
 #' p <- 10
@@ -751,7 +757,6 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' pts <- genSample(p, 1000, range = range, box = TRUE, argsBox = list(cor = "idxSplit"))
 #' head(pts)
 #' Rfast::colMinsMaxs(as.matrix(pts))
-#' }
 genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box = FALSE, ...) {
    if (!is.matrix(range)) range <- matrix(range, ncol = 2)
    if (nrow(range) == 1) range <-  matrix(rep(range, each=p), nrow=p)
@@ -882,6 +887,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
 #' pts <- genNDSet(3, 50, range = range, random = TRUE, keep = TRUE)
 #' head(pts)
@@ -894,7 +900,6 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' plotCones3D(pts[pts$nd,1:3], argsPolygon3d = list(alpha = 1))
 #' finalize3D()
 #'
-#' \donttest{
 #' ini3D()
 #' range <- c(1,100)
 #' cent <- rep(range[1] + (range[2]-range[1])/2, 3)
@@ -969,6 +974,7 @@ genNDSet <-
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
 #' ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+2),
 #'   ylim = c(min(pts[,2])-2,max(pts[,2])+2),
@@ -1012,6 +1018,7 @@ genNDSet <-
 #' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
 #' finalize3D()
 #' pts
+#' }
 classifyNDSet <- function(pts, direction = 1) {
    pts <- .checkPts(pts, stopUnique = FALSE)
    p <- ncol(pts)
