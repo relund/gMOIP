@@ -70,7 +70,7 @@ dimFace<-function(pts, dim = NULL) {
 #'   not equal \eqn{p}.
 #'
 #' @note Some of the code are inspired by the [Matlab
-#'   code](http://www.mathworks.com/matlabcentral/fileexchange/10226-inhull) by
+#'   code](https://www.mathworks.com/matlabcentral/fileexchange/10226-inhull) by
 #'   John D'Errico and
 #'   [how to find a point inside a hull](https://stat.ethz.ch/pipermail/r-help/2009-December/415377.html).
 #'   If the dimension of the hull is below \eqn{p} then PCA may be used to check (a
