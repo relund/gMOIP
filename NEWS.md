@@ -1,3 +1,7 @@
+# gMOIP 1.4.7
+
+*Fixed errors about pandoc missing and added webshot2.
+
 # gMOIP 1.4.6
 
 * Added support for plotting rectangles, points, planes, hulls in 3D. Further vignettes added.

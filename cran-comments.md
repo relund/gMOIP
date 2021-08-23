@@ -2,7 +2,7 @@
 * Mac OS (local), R (release)
 * Mac OS (latest) on GitHub Actions, R (release)
 * Windows (latest) on GitHub Actions, R (release)
-* Ubuntu 16.04 on GitHub Actions, R (release, devel, oldrel)
+* Ubuntu 20.04 on GitHub Actions, R (release, devel)
 * Win-builder (check_win_release)
 
 
