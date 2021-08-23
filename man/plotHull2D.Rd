@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plotHull2D}
 \alias{plotHull2D}
-\title{Plot the convex hull of a set of points in 3D.}
+\title{Plot the convex hull of a set of points in 2D.}
 \usage{
 plotHull2D(
   pts,
@@ -58,7 +58,7 @@ lists. Currently the following arguments are supported:
 The ggplot object if \code{drawPlot = TRUE}; otherwise, a list of ggplot components.
 }
 \description{
-Plot the convex hull of a set of points in 3D.
+Plot the convex hull of a set of points in 2D.
 }
 \examples{
 library(ggplot2)
