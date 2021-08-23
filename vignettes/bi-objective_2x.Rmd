@@ -19,6 +19,11 @@ opts_chunk$set(
   warning=FALSE, message=FALSE, include = TRUE, 
   out.width = "99%", fig.width = 8, fig.align = "center", fig.asp = 0.62
 )
+
+if (!requireNamespace("rmarkdown", quietly = TRUE) || !rmarkdown::pandoc_available("1.14")) {
+   warning(call. = FALSE, "These vignettes assume rmarkdown and pandoc version 1.14 (or higher). These were not found. Older versions will not work.")
+   knitr::knit_exit()
+}
 ```
 
 With `gMOIP` you can make plots of the criterion space for bi-objective models (linear
