@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gMOIP</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.7</span>
       </span>
     </div>
 
@@ -349,11 +349,11 @@ models some nondominated points may in fact be dominated by a segment.</p>
 <span class='co'>### Bi-objective problem with three variables</span>
 <span class='va'>loadView</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>fname</span> <span class='op'>=</span> <span class='st'>"view.RData"</span>, <span class='va'>v</span> <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>{</span>
    <span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='va'>v</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
-      <span class='fu'>rgl</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rgl/man/viewpoint.html'>view3d</a></span><span class='op'>(</span>userMatrix <span class='op'>=</span> <span class='va'>v</span><span class='op'>)</span>
+      <span class='fu'>rgl</span><span class='fu'>::</span><span class='fu'><a href='https://dmurdoch.github.io/rgl/dev/reference/viewpoint.html'>view3d</a></span><span class='op'>(</span>userMatrix <span class='op'>=</span> <span class='va'>v</span><span class='op'>)</span>
    <span class='op'>}</span> <span class='kw'>else</span> <span class='op'>{</span>
       <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span><span class='op'>(</span><span class='va'>fname</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
          <span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span><span class='va'>fname</span><span class='op'>)</span>
-         <span class='fu'>rgl</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rgl/man/viewpoint.html'>view3d</a></span><span class='op'>(</span>userMatrix <span class='op'>=</span> <span class='va'>view</span><span class='op'>)</span>
+         <span class='fu'>rgl</span><span class='fu'>::</span><span class='fu'><a href='https://dmurdoch.github.io/rgl/dev/reference/viewpoint.html'>view3d</a></span><span class='op'>(</span>userMatrix <span class='op'>=</span> <span class='va'>view</span><span class='op'>)</span>
       <span class='op'>}</span> <span class='kw'>else</span> <span class='op'>{</span>
          <span class='kw'><a href='https://rdrr.io/r/base/warning.html'>warning</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"Can'TRUE load view in file "</span>, <span class='va'>fname</span>, <span class='st'>"!"</span><span class='op'>)</span><span class='op'>)</span>
       <span class='op'>}</span>
