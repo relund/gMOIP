@@ -61,18 +61,18 @@ lists. Currently the following arguments are supported:
 \item \code{argsFaces}: A list of arguments for \code{\link{plotHull3D}}.
 \item \code{argsFeasible}: A list of arguments for rgl functions:
 \itemize{
-\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
-\item \code{segments3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::segments3d}}.
-\item \code{triangles3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::triangles3d}}.
+\item \code{points3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::points3d}}.
+\item \code{segments3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::segments3d}}.
+\item \code{triangles3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::triangles3d}}.
 }
 \item \code{argsLabels}: A list of arguments for rgl functions:
 \itemize{
-\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+\item \code{points3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::points3d}}.
 \item \code{text3d}: A list of arguments for \code{\link[rgl:texts]{rgl::text3d}}.
 }
 \item \code{argsOptimum}: A list of arguments for rgl functions:
 \itemize{
-\item \code{points3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::points3d}}.
+\item \code{points3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::points3d}}.
 }
 }}
 }

@@ -435,7 +435,7 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
    if (length(direction) != p) direction = rep(direction[1],p)
    # print(set)
    if (addRays) {
-      if (rgl::rgl.cur() > 0 & useRGLBBox) {
+      if (rgl::cur3d() > 0 & useRGLBBox) {
          limits <- rgl::par3d()$bbox
          for (i in 1:dim(pts)[1]) {
             pt <- as.vector(pts[i,])

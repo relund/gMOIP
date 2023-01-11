@@ -78,7 +78,7 @@ cornerPoints <- function (A, b, type = rep("c", ncol(A)), nonneg = rep(TRUE, nco
    p <- slices(A, b, type, nonneg)
    p <- do.call(rbind, p)
    tri <- t(geometry::convhulln(p))
-   #rgl.triangles(p[tri,1],p[tri,2],p[tri,3],col="gold2",alpha=.6)
+   #triangles3d(p[tri,1],p[tri,2],p[tri,3],col="gold2",alpha=.6)
    idx <- unique(as.vector(tri))
    p <- p[idx,]
    #points3d(p, col="blue", size = 15)

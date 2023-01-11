@@ -57,6 +57,6 @@ plotPlane3D(c(1,1,1), point = c(1,1,1), useLines = TRUE, useShade = TRUE)
 ids <- plotPlane3D(c(1,2,1), point = c(2,2,2), argsLines = list(col="blue", lines = 100),
             useLines = TRUE)
 finalize3D()
-# rgl.pop(id = ids) # remove last plane
+# pop3d(id = ids) # remove last plane
 }
 }
