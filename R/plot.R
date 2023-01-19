@@ -798,7 +798,7 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #' @param fname The file name of the view.
 #' @param v The view matrix.
 #' @param clear Call [rgl::clear3d].
-#' @param close Call [rgl::rgl.close].
+#' @param close Call [rgl::close3d].
 #' @param zoom Zoom level.
 #' @param ... Additional parameters passed to [rgl::view3d].
 #'
@@ -822,7 +822,7 @@ saveView <- function(fname = "view.RData", overwrite = FALSE, print = FALSE) {
 #' }
 loadView <- function(fname = "view.RData", v = NULL, clear = TRUE, close = FALSE, zoom = 1, ...) {
    if (clear) rgl::clear3d()
-   if (close) rgl::rgl.close()
+   if (close) rgl::close3d()
    if (!is.null(v)) {
       rgl::view3d(userMatrix = v, zoom = zoom, ...)
    } else {
@@ -992,7 +992,7 @@ plotNDSet2D <- function(points,
 #'            argsPlot3d = list(size=2, type="s", alpha=0.3))
 #' ids <- plotRectangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
 #' finalize3D()
-#' # rgl.pop(id = ids) remove last object
+#' # pop3d(id = ids) remove last object
 #' }
 plotRectangle3D <- function(a, b, ...) {
    args <- list(...)
@@ -1067,7 +1067,7 @@ plotRectangle3D <- function(a, b, ...) {
 #' ids <- plotPolygon3D(pts, usePoints = TRUE, useShade = TRUE,
 #'               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
 #' finalize3D()
-#' # rgl.pop(id = ids) # remove object again
+#' # pop3d(id = ids) # remove object again
 #'
 #' # In general you have to finetune size and numbers when you use textures
 #' # Different pch
@@ -1140,7 +1140,7 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
       ids <- c(ids, do.call(rgl::shade3d, args = c(list(poly), argsPoints)))
    }
    if (useLines) {
-      if (!rgl::rgl.cur()) stop("Option useLines need an open rgl window!")
+      if (!rgl::cur3d()) stop("Option useLines need an open rgl window!")
       limits <- rgl::par3d()$bbox
       m <- c(limits[1], limits[3], limits[5])
       M <- c(limits[2], limits[4], limits[6])
@@ -1233,7 +1233,7 @@ getTexture <- function(pch = 16, cex = 10, ...) {
 #' plotCones3D(c(4,2,2), direction = c(1,-1,-1))
 #' ids <- plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 #' finalize3D()
-#' # rgl.pop(id = ids) # remove last cone
+#' # pop3d(id = ids) # remove last cone
 #' }
 plotCones3D <-
    function(pts,
@@ -1365,7 +1365,7 @@ plotCones2D <-
 #' pts<-matrix(c(5,5,5,10,10,5,10,5,5,5,5,10), ncol = 3, byrow = TRUE)
 #' lst <- plotHull3D(pts, argsPolygon3d = list(alpha=0.9), argsSegments3d = list(color="red"))
 #' finalize3D()
-#' # rgl.pop(id = lst$ids) # remove last hull
+#' # pop3d(id = lst$ids) # remove last hull
 #'
 #' ## Using addRays
 #' pts <- data.frame(x = c(1,3), y = c(1,3), z = c(1,3))
@@ -1590,7 +1590,7 @@ plotHull3D <- function(pts,
 #' ids <- plotPoints3D(c(3,3,3, 4,4,4), addText = "rownames")
 #' finalize3D()
 #' rgl::rglwidget()
-#' # rgl.pop(ids) # remove the last again
+#' # pop3d(ids) # remove the last again
 #' }
 plotPoints3D <- function(pts, addText = FALSE, ...) {
    args <- list(...)
@@ -1663,7 +1663,7 @@ plotPoints3D <- function(pts, addText = FALSE, ...) {
 #' ids <- plotPlane3D(c(1,2,1), point = c(2,2,2), argsLines = list(col="blue", lines = 100),
 #'             useLines = TRUE)
 #' finalize3D()
-#' # rgl.pop(id = ids) # remove last plane
+#' # pop3d(id = ids) # remove last plane
 #' }
 plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = TRUE, useLines = FALSE,
                         usePoints = FALSE, ...) {
@@ -1678,7 +1678,7 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = TRUE, useLi
       ids <- c(ids, do.call(rgl::planes3d, args = c(list(normal, d = offset), argsPlanes3d) ))
    }
    # else use points or lines
-   if (!rgl::rgl.cur()) stop("Option useLines or usePoints need an open rgl window!")
+   if (!rgl::cur3d()) stop("Option useLines or usePoints need an open rgl window!")
    limits <- rgl::par3d()$bbox
    m <- c(limits[1], limits[3], limits[5])
    M <- c(limits[2], limits[4], limits[6])

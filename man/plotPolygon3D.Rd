@@ -28,9 +28,9 @@ plotPolygon3D(
 lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsShade}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}} (n > 4 vertices),
-\link[rgl:3dobjects]{rgl::triangles3d} (n = 3 vertices) and \link[rgl:3dobjects]{rgl::quads3d} (n = 4 vertices)
+\link[rgl:primitives]{rgl::triangles3d} (n = 3 vertices) and \link[rgl:primitives]{rgl::quads3d} (n = 4 vertices)
 if \code{useShade = TRUE}.
-\item \code{argsFrame}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::lines3d}} if \code{useFrame = TRUE}.
+\item \code{argsFrame}: A list of arguments for \code{\link[rgl:primitives]{rgl::lines3d}} if \code{useFrame = TRUE}.
 \item \code{argsPoints}: A list of arguments for \code{\link[rgl:shade3d]{rgl::shade3d}} if \code{usePoints = TRUE}. It is important
 to give a texture using \code{texture}. A texture can be set using \link{getTexture}.
 \item \code{argsLines}: A list of arguments for \link[rgl:persp3d]{rgl::persp3d} when \code{useLines = TRUE}. Moreover, the list
@@ -71,7 +71,7 @@ ini3D()
 ids <- plotPolygon3D(pts, usePoints = TRUE, useShade = TRUE,
               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
 finalize3D()
-# rgl.pop(id = ids) # remove object again
+# pop3d(id = ids) # remove object again
 
 # In general you have to finetune size and numbers when you use textures
 # Different pch

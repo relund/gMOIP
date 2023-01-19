@@ -15,7 +15,7 @@ plotRectangle3D(a, b, ...)
 lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
-\item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::segments3d}}.
+\item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::segments3d}}.
 \item \code{argsPolygon3d}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}}.
 \item \code{argsShade3d}: A list of arguments for \code{\link[rgl:mesh3d]{rgl::shade3d}}.
 }}
@@ -35,6 +35,6 @@ plotRectangle3D(c(1,1,1), c(4,4,3), drawPoints = TRUE, drawLines = FALSE,
            argsPlot3d = list(size=2, type="s", alpha=0.3))
 ids <- plotRectangle3D(c(2,2,2), c(3,3,2.5), argsPolygon3d = list(alpha = 1) )
 finalize3D()
-# rgl.pop(id = ids) remove last object
+# pop3d(id = ids) remove last object
 }
 }

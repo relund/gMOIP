@@ -36,7 +36,7 @@ i'th column of \code{pts} minus a value greater than on equal zero (maximize obj
 lists (see examples). Currently the following arguments are supported:
 \itemize{
 \item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}}.
-\item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:3dobjects]{rgl::segments3d}}.
+\item \code{argsSegments3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::segments3d}}.
 \item \code{argsPolygon3d}: A list of arguments for \code{\link[rgl:polygon3d]{rgl::polygon3d}}.
 }}
 }
@@ -62,6 +62,6 @@ plotCones3D(c(2,2,2), direction = -1)
 plotCones3D(c(4,2,2), direction = c(1,-1,-1))
 ids <- plotCones3D(c(2,2,4), direction = c(-1,-1,1))
 finalize3D()
-# rgl.pop(id = ids) # remove last cone
+# pop3d(id = ids) # remove last cone
 }
 }

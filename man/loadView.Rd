@@ -20,7 +20,7 @@ loadView(
 
 \item{clear}{Call \link[rgl:scene]{rgl::clear3d}.}
 
-\item{close}{Call \link[rgl:rgl.open]{rgl::rgl.close}.}
+\item{close}{Call \link[rgl:open3d]{rgl::close3d}.}
 
 \item{zoom}{Zoom level.}
 
