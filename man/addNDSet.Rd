@@ -18,7 +18,7 @@ addNDSet(
 \item{pts}{A data frame with points to add (a column for each objective).}
 
 \item{nDSet}{A data frame with current non-dominated set (NULL is none yet). Column names of the
-p objectives must be z1, ..., zp.}
+p objectives must be \verb{z1, ..., zp}.}
 
 \item{crit}{A max or min vector. If length one assume all objectives are optimized in the same
 direction.}
@@ -27,11 +27,11 @@ direction.}
 
 \item{dubND}{Duplicated non-dominated points are classified as non-dominated.}
 
-\item{classify}{Non-dominated points are classified into supported extreme (se), supported
-non-extreme (sne) and unsupported (us)}
+\item{classify}{Non-dominated points are classified into supported extreme (\code{se}), supported
+non-extreme (\code{sne}) and unsupported (\code{us})}
 }
 \value{
-A data frame with a column for each objective (\code{z} columns) and nd (non-dominated).
+A data frame with a column for each objective (\code{z} columns) and \code{nd} (non-dominated).
 Moreover if \code{classify} then columns \code{se}, \code{sne}, \code{us} and \code{cls}.
 }
 \description{

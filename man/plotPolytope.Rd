@@ -33,7 +33,7 @@ entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.}
 \item{nonneg}{A boolean vector of same length as number of variables. If
 entry k is TRUE then variable k must be non-negative.}
 
-\item{crit}{Either max or min (only used if add the iso profit line)}
+\item{crit}{Either max or min (only used if add the iso-profit line)}
 
 \item{faces}{A character vector of same length as number of variables. If
 entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
@@ -45,14 +45,14 @@ Useful if e.g. want to show the linear relaxation of an IP.}
 (relevant for IPLP/MILP).}
 
 \item{plotOptimum}{Show the optimum corner solution point (if alternative solutions
-only one is shown) and add the iso profit line.}
+only one is shown) and add the iso-profit line.}
 
 \item{latex}{If \code{True} make latex math labels for TikZ.}
 
-\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
-'coord' add coordinates to the points. Otherwise number all points from one.}
+\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If equal
+\code{coord} add coordinates to the points. Otherwise number all points from one.}
 
-\item{...}{If 2D, further arguments passed on the the ggplot plotting functions. This must be
+\item{...}{If 2D, further arguments passed on the the \code{ggplot} plotting functions. This must be
 done as lists. Currently the following arguments are supported:
 \itemize{
 \item \code{argsFaces}: A list of arguments for \code{\link{plotHull2D}}.
@@ -81,25 +81,25 @@ lists. Currently the following arguments are supported:
 \item \code{argsPlot3d}: A list of arguments for \code{\link[rgl:plot3d]{rgl::plot3d}} to open the RGL window.
 \item \code{argsTitle3d}: A list of arguments for \code{\link[rgl:axes3d]{rgl::title3d}}.
 \item \code{argsFaces}: A list of arguments for \code{\link{plotHull3D}}.
-\item \code{argsFeasible}: A list of arguments for rgl functions:
+\item \code{argsFeasible}: A list of arguments for RGL functions:
 \itemize{
 \item \code{points3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::points3d}}.
 \item \code{segments3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::segments3d}}.
 \item \code{triangles3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::triangles3d}}.
 }
-\item \code{argsLabels}: A list of arguments for rgl functions:
+\item \code{argsLabels}: A list of arguments for RGL functions:
 \itemize{
 \item \code{points3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::points3d}}.
 \item \code{text3d}: A list of arguments for \code{\link[rgl:texts]{rgl::text3d}}.
 }
-\item \code{argsOptimum}: A list of arguments for rgl functions:
+\item \code{argsOptimum}: A list of arguments for RGL functions:
 \itemize{
 \item \code{points3d}: A list of arguments for \code{\link[rgl:primitives]{rgl::points3d}}.
 }
 }}
 }
 \value{
-If 2D a ggplot2 object. If 3D a RGL window with the 3D plot.
+If 2D a \code{ggplot} object. If 3D a RGL window with the 3D plot.
 }
 \description{
 Plot the polytope (bounded convex set) of a linear mathematical program

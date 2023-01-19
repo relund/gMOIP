@@ -10,19 +10,18 @@ criterionPoints(pts, obj, crit, labels = "coord")
 }
 \arguments{
 \item{pts}{A data frame with a column for each variable in the solution
-space (can also be a rangePoints).}
+space (can also be a \code{rangePoints}).}
 
 \item{obj}{A p x n matrix(one row for each criterion).}
 
-\item{crit}{Either max or min.}
+\item{crit}{Either \code{max} or \code{min}.}
 
 \item{labels}{If \code{NULL} or "n" don't add any labels (empty string). If
-'coord' labels are the solution space coordinates. Otherwise number all
+equals \code{coord}, labels are the solution space coordinates. Otherwise number all
 points from one based on the solution space points.}
 }
 \value{
-A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
-(non-dominated), ext (extreme), nonExt (non-extreme supported).
+A data frame with columns \verb{x1, ..., xn, z1, ..., zp, lbl (label), nD (non-dominated), ext (extreme), nonExt (non-extreme supported)}.
 }
 \description{
 Calculate the criterion points of a set of points and ranges to find the set

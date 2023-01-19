@@ -37,15 +37,15 @@ and \code{both} supported or a vector with text.}
 plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
-\item{drawPlot}{Draw the ggplot. Set to FALSE if you want to combine hulls in a single plot.}
+\item{drawPlot}{Draw the \code{ggplot}. Set to FALSE if you want to combine hulls in a single plot.}
 
-\item{drawBBoxHull}{If addRays then draw the hull areas hitting the bounding box also.}
+\item{drawBBoxHull}{If \code{addRays} then draw the hull areas hitting the bounding box also.}
 
 \item{m}{Minimum values of the bounding box.}
 
 \item{M}{Maximum values of the bounding box.}
 
-\item{...}{Further arguments passed on the the ggplot plotting functions. This must be done as
+\item{...}{Further arguments passed on the the \code{ggplot} plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{
 \item \code{argsGeom_point}: A list of arguments for \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.
@@ -55,7 +55,7 @@ lists. Currently the following arguments are supported:
 }}
 }
 \value{
-The ggplot object if \code{drawPlot = TRUE}; otherwise, a list of ggplot components.
+The \code{ggplot} object if \code{drawPlot = TRUE}; otherwise, a list of \code{ggplot} components.
 }
 \description{
 Plot the convex hull of a set of points in 2D.

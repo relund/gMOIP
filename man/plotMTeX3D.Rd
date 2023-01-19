@@ -17,7 +17,7 @@ plotMTeX3D(tex, edge, line = 0, at = NULL, pos = NA, ...)
 
 \item{pos}{The position at which to draw the axis or text.}
 
-\item{...}{Further arguments passed to \link{plotTeX3D}.}
+\item{...}{Further arguments passed to \code{\link[=plotTeX3D]{plotTeX3D()}}.}
 }
 \value{
 The object IDs of objects added to the scene.

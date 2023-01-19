@@ -30,7 +30,7 @@ plotTeX3D(
 
 \item{size}{Size of the generated png.}
 
-\item{...}{Arguments passed on to \link[rgl:sprites]{rgl::sprites3d} and \link{texToPng}.}
+\item{...}{Arguments passed on to \code{\link[rgl:sprites]{rgl::sprites3d()}} and \code{\link[=texToPng]{texToPng()}}.}
 }
 \value{
 The shape ID of the displayed object is returned.

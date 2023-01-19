@@ -37,7 +37,7 @@ and \code{both} supported or a vector with text.}
 plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
-\item{drawBBoxHull}{If addRays then draw the hull areas hitting the bounding box also.}
+\item{drawBBoxHull}{If \code{addRays} then draw the hull areas hitting the bounding box also.}
 
 \item{...}{Further arguments passed on the the RGL plotting functions. This must be done as
 lists (see examples). Currently the following arguments are supported:

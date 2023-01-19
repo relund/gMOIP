@@ -33,7 +33,7 @@ entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.}
 \item{nonneg}{A boolean vector of same length as number of variables. If
 entry k is TRUE then variable k must be non-negative.}
 
-\item{crit}{Either max or min (only used if add the iso profit line)}
+\item{crit}{Either max or min (only used if add the iso-profit line)}
 
 \item{faces}{A character vector of same length as number of variables. If
 entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.
@@ -45,14 +45,14 @@ Useful if e.g. want to show the linear relaxation of an IP.}
 (relevant for ILP/MILP).}
 
 \item{plotOptimum}{Show the optimum corner solution point (if alternative solutions
-only one is shown) and add the iso profit line.}
+only one is shown) and add the iso-profit line.}
 
 \item{latex}{If \code{True} make latex math labels for TikZ.}
 
-\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
-'coord' add coordinates to the points. Otherwise number all points from one.}
+\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If equal
+\code{coord} add coordinates to the points. Otherwise number all points from one.}
 
-\item{...}{Further arguments passed on the the ggplot plotting functions. This must be done as
+\item{...}{Further arguments passed on the the \code{ggplot} plotting functions. This must be done as
 lists. Currently the following arguments are supported:
 \itemize{
 \item \code{argsFaces}: A list of arguments for \code{\link{plotHull2D}}.
@@ -75,7 +75,7 @@ lists. Currently the following arguments are supported:
 }}
 }
 \value{
-A ggplot2 object.
+A \code{ggplot} object.
 }
 \description{
 Plot the polytope (bounded convex set) of a linear mathematical program

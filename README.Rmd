@@ -136,8 +136,8 @@ movie3d(spin3d(), duration = 10, type="gif", dir="./man/figures", movie = "READM
 ![](man/figures/README-3d.gif)
 </center>
 
-Note: interactive 3d plots cannot be displayed in a github README file, and static images or animated gifs are used here instead.
-Visit the [pkgdown online documentation](https://relund.github.io/gMOIP/) to view plots which can be manipulated in the browser.
+Note: interactive 3d plots cannot be displayed in a GitHub `README` file, and static images or animated gifs are used here instead.
+Visit the [*pkgdown* online documentation](https://relund.github.io/gMOIP/) to view plots which can be manipulated in the browser.
 
 For more examples see `example("gMOIP-package")` or `browseVignettes('gMOIP')`. 
 

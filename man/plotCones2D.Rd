@@ -32,7 +32,7 @@ i'th column of \code{pts} minus a value greater than on equal zero (maximize obj
 
 \item{rectangle}{Draw the cone as a rectangle.}
 
-\item{drawPlot}{Draw the ggplot. Set to FALSE if you want to combine hulls in a single plot.}
+\item{drawPlot}{Draw the \code{ggplot}. Set to FALSE if you want to combine hulls in a single plot.}
 
 \item{m}{Minimum values of the bounding box.}
 
@@ -41,7 +41,7 @@ i'th column of \code{pts} minus a value greater than on equal zero (maximize obj
 \item{...}{Further arguments passed to \link{plotHull2D}}
 }
 \value{
-A ggplot object
+A \code{ggplot} object
 }
 \description{
 The cones are defined as the point plus/minus rays of R2.

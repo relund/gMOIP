@@ -6,15 +6,15 @@
 #' supported, non-extreme supported, non-supported.
 #'
 #' @param pts A data frame with a column for each variable in the solution
-#'   space (can also be a rangePoints).
+#'   space (can also be a `rangePoints`).
 #' @param obj A p x n matrix(one row for each criterion).
-#' @param crit Either max or min.
+#' @param crit Either `max` or `min`.
 #' @param labels If \code{NULL} or "n" don't add any labels (empty string). If
-#'   'coord' labels are the solution space coordinates. Otherwise number all
+#'   equals `coord`, labels are the solution space coordinates. Otherwise number all
 #'   points from one based on the solution space points.
 #'
-#' @return A data frame with columns x1, ..., xn, z1, ..., zp, lbl (label), nD
-#'   (non-dominated), ext (extreme), nonExt (non-extreme supported).
+#' @return A data frame with columns `x1, ..., xn, z1, ..., zp, lbl (label), nD
+#'   (non-dominated), ext (extreme), nonExt (non-extreme supported)`.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #' @examples
@@ -160,15 +160,15 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #'
 #' @param pts A data frame with points to add (a column for each objective).
 #' @param nDSet A data frame with current non-dominated set (NULL is none yet). Column names of the
-#'   p objectives must be z1, ..., zp.
+#'   p objectives must be `z1, ..., zp`.
 #' @param crit A max or min vector. If length one assume all objectives are optimized in the same
 #'   direction.
 #' @param keepDom Keep dominated points in output.
 #' @param dubND Duplicated non-dominated points are classified as non-dominated.
-#' @param classify Non-dominated points are classified into supported extreme (se), supported
-#'   non-extreme (sne) and unsupported (us)
+#' @param classify Non-dominated points are classified into supported extreme (`se`), supported
+#'   non-extreme (`sne`) and unsupported (`us`)
 #'
-#' @return A data frame with a column for each objective (`z` columns) and nd (non-dominated).
+#' @return A data frame with a column for each objective (`z` columns) and `nd` (non-dominated).
 #'   Moreover if `classify` then columns `se`, `sne`, `us` and `cls`.
 #'
 #' @author Lars Relund \email{lars@@relund.dk}
@@ -422,8 +422,8 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
 #' @param crit Either max or min.
 #' @param keepDom Keep dominated points.
 #'
-#' @return A data frame with columns z1 and z2, nD (non-dominated),
-#'         ext (extreme), nonExt (non-extreme supported).
+#' @return A data frame with columns z1 and z2, `nD` (non-dominated),
+#'         `ext` (extreme), `nonExt` (non-extreme supported).
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
 #'
@@ -971,6 +971,7 @@ genNDSet <-
 #' @note It is assumed that `pts` are nondominated.
 #'
 #' @return The ND set with classification columns.
+#' @importFrom rlang .data
 #' @export
 #'
 #' @examples
@@ -1053,7 +1054,7 @@ classifyNDSet <- function(pts, direction = 1) {
    set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of duplicates
    set1 <- set1 %>%
       dplyr::filter(!is.na(.data$id.y)) %>%
-      dplyr::mutate(id.x = .data$id.y) %>% dplyr::select(z1:id.x)
+      dplyr::mutate(id.x = .data$id.y) %>% dplyr::select(.data$z1:.data$id.x)
    set <- bind_rows(set, pts[idx,]) %>% arrange(id) %>% select(-id)
    if (nrow(set1) > 0) for (i in 1:nrow(set1)) set[set1$id.x[i],] <- set1[i, 1:(p+4)]
    return(set)

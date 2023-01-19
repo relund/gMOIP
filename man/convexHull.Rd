@@ -25,7 +25,7 @@ convexHull(
 plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
 i'th column of \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 
-\item{tol}{Tolerance on std. dev. if using PCA.}
+\item{tol}{Tolerance on standard deviation if using PCA.}
 
 \item{m}{Minimum values of the bounding box.}
 

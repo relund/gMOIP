@@ -24,13 +24,13 @@ minus a value greater than on equal zero.}
 }
 \value{
 The points merged with the points on the bounding box. The column \code{pt} equals 1 if
-points from pts and zero otherwise.
+points from \code{pts} and zero otherwise.
 }
 \description{
 Add all points on the bounding box hit by the rays.
 }
 \note{
-Assume that \code{pts} has been checked using \link{.checkPts}.
+Assume that \code{pts} has been checked using \code{\link[=.checkPts]{.checkPts()}}.
 }
 \examples{
 pts <- genNDSet(3,10)[,1:3]

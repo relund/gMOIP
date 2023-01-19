@@ -18,13 +18,13 @@ loadView(
 
 \item{v}{The view matrix.}
 
-\item{clear}{Call \link[rgl:scene]{rgl::clear3d}.}
+\item{clear}{Call \code{\link[rgl:scene]{rgl::clear3d()}}.}
 
-\item{close}{Call \link[rgl:open3d]{rgl::close3d}.}
+\item{close}{Call \code{\link[rgl:open3d]{rgl::close3d()}}.}
 
 \item{zoom}{Zoom level.}
 
-\item{...}{Additional parameters passed to \link[rgl:viewpoint]{rgl::view3d}.}
+\item{...}{Additional parameters passed to \code{\link[rgl:viewpoint]{rgl::view3d()}}.}
 }
 \description{
 Help function to load the view angle for the RGL 3D plot from a file or matrix

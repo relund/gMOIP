@@ -2,14 +2,14 @@
 % Please edit documentation in R/plot.R
 \name{getTexture}
 \alias{getTexture}
-\title{Save a pch symbol as a temporary file.}
+\title{Save a point symbol as a temporary file.}
 \usage{
 getTexture(pch = 16, cex = 10, ...)
 }
 \arguments{
-\item{pch}{Pch number/symbol.}
+\item{pch}{Point number/symbol.}
 
-\item{cex}{Pch size}
+\item{cex}{Point size}
 
 \item{...}{Further arguments passed to \code{plot}.}
 }
@@ -17,7 +17,7 @@ getTexture(pch = 16, cex = 10, ...)
 The file name.
 }
 \description{
-Save a pch symbol as a temporary file.
+Save a point symbol as a temporary file.
 }
 \examples{
 \donttest{

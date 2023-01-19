@@ -1,6 +1,11 @@
+# gMOIP 1.4.8
+
+* Change `rgl.*` to `*3d` functions.
+* Fixed bugs due to dependent package updates.
+
 # gMOIP 1.4.7
 
-*Fixed errors about pandoc missing and added webshot2.
+* Fixed errors about pandoc missing and added `webshot2`.
 
 # gMOIP 1.4.6
 
@@ -30,7 +35,7 @@
 # gMOIP 1.3.0
 
 * Added support for 3D plots using RGL.
-* Added highlevel functions for plotting.
+* Added high level functions for plotting.
 * Can plot the criterion space for bi-objective models.
 
 # gMOIP 1.2.0

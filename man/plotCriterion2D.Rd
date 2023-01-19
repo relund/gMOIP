@@ -31,7 +31,7 @@ entry k is 'i' variable \eqn{k} must be integer and if 'c' continuous.}
 \item{nonneg}{A boolean vector of same length as number of variables. If
 entry k is TRUE then variable k must be non-negative.}
 
-\item{crit}{Either max or min (only used if add the iso profit line).}
+\item{crit}{Either max or min (only used if add the iso-profit line).}
 
 \item{addTriangles}{Add search triangles defined by the non-dominated extreme
 points.}
@@ -42,11 +42,11 @@ points.}
 
 \item{latex}{If true make latex math labels for TikZ.}
 
-\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
-'coord' add coordinates to the points. Otherwise number all points from one.}
+\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If equal
+\code{coord} add coordinates to the points. Otherwise number all points from one.}
 }
 \value{
-The ggplot2 object.
+The \code{ggplot} object.
 }
 \description{
 Create a plot of the criterion space of a bi-objective problem

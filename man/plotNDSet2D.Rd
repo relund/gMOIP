@@ -16,7 +16,7 @@ plotNDSet2D(
 \arguments{
 \item{points}{Data frame with non-dominated points.}
 
-\item{crit}{Either max or min (only used if add the iso profit line). A vector is currently not
+\item{crit}{Either max or min (only used if add the iso-profit line). A vector is currently not
 supported.}
 
 \item{addTriangles}{Add search triangles defined by the non-dominated extreme points.}
@@ -25,11 +25,11 @@ supported.}
 
 \item{latex}{If true make latex math labels for TikZ.}
 
-\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If
-'coord' add coordinates to the points. Otherwise number all points from one.}
+\item{labels}{If \code{NULL} don't add any labels. If 'n' no labels but show the points. If equal
+\code{coord} add coordinates to the points. Otherwise number all points from one.}
 }
 \value{
-The ggplot2 object.
+The \code{ggplot} object.
 }
 \description{
 Create a plot of a discrete non-dominated set.

@@ -17,8 +17,8 @@ addNDSet2D(pts, nDSet = NULL, crit = "max", keepDom = FALSE)
 \item{keepDom}{Keep dominated points.}
 }
 \value{
-A data frame with columns z1 and z2, nD (non-dominated),
-ext (extreme), nonExt (non-extreme supported).
+A data frame with columns z1 and z2, \code{nD} (non-dominated),
+\code{ext} (extreme), \code{nonExt} (non-extreme supported).
 }
 \description{
 Add 2D discrete points to a non-dominated set and classify them into extreme

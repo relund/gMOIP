@@ -2,16 +2,16 @@
 % Please edit documentation in R/plot.R
 \name{gMOIPTheme}
 \alias{gMOIPTheme}
-\title{ggPlot theme for the package}
+\title{The \code{ggplot} theme for the package}
 \usage{
 gMOIPTheme(...)
 }
 \arguments{
-\item{...}{Further arguments parsed to \link[ggplot2:theme]{ggplot2::theme}.}
+\item{...}{Further arguments parsed to \code{\link[ggplot2:theme]{ggplot2::theme()}}.}
 }
 \value{
 The theme object.
 }
 \description{
-ggPlot theme for the package
+The \code{ggplot} theme for the package
 }

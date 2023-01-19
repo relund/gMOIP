@@ -1,10 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
-[![CRAN\_Downloads\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gMOIP)](https://CRAN.R-project.org/package=gMOIP)
+[![CRAN_Downloads_Badge](http://cranlogs.r-pkg.org/badges/grand-total/gMOIP?color=brightgreen)](http://cranlogs.r-pkg.org/downloads/total/last-month/gMOIP)
 [![R build
 status](https://github.com/relund/gMOIP/workflows/R-CMD-check/badge.svg)](https://github.com/relund/gMOIP/actions)
 <!-- badges: end -->
@@ -24,12 +23,12 @@ points is inside/at/outside the convex hull of a set of vertices (for
 arbitrary dimension).
 
 Finally, the package also contains functions for generating
-(non-dominated) points in \(\mathbb{R}_n\) and classifying non-dominated
+(non-dominated) points in $\mathbb{R}_n$ and classifying non-dominated
 points as supported extreme, supported non-extreme and unsupported.
 
 ## Usage
 
-Consider the model \(\max\{cx | Ax \leq b\}\) (could also be minimized)
+Consider the model $\max\{cx | Ax \leq b\}$ (could also be minimized)
 with 2 variables:
 
 ``` r
@@ -39,7 +38,7 @@ coeff <- c(7.75, 10)  # coefficients c
 ```
 
 The polytope of the LP model with non-negative continuous variables
-(\(x \geq 0\)):
+($x \geq 0$):
 
 ``` r
 plotPolytope(
@@ -58,7 +57,7 @@ plotPolytope(
 
 <img src="man/figures/README-lp-1.png" width="99%" style="display: block; margin: auto;" />
 
-The polytope of the ILP model with LP faces (\(x\in \mathbb{Z}_0\)):
+The polytope of the ILP model with LP faces ($x\in \mathbb{Z}_0$):
 
 ``` r
 plotPolytope(
@@ -119,15 +118,13 @@ plotPolytope(A, b, plotOptimum = TRUE, obj = coeff, labels = "n")
 ```
 
 <center>
-
 ![](man/figures/README-3d.gif)
-
 </center>
 
-Note: interactive 3d plots cannot be displayed in a github README file,
-and static images or animated gifs are used here instead. Visit the
-[pkgdown online documentation](https://relund.github.io/gMOIP/) to view
-plots which can be manipulated in the browser.
+Note: interactive 3d plots cannot be displayed in a GitHub `README`
+file, and static images or animated gifs are used here instead. Visit
+the [*pkgdown* online documentation](https://relund.github.io/gMOIP/) to
+view plots which can be manipulated in the browser.
 
 For more examples see `example("gMOIP-package")` or
 `browseVignettes('gMOIP')`.
