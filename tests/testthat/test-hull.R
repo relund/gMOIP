@@ -10,11 +10,11 @@ test_that("Hull in 1D", {
    expect_equal(hull$hull, matrix(c(1,3), nrow=1))
 
    hull <- convexHull(pts, addRays = TRUE)
-   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull) %>% filter(pt == 1)
+   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull[1,]) %>% filter(pt == 1)
    expect_equal(set$id, c(1))
 
    hull <- convexHull(pts, addRays = TRUE, direction = -1)
-   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull) %>% filter(pt == 1)
+   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull[1,]) %>% filter(pt == 1)
    expect_equal(set$id, c(3))
 })
 
@@ -31,11 +31,11 @@ test_that("Hull in 2D", {
    expect_equal(hull$hull, matrix(c(1,2), nrow=1))
 
    hull <- convexHull(pts, addRays = TRUE)
-   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull) %>% filter(pt == 1)
+   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull[1,]) %>% filter(pt == 1)
    expect_equal(set$id, c(1))
 
    hull <- convexHull(pts, addRays = TRUE, direction = -1)
-   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull) %>% filter(pt == 1)
+   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull[1,]) %>% filter(pt == 1)
    expect_equal(set$id, c(2))
 
    pts<-matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
@@ -46,7 +46,7 @@ test_that("Hull in 2D", {
    expect_equal(hull$hull, matrix(c(1,3,2), nrow=1))
 
    hull <- convexHull(pts, addRays = TRUE)
-   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull) %>% filter(pt == 1)
+   set <- hull$pts %>% mutate(id = 1:nrow(hull$pts)) %>% slice(hull$hull[1,]) %>% filter(pt == 1)
    expect_equal(set$id, c(3))
 })
 

@@ -146,7 +146,7 @@ inHull <- function(pts, vertices, hull=NULL,
    p <- ncol(vertices)   # dimension of points
    cx <- nrow(pts)   # points to test
    d <- dimFace(vertices, dim = p)
-   if (d == 0) return(-as.integer(apply(pts, 1, FUN = function(x) abs(x - vertices[1,]) > tol)))
+   if (d == 0) return(-as.integer(apply(pts, 1, FUN = function(x) any(abs(x - vertices[1, ]) > tol))))
    if (p == 1) { #1D space - check if between max and min
       m <- min(vertices)
       M <- max(vertices)
@@ -518,10 +518,10 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
    tmp <- dplyr::filter(set, .data$vtx | .data$pt, .preserve = TRUE)
    if (nrow(set) != nrow(tmp)) {
       tmp$newId <- 1:nrow(tmp)
-      mch <- dplyr::left_join(set, tmp, by = 'oldId') %>% dplyr::select(.data$newId)
+      mch <- dplyr::left_join(set, tmp, by = 'oldId') %>% dplyr::select(newId)
       hull <- apply(hull, c(1,2), function(id) {if (is.na(id)) return(NA) else return(mch[id,1])} )
-      set <- dplyr::select(tmp, -.data$oldId, -.data$newId)
-   } else set <- dplyr::select(tmp, -.data$oldId)
+      set <- dplyr::select(tmp, -oldId, -newId)
+   } else set <- dplyr::select(tmp, -oldId)
    return(list(hull = hull, pts = set))
    stop("Cannot find the vertices!")
 }
