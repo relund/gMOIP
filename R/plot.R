@@ -1041,7 +1041,7 @@ plotRectangle3D <- function(a, b, ...) {
 #'
 #' @examples
 #' \donttest{
-#' pts0 <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
+#' pts <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
 #' pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
 #'
 #' ini3D()
@@ -1064,8 +1064,8 @@ plotRectangle3D <- function(a, b, ...) {
 #' finalize3D()
 #'
 #' ini3D()
-#' ids <- plotPolygon3D(pts, usePoints = TRUE, useShade = TRUE,
-#'               argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
+#' ids <- plotPolygon3D(pts, usePoints = TRUE, useFrame = TRUE,
+#'               argsPoints = list(texture = getTexture(pch = 16, cex = 20)))
 #' finalize3D()
 #' # pop3d(id = ids) # remove object again
 #'
@@ -1091,20 +1091,21 @@ plotRectangle3D <- function(a, b, ...) {
 #' for (i in 1:4) {
 #'   ini3D(TRUE)
 #'   plotPolygon3D(pts, usePoints = TRUE,
-#'                 argsPoints = list(texture = fname, texcoords = rbind(pts$x, pts$y)*5*i))
+#'                 argsPoints = list(texture = fname, texcoords = rbind(pts$x, pts$y, pts$z)*5*i))
 #'   finalize3D()
 #' }
 #' }
 plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FALSE,
                           useFrame = TRUE, ...) {
    args <- list(...)
+   # args <- list(argsPoints=argsPoints)
    argsShade <- mergeLists(list(color = "black", col = "grey40",
-                                    lwd = 2, alpha = 0.2, fill = TRUE,
-                                    texcoords = rbind(pts[,1], pts[,2])*10 ),
+                                    lwd = 2, alpha = 0.2, fill = TRUE),
                                args$argsShade)
    argsFrame <- mergeLists(list(color = "black", lwd = 1, alpha = 0.8), args$argsFrame)
-   argsPoints <- mergeLists(list(color = "white", specular = "black", alpha = 0.5,
-                                 texcoords = rbind(pts[,1], pts[,2])*10 ),
+   argsPoints <- mergeLists(list(color = "grey", specular = "black", alpha = 0.5,
+                                 texcoords = rbind(pts[,1], pts[,2], pts[,3])*25
+                                 ),
                            args$argsPoints)
    argsLines <- mergeLists(list(color = "black", lwd = 1, alpha = 0.4, lines = 50, back = 'lines',
                                 front = 'lines', lit = FALSE),
@@ -1135,8 +1136,8 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
       if (nrow(pts) > 3)
          poly <- do.call(rgl::polygon3d, args = c(list(pts, plot = FALSE), argsPoints))
       if (nrow(pts) == 3)
-         poly <- tmesh3d(rbind(pts[,1], pts[,2], pts[,3], 1), indices = 1:3)
-      poly$texcoords <- argsPoints$texcoords
+         poly <- mesh3d(vertices = rbind(pts[,1], pts[,2], pts[,3], 1), triangles = 1:3)
+      # poly$texcoords <- argsPoints$texcoords
       ids <- c(ids, do.call(rgl::shade3d, args = c(list(poly), argsPoints)))
    }
    if (useLines) {
@@ -1811,7 +1812,7 @@ finalize3D <- function(...){
 
    do.call(rgl::axes3d, args = argsAxes3d)
    do.call(rgl::title3d, args = argsTitle3d)
-   rgl.bringtotop()
+   rgl::rgl.bringtotop()
    return(invisible(NULL))
 }
 
@@ -1825,7 +1826,7 @@ finalize3D <- function(...){
 #' @param dpi Dpi of the png. Not used if `width` or `height` are specified.
 #' @param fontsize Front size used in the LaTeX document.
 #' @param calcM Estimate 1 em in pixels in the resulting png.
-#' @param crop Call [pdfcrop()].
+#' @param crop Call commandline program `pdfcrop` (must be installed).
 #'
 #' @return The filename of the png or a list if `calcM = TRUE`.
 #' @export

@@ -45,7 +45,7 @@ Plot a polygon.
 }
 \examples{
 \donttest{
-pts0 <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
+pts <- data.frame(x = c(1,0,0,0.4), y = c(0,1,0,0.3), z = c(0,0,1,0.3))
 pts <- data.frame(x = c(1,0,0), y = c(0,1,0), z = c(0,0,1))
 
 ini3D()
@@ -68,8 +68,8 @@ plotPolygon3D(pts, useFrame = TRUE, useLines = TRUE, useShade = TRUE,
 finalize3D()
 
 ini3D()
-ids <- plotPolygon3D(pts, usePoints = TRUE, useShade = TRUE,
-              argsPoints = list(color = "blue", texture = getTexture(pch = 16, cex = 20)))
+ids <- plotPolygon3D(pts, usePoints = TRUE, useFrame = TRUE,
+              argsPoints = list(texture = getTexture(pch = 16, cex = 20)))
 finalize3D()
 # pop3d(id = ids) # remove object again
 
@@ -95,7 +95,7 @@ fname <- getTexture(pch = 16, cex = 20)
 for (i in 1:4) {
   ini3D(TRUE)
   plotPolygon3D(pts, usePoints = TRUE,
-                argsPoints = list(texture = fname, texcoords = rbind(pts$x, pts$y)*5*i))
+                argsPoints = list(texture = fname, texcoords = rbind(pts$x, pts$y, pts$z)*5*i))
   finalize3D()
 }
 }
