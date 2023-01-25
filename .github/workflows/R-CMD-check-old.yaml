@@ -6,13 +6,16 @@
 # https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
 on:
   push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+    branches-ignore:
+      - '**'
+
+  #   branches:
+  #     - main
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - master
 
 name: R-CMD-check
 
@@ -39,20 +42,20 @@ jobs:
       DISPLAY: 99 # for rgl
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install XQuartz on macOS
         if: runner.os == 'macOS'
         run: brew install --cask xquartz
 
-      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r@v2
         # with:
         #   r-version: ${{ matrix.config.r }}
         #   http-user-agent: ${{ matrix.config.http-user-agent }}
 
-      - uses: r-lib/actions/setup-pandoc@v1
+      - uses: r-lib/actions/setup-pandoc@v2
 
-      - uses: r-lib/actions/setup-tinytex@v1
+      - uses: r-lib/actions/setup-tinytex@v2
       - run: tlmgr --version
 
       - name: Query dependencies
