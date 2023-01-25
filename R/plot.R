@@ -1826,7 +1826,7 @@ finalize3D <- function(...){
 #' @param dpi Dpi of the png. Not used if `width` or `height` are specified.
 #' @param fontsize Front size used in the LaTeX document.
 #' @param calcM Estimate 1 em in pixels in the resulting png.
-#' @param crop Call commandline program `pdfcrop` (must be installed).
+#' @param crop Call command line program `pdfcrop` (must be installed).
 #'
 #' @return The filename of the png or a list if `calcM = TRUE`.
 #' @export

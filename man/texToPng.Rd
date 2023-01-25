@@ -30,7 +30,7 @@ texToPng(
 
 \item{calcM}{Estimate 1 em in pixels in the resulting png.}
 
-\item{crop}{Call commandline program \code{pdfcrop} (must be installed).}
+\item{crop}{Call command line program \code{pdfcrop} (must be installed).}
 }
 \value{
 The filename of the png or a list if \code{calcM = TRUE}.
