@@ -17,3 +17,4 @@ A list with ranges.
 \description{
 Get ranges of the bounding box margins
 }
+\keyword{internal}

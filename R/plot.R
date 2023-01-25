@@ -1884,6 +1884,7 @@ texToPng <- function(tex, width = NULL, height = NULL, dpi = 72, viewPng = FALSE
 #' @param ... Arguments parsed on to `texToPng`.
 #'
 #' @return The width and size of the png.
+#' @keywords internal
 .sizeM <- function(...) {
    f <- texToPng("M", ...)
    return(pngSize(f))
@@ -1980,6 +1981,7 @@ plotTitleTeX3D <- function (main = NULL, sub = NULL, xlab = NULL, ylab = NULL,
 #' @param ranges The bounding box.
 #'
 #' @return A list with ranges.
+#' @keywords internal
 .getRanges <- function (expand = 1.03, ranges = par3d("bbox"))
 {
    ranges <- list(xlim = ranges[1:2], ylim = ranges[3:4], zlim = ranges[5:6])

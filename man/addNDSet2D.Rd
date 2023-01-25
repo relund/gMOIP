@@ -34,3 +34,4 @@ addNDSet2D(pts, nDSet, crit = "min")
 \author{
 Lars Relund \email{lars@relund.dk}
 }
+\keyword{internal}

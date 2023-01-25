@@ -426,6 +426,7 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
 #'         `ext` (extreme), `nonExt` (non-extreme supported).
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4))

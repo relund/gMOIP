@@ -15,3 +15,4 @@ The width and size of the png.
 \description{
 Estimate 1 em in pixels in the resulting png.
 }
+\keyword{internal}
