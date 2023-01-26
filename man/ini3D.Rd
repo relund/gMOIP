@@ -4,7 +4,7 @@
 \alias{ini3D}
 \title{Initialize the RGL window.}
 \usage{
-ini3D(new = FALSE, clear = TRUE, ...)
+ini3D(new = TRUE, clear = FALSE, ...)
 }
 \arguments{
 \item{new}{A new window is opened (otherwise the current is cleared).}

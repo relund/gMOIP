@@ -149,6 +149,9 @@ plotHull2D <- function(pts,
 
 #' Plot the polytope (bounded convex set) of a linear mathematical program
 #'
+#' This is a wrapper function calling [plotPolytope2D()] (2D graphics) and
+#' [plotPolytope3D()] (3D graphics).
+#'
 #' @param A The constraint matrix.
 #' @param b Right hand side.
 #' @param obj A vector with objective coefficients.
@@ -272,6 +275,9 @@ plotPolytope <- function(A,
 #'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
 #'
 #' @return A `ggplot` object.
+#' @note In general use [plotPolytope()] instead of this function. The feasible region defined by the constraints must be bounded otherwise you may see
+#'   strange results.
+#' @seealso [plotPolytope()] for examples.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import ggplot2
 plotPolytope2D <-
@@ -434,9 +440,9 @@ plotPolytope2D <-
 #'   * `argsOptimum`: A list of arguments for RGL functions:
 #'      - `points3d`: A list of arguments for [`rgl::points3d`].
 #'
-#' @note The feasible region defined by the constraints must be bounded otherwise you may see
+#' @note In general use [plotPolytope()] instead of this function. The feasible region defined by the constraints must be bounded otherwise you may see
 #'   strange results.
-#'
+#' @seealso [plotPolytope()] for examples.
 #' @return A RGL window with 3D plot.
 #' @author Lars Relund \email{lars@@relund.dk}
 #' @import rgl
@@ -543,6 +549,7 @@ plotPolytope3D <-
 
       do.call(axes3d, args = argsAxes3d)
       do.call(title3d, args = argsTitle3d)
+      rgl::highlevel()
    }
 
 
@@ -1155,6 +1162,7 @@ plotPolygon3D <- function(pts, useShade = TRUE, useLines = FALSE, usePoints = FA
       z <- predict(lm(z ~ x + y, data = pts), newdata = data.frame(x=xy[,1], y=xy[,2]))
       ids <- c(ids, do.call(rgl::persp3d, args = c(list(x, y, z, add = TRUE), argsLines)))
    }
+   print(rgl::highlevel())
    return(invisible(ids))
 }
 
@@ -1676,7 +1684,7 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = TRUE, useLi
    ids <- NULL
    if (!is.null(point)) offset <- -sum(normal * point)
    if (useShade) {
-      ids <- c(ids, do.call(rgl::planes3d, args = c(list(normal, d = offset), argsPlanes3d) ))
+      ids <- c(ids, do.call(rgl::planes3d, args = c(list(a = normal, d = offset), argsPlanes3d) ))
    }
    # else use points or lines
    if (!rgl::cur3d()) stop("Option useLines or usePoints need an open rgl window!")
@@ -1717,6 +1725,17 @@ plotPlane3D <- function(normal, point = NULL, offset = 0, useShade = TRUE, useLi
 #'
 #' @return The theme object.
 #' @export
+#'
+#' @examples
+#' pts<-matrix(c(1,1), ncol = 2, byrow = TRUE)
+#' plotHull2D(pts)
+#' pts1<-matrix(c(2,2, 3,3), ncol = 2, byrow = TRUE)
+#' ggplot() +
+#'   plotHull2D(pts2, drawPoints = TRUE, addText = "coord", drawPlot = FALSE) +
+#'   plotHull2D(pts1, drawPoints = TRUE, drawPlot = FALSE) +
+#'   gMOIPTheme() +
+#'   xlab(expression(x[1])) +
+#'   ylab(expression(x[2]))
 gMOIPTheme <- function(...) {
    return(
       theme_bw() +
@@ -1761,8 +1780,9 @@ gMOIPTheme <- function(...) {
 #' plotPoints3D(pts)
 #' finalize3D()
 #' }
-ini3D <- function(new = FALSE, clear = TRUE, ...){
+ini3D <- function(new = TRUE, clear = FALSE, ...){
    args <- list(...)
+   # args <- list(argsPlot3d = list(xlim = c(0,6), ylim = c(0,6), zlim = c(0,6)))
    argsPlot3d <-
       mergeLists(list(
          xlab = '',
@@ -1774,10 +1794,10 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
    argsAspect3d <- mergeLists(list(x = "iso"), args$argsAspect3d)
 
    if (new) rgl::open3d()
-   rgl::highlevel()
    if (clear) rgl::clear3d()
    do.call(rgl::plot3d, args = c(list(x = c(1,1), y = c(1,1), z = c(1,1), type = 'n'), argsPlot3d))
    do.call(rgl::aspect3d, args = argsAspect3d)
+   rgl::highlevel()
    return(invisible(NULL))
 }
 
@@ -1789,7 +1809,7 @@ ini3D <- function(new = FALSE, clear = TRUE, ...){
 #'   * `argsAxes3d`: A list of arguments for [`rgl::axes3d`].
 #'   * `argsTitle3d`: A list of arguments for [`rgl::title3d`][rgl::axes3d].
 #'
-#' @return NULL (invisible).
+#' @return The RGL object (using [rgl::highlevel()]).
 #' @export
 #'
 #' @examples
@@ -1812,8 +1832,7 @@ finalize3D <- function(...){
 
    do.call(rgl::axes3d, args = argsAxes3d)
    do.call(rgl::title3d, args = argsTitle3d)
-   rgl::rgl.bringtotop()
-   return(invisible(NULL))
+   rgl::highlevel()
 }
 
 

@@ -15,7 +15,7 @@ lists. Currently the following arguments are supported:
 }}
 }
 \value{
-NULL (invisible).
+The RGL object (using \code{\link[rgl:rglIds]{rgl::highlevel()}}).
 }
 \description{
 Finalize the RGL window.

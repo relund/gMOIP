@@ -182,3 +182,5 @@ browseVignettes('gMOIP')
 example("gMOIP-package")
 ```
 
+The package is highly dependent on the `{rgl}` package for plotting 3D graphics. If your build of `{rgl}` does not include OpenGL functions, use `rgl::rglwidget()` to display results, e.g. via `options(rgl.printRglwidget = TRUE)`.
+

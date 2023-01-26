@@ -83,8 +83,11 @@ A RGL window with 3D plot.
 Plot the polytope (bounded convex set) of a linear mathematical program
 }
 \note{
-The feasible region defined by the constraints must be bounded otherwise you may see
+In general use \code{\link[=plotPolytope]{plotPolytope()}} instead of this function. The feasible region defined by the constraints must be bounded otherwise you may see
 strange results.
+}
+\seealso{
+\code{\link[=plotPolytope]{plotPolytope()}} for examples.
 }
 \author{
 Lars Relund \email{lars@relund.dk}

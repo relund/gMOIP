@@ -1,3 +1,6 @@
+url: http://relund.github.io/gMOIP/
+template:
+  bootstrap: 5
 reference:
 - title: 2D graphics
 - contents:

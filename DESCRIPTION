@@ -51,5 +51,4 @@ Suggests:
     pdftools,
     testthat (>= 2.1.0),
     webshot2
-Additional_repositories: https://dmurdoch.github.io/drat
 VignetteBuilder: knitr

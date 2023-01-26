@@ -80,6 +80,13 @@ A \code{ggplot} object.
 \description{
 Plot the polytope (bounded convex set) of a linear mathematical program
 }
+\note{
+In general use \code{\link[=plotPolytope]{plotPolytope()}} instead of this function. The feasible region defined by the constraints must be bounded otherwise you may see
+strange results.
+}
+\seealso{
+\code{\link[=plotPolytope]{plotPolytope()}} for examples.
+}
 \author{
 Lars Relund \email{lars@relund.dk}
 }

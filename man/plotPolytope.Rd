@@ -102,7 +102,8 @@ lists. Currently the following arguments are supported:
 If 2D a \code{ggplot} object. If 3D a RGL window with the 3D plot.
 }
 \description{
-Plot the polytope (bounded convex set) of a linear mathematical program
+This is a wrapper function calling \code{\link[=plotPolytope2D]{plotPolytope2D()}} (2D graphics) and
+\code{\link[=plotPolytope3D]{plotPolytope3D()}} (3D graphics).
 }
 \note{
 The feasible region defined by the constraints must be bounded (i.e. no extreme rays)
@@ -311,8 +312,8 @@ plotPolytope(
 
 
 #### 3D examples ####
-# Ex 1
 \donttest{
+# Ex 1
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)
