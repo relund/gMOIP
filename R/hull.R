@@ -378,8 +378,6 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
 #'   facet in the hull and \code{pts} equal the input points (and dummy points) and columns:
 #'   \code{pt}, true if a point in the original input; false if a dummy point (a point on a ray).
 #'   \code{vtx}, TRUE if a vertex in the hull.
-#' @importFrom rlang .data
-#' @export
 #'
 #' @examples
 #' ## 1D
@@ -428,6 +426,9 @@ addRays <- function(pts, m = apply(pts,2,min)-5, M = apply(pts,2,max)+5, directi
 #' plotHull3D(pts, addRays = TRUE)
 #' convexHull(pts, addRays = TRUE)
 #' finalize3D()
+#'
+#' @importFrom rlang .data
+#' @export
 convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
                        tol = mean(mean(abs(pts)))*sqrt(.Machine$double.eps)*2,
                        m = apply(pts,2,min)-5, M = apply(pts,2,max)+5) {
@@ -519,10 +520,10 @@ convexHull <- function(pts, addRays = FALSE, useRGLBBox = FALSE, direction = 1,
    tmp <- dplyr::filter(set, .data$vtx | .data$pt, .preserve = TRUE)
    if (nrow(set) != nrow(tmp)) {
       tmp$newId <- 1:nrow(tmp)
-      mch <- dplyr::left_join(set, tmp, by = 'oldId') %>% dplyr::select(.data$newId)
+      mch <- dplyr::left_join(set, tmp, by = 'oldId') %>% dplyr::select("newId")
       hull <- apply(hull, c(1,2), function(id) {if (is.na(id)) return(NA) else return(mch[id,1])} )
-      set <- dplyr::select(tmp, -.data$oldId, -.data$newId)
-   } else set <- dplyr::select(tmp, -.data$oldId)
+      set <- dplyr::select(tmp, -"oldId", -"newId")
+   } else set <- dplyr::select(tmp, -"oldId")
    return(list(hull = hull, pts = set))
    stop("Cannot find the vertices!")
 }

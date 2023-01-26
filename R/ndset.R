@@ -1055,8 +1055,8 @@ classifyNDSet <- function(pts, direction = 1) {
    set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of duplicates
    set1 <- set1 %>%
       dplyr::filter(!is.na(.data$id.y)) %>%
-      dplyr::mutate(id.x = .data$id.y) %>% dplyr::select(.data$z1:.data$id.x)
-   set <- bind_rows(set, pts[idx,]) %>% arrange(id) %>% select(-id)
+      dplyr::mutate(id.x = .data$id.y) %>% dplyr::select("z1":"id.x")
+   set <- dplyr::bind_rows(set, pts[idx,]) %>% dplyr::arrange(id) %>% dplyr::select(-id)
    if (nrow(set1) > 0) for (i in 1:nrow(set1)) set[set1$id.x[i],] <- set1[i, 1:(p+4)]
    return(set)
 }
