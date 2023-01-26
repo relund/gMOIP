@@ -16,13 +16,14 @@ The theme object.
 The \code{ggplot} theme for the package
 }
 \examples{
-pts<-matrix(c(1,1), ncol = 2, byrow = TRUE)
+pts <- matrix(c(1,1), ncol = 2, byrow = TRUE)
 plotHull2D(pts)
-pts1<-matrix(c(2,2, 3,3), ncol = 2, byrow = TRUE)
-ggplot() +
+pts1 <- matrix(c(2,2, 3,3), ncol = 2, byrow = TRUE)
+pts2 <- matrix(c(1,1, 2,2, 0,1), ncol = 2, byrow = TRUE)
+ggplot2::ggplot() +
   plotHull2D(pts2, drawPoints = TRUE, addText = "coord", drawPlot = FALSE) +
   plotHull2D(pts1, drawPoints = TRUE, drawPlot = FALSE) +
   gMOIPTheme() +
-  xlab(expression(x[1])) +
-  ylab(expression(x[2]))
+  ggplot2::xlab(expression(x[1])) +
+  ggplot2::ylab(expression(x[2]))
 }
