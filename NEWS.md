@@ -1,3 +1,7 @@
+# gMOIP 1.4.9
+
+* Remove tidyverse dependence and instead depend on the packages in the tidyverse that are actually used.
+
 # gMOIP 1.4.8
 
 * Change `rgl.*` to `*3d` functions.
