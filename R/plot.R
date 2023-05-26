@@ -147,7 +147,7 @@ plotHull2D <- function(pts,
 
 
 
-#' Plot the polytope (bounded convex set) of a linear mathematical program
+#' Plot the polytope (bounded convex set) of a linear mathematical program (Ax <= b)
 #'
 #' This is a wrapper function calling [plotPolytope2D()] (2D graphics) and
 #' [plotPolytope3D()] (3D graphics).
@@ -317,7 +317,8 @@ plotPolytope2D <-
    if (!latex) p <- p + xlab(expression(x[1])) + ylab(expression(x[2]))
 
    if (plotFaces) {
-      cPoints = cornerPoints(A, b, faces, nonneg)
+      cPoints <- cornerPoints(A, b, faces, nonneg)
+      cPoints <- unique(cPoints)
       p <- p +
          do.call(plotHull2D, args = c(list(cPoints, drawPlot = FALSE), argsFaces))
    }
@@ -560,6 +561,62 @@ plotPolytope3D <-
 mergeLists <- function (a,b) {
    c(a[setdiff(names(a), names(b))], b)
 }
+
+
+#' Plot the lines of a linear mathematical program (Ax = b)
+#'
+#' @param A The constraint matrix.
+#' @param b Right hand side.
+#' @param nonneg A boolean vector of same length as number of variables. If
+#'   entry k is TRUE then variable k must be non-negative and the line is plotted too.
+#' @param latex If \code{True} make latex math labels for TikZ.
+#' @param ... Further arguments passed on the the `ggplot` plotting functions. This must be done as
+#'   lists. Currently the following arguments are supported:
+#'
+#'   * `argsTheme`: A list of arguments for [`ggplot2::theme`].
+#'
+#' @return A `ggplot` object.
+#' @note In general you will properly use [plotPolytope()] instead of this function.
+#' @seealso [plotPolytope()].
+#' @author Lars Relund \email{lars@@relund.dk}
+#' @import ggplot2
+plotLines2D <-
+   function(A,
+            b,
+            nonneg = rep(TRUE, ncol(A)),
+            latex = FALSE,
+            ...)
+{
+      args <- list(...)
+      argsTheme <- mergeLists(list(), args$argsTheme)
+
+      # Create solution plot
+      p <- ggplot() #+ coord_fixed(ratio = 1)
+      if (latex) p <- p + xlab("$x_1$") + ylab("$x_2$")
+      if (!latex) p <- p + xlab(expression(x[1])) + ylab(expression(x[2]))
+
+      for (i in 1:nrow(A)) {
+         if (A[i,1] == 0) {
+            p <- p + geom_hline(yintercept = b[i])
+            next
+         }
+         if (A[i,2] == 0) {
+            p <- p + geom_vline(xintercept = b[i])
+            next
+         }
+         p <- p + geom_abline(slope = -A[i,1]/A[i,2], intercept = b[i]/A[i,2])
+      }
+      if (nonneg[1]) p <- p + geom_vline(xintercept = 0)
+      if (nonneg[2]) p <- p + geom_hline(yintercept = 0)
+
+      l <- cornerPoints(A, b, nonneg = nonneg)
+      p <- p + xlim(min(l[,1]), max(l[,1])) +
+         ylim(min(l[,2]), max(l[,2])) +
+         do.call(gMOIPTheme, args = c(list(), argsTheme))
+      return(p)
+}
+
+
 
 
 #' Create a plot of the criterion space of a bi-objective problem
