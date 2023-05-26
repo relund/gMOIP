@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plotPolytope}
 \alias{plotPolytope}
-\title{Plot the polytope (bounded convex set) of a linear mathematical program}
+\title{Plot the polytope (bounded convex set) of a linear mathematical program (Ax <= b)}
 \usage{
 plotPolytope(
   A,
