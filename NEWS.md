@@ -1,3 +1,8 @@
+# gMOIP 1.5.0
+
+* Fix bug concerning degeneration.
+* Added function `plotLines2D` for plotting the lines to Ax = b. 
+
 # gMOIP 1.4.9
 
 * Remove tidyverse dependence and instead depend on the packages in the tidyverse that are actually used.

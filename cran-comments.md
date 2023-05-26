@@ -15,7 +15,7 @@ R CMD check results
 
 ## Comments submission
 
-* Remove tidyverse dependence and instead depend on the packages in the tidyverse that are actually used.
+* Fixed a bug and added a new function.
 
 
 ## Downstream dependencies
