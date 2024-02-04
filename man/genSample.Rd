@@ -10,6 +10,7 @@ genSample(
   range = c(1, 100),
   random = FALSE,
   sphere = TRUE,
+  planes = FALSE,
   box = FALSE,
   ...
 )
@@ -25,11 +26,20 @@ genSample(
 
 \item{sphere}{Generate points on a sphere.}
 
+\item{planes}{Generate points between two planes.}
+
 \item{box}{Generate points in boxes.}
 
 \item{...}{Further arguments passed on to the method for generating points. This must be done as
 lists (see examples). Currently the following arguments are supported:
 \itemize{
+\item \code{argsPlanes}: A list of arguments for generating points between planes and in the cube
+defined by the range:
+\itemize{
+\item \code{center}: A point between the planes (default \code{rowMeans(range)}).
+\item \code{planeU}: The upper plane (default \code{c(rep(1, p), -1.2*sum(center))}).
+\item \code{planeL}: The lower plane (default \code{c(rep(1, p), -0.8*sum(center))}).
+}
 \item \code{argsSphere}: A list of arguments for generating points on a sphere:
 \itemize{
 \item \code{radius}: The radius of the sphere.
@@ -94,6 +104,37 @@ range <- c(1,100)
 pts <- genSample(p, 1000, range = range, random = TRUE)
 head(pts)
 Rfast::colMinsMaxs(as.matrix(pts))
+
+
+### Using planes
+## p = 2
+range <- matrix(c(1,100, 50,100), ncol = 2, byrow = TRUE )
+center <- rowMeans(range)
+planeU <- c(rep(1, 2), -1.5*sum(rowMeans(range)))
+planeL <- c(rep(1, 2), -0.7*sum(rowMeans(range)))
+pts <- genSample(2, 1000, range = range, planes = TRUE,
+   argsPlanes = list(center = center, planeU = planeU, planeL = planeL))
+head(pts)
+Rfast::colMinsMaxs(as.matrix(pts))
+plot(pts)
+
+\donttest{
+## p = 3
+range <- matrix(c(1,100, 50,100, 10, 50), ncol = 2, byrow = TRUE )
+center <- rowMeans(range)
+planeU <- c(rep(1, 3), -1.2*sum(rowMeans(range)))
+planeL <- c(rep(1, 3), -0.6*sum(rowMeans(range)))
+pts <- genSample(3, 1000, range = range, planes = TRUE,
+   argsPlanes = list(center = center, planeU = planeU, planeL = planeL))
+head(pts)
+Rfast::colMinsMaxs(as.matrix(pts))
+ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
+plotPoints3D(pts)
+rgl::planes3d(planeL[1], planeL[2], planeL[3], planeL[4], alpha = 0.5)
+rgl::planes3d(planeU[1], planeU[2], planeU[3], planeU[4], alpha = 0.5)
+finalize3D()
+}
+
 
 ### Using sphere
 ## p = 2

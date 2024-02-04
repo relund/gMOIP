@@ -159,14 +159,14 @@ criterionPoints<-function(pts, obj, crit, labels = "coord") {
 #' supported, non-supported.
 #'
 #' @param pts A data frame with points to add (a column for each objective).
-#' @param nDSet A data frame with current non-dominated set (NULL is none yet). Column names of the
+#' @param nDSet A data frame with current non-dominated set (NULL if none yet). Column names of the
 #'   p objectives must be `z1, ..., zp`.
 #' @param crit A max or min vector. If length one assume all objectives are optimized in the same
 #'   direction.
 #' @param keepDom Keep dominated points in output.
 #' @param dubND Duplicated non-dominated points are classified as non-dominated.
 #' @param classify Non-dominated points are classified into supported extreme (`se`), supported
-#'   non-extreme (`sne`) and unsupported (`us`)
+#'   non-extreme (`sne`) and unsupported (`us`).
 #'
 #' @return A data frame with a column for each objective (`z` columns) and `nd` (non-dominated).
 #'   Moreover if `classify` then columns `se`, `sne`, `us` and `cls`.
@@ -222,60 +222,37 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
       pts <- pts[-1,]
    }
    set <- bind_rows(nDSet, pts)
+   idx <- eaf::is_nondominated(set, maximise = (direction == -1), keep_weakly = dubND)
 
-   # new implem
-   pf <- dplyr::if_else(direction == 1, "quo(", "quo(desc(")
-   sf <- dplyr::if_else(direction == 1, ")", "))")
-   args <- paste0("list(", paste0(pf, colnames(nDSet), sf, collapse = ", "), ")")
-   args <- eval(parse(text=args))
-   set <- set %>% dplyr::arrange(!!!args)  # sort based on direction, i.e. i<j => j cannot dom i
-   set$nd <- TRUE
-   if (dubND) {
-      for (i in 1:(nrow(set)-1)) {
-         for (j in (i+1):nrow(set)) {
-            if (set$nd[j]) { # must check if i dom j and not eq
-               if (all(set[i, 1:p]*direction <= set[j, 1:p]*direction)) { # i may dom j
-                  if (!(all(set[i, 1:p]*direction == set[j, 1:p]*direction))) set$nd[j] <- FALSE
-               }
-            }
-         }
-      }
-   } else {
-      for (i in 1:(nrow(set)-1)) {
-         for (j in (i+1):nrow(set)) {
-            if (set$nd[j]) { # must check if i dom j
-               if (all(set[i, 1:p]*direction <= set[j, 1:p]*direction)) set$nd[j] <- FALSE
-            }
-         }
-      }
-   }
-
-   # old implem
-   # idx <- (nrow(nDSet)+1):nrow(set)
+   # pf <- dplyr::if_else(direction == 1, "quo(", "quo(desc(")
+   # sf <- dplyr::if_else(direction == 1, ")", "))")
+   # args <- paste0("list(", paste0(pf, colnames(nDSet), sf, collapse = ", "), ")")
+   # args <- eval(parse(text=args))
+   # set <- set %>% dplyr::arrange(!!!args)  # sort based on direction, i.e. i<j => j cannot dom i
    # set$nd <- TRUE
    # if (dubND) {
-   #    for (i in idx) {
-   #       for (j in 1:(i-1)) {
-   #          if (!set$nd[j]) next  # if j dom don't check against i
-   #          less <- set[j,1:p]*direction < set[i,1:p]*direction
-   #          eq <- set[j,1:p]*direction == set[i,1:p]*direction
-   #          if (all(less | eq) & !all(eq)) {set$nd[i] <- FALSE; break} # j strict dom i
-   #          if (all(!less | eq) & !all(eq)) set$nd[j] <- FALSE # i strict dom j
+   #    for (i in 1:(nrow(set)-1)) {
+   #       for (j in (i+1):nrow(set)) {
+   #          if (set$nd[j]) { # must check if i dom j and not eq
+   #             if (all(set[i, 1:p]*direction <= set[j, 1:p]*direction)) { # i may dom j
+   #                if (!(all(set[i, 1:p]*direction == set[j, 1:p]*direction))) set$nd[j] <- FALSE
+   #             }
+   #          }
    #       }
    #    }
    # } else {
-   #    for (i in idx) {
-   #       for (j in 1:(i-1)) {
-   #          if (!set$nd[j]) next  # if j dom don't check against i
-   #          less <- set[j,1:p]*direction < set[i,1:p]*direction
-   #          eq <- set[j,1:p]*direction == set[i,1:p]*direction
-   #          if (all(less | eq)) {set$nd[i] <- FALSE;  break} # j dom i
-   #          if (all(!less | eq) & !all(eq)) set$nd[j] <- FALSE # i strict dom j
+   #    for (i in 1:(nrow(set)-1)) {
+   #       for (j in (i+1):nrow(set)) {
+   #          if (set$nd[j]) { # must check if i dom j
+   #             if (all(set[i, 1:p]*direction <= set[j, 1:p]*direction)) set$nd[j] <- FALSE
+   #          }
    #       }
    #    }
    # }
 
-   if (!keepDom) set <- set %>% filter(.data$nd)
+   set$nd <- FALSE
+   set$nd[idx] <- TRUE
+   if (!keepDom) set <- set[idx, ]
    if (classify) {
       set1 <- classifyNDSet(set[set$nd,1:p], direction)
       set <- set %>% tibble::rownames_to_column(var = "id")
@@ -288,127 +265,6 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
       set <- set %>% select(-id)
    }
    return(set)
-
-   # iP = pts
-   # colnames(iP)[1:2] <- paste0("z", 1:2)
-   # #iP <- round(iP,10)
-   # rownames(iP) <- NULL
-   # iP <- rbind(iP, nDSet)
-   # tol <- 1e-4
-   # iP$oldRowIdx <- 1:length(iP$z1)
-   # if (crit=="max") iP <- iP[order(-iP$z2,-iP$z1),]
-   # if (crit=="min") iP <- iP[order(iP$z2,iP$z1),]
-   #
-   # # classify non dom
-   # iP$nD <- FALSE
-   # iP$nD[1] <- TRUE  # upper left point
-   # p1 <- iP$z1[1]; p2 <- iP$z2[1]  # current non dom point (due to sorting will p2 always be larger than or equal to current)
-   # for (r in 2:length(iP$z1)) { # current point under consideration
-   #    if (abs(p2 - iP$z2[r]) < tol &
-   #        abs(p1 - iP$z1[r]) < tol) {
-   #       iP$nD[r] <- TRUE
-   #       p1 <- iP$z1[r]
-   #       p2 <- iP$z2[r]
-   #       next
-   #    }
-   #    if (crit == "max" &
-   #        p2 - iP$z2[r] > tol &
-   #        iP$z1[r] > p1 + tol) {
-   #       iP$nD[r] <- TRUE
-   #       p1 <- iP$z1[r]
-   #       p2 <- iP$z2[r]
-   #       next
-   #    }
-   #    if (crit == "min" &
-   #        iP$z2[r] - p2 > tol &
-   #        iP$z1[r] < p1 - tol) {
-   #       iP$nD[r] <- TRUE
-   #       p1 <- iP$z1[r]
-   #       p2 <- iP$z2[r]
-   #       next
-   #    }
-   # }
-   # # iP$nD <- TRUE
-   # # for (i in 2:nrow(iP)) { # remove non-dom z2
-   # #    if (iP$z2[i-1]==iP$z2[i]) iP$nD[i] <- FALSE
-   # # }
-   # # if (!keepDom) iP <- iP[iP$nD,]
-   # # for (i in 2:nrow(iP)) { # remove non-dom z1
-   # #    if (iP$z1[i-1]==iP$z1[i]) iP$nD[i] <- FALSE
-   # # }
-   # if (!keepDom) iP <- iP[iP$nD,]
-   # iP$rowIdx <- 1:nrow(iP)
-   # # classify extreme supported
-   # idx <- which(iP$nD & !duplicated(cbind(iP$z1,iP$z2), MARGIN = 1) )  # remove duplicated points
-   # iP$ext <- FALSE
-   # iP$ext[idx[1]] <- TRUE
-   # iP$ext[idx[length(idx)]] <- TRUE
-   # if (length(idx)<3) {
-   #    iP$nonExt <- FALSE
-   #    #return(iP)   # a single extreme
-   # } else {
-   #    nD <- iP[idx,]
-   #    ul<-1
-   #    lr<-length(idx)
-   #    while (ul<length(idx)) {
-   #       # for (k in 1:1000) {
-   #       slope <- (nD$z2[lr]-nD$z2[ul])/(nD$z1[lr]-nD$z1[ul])
-   #       nD$val <- nD$z2-slope*nD$z1
-   #       #cat("val:",nD$val[ul],"max:",max(nD$val),"min:",min(nD$val),"\n")
-   #       if (crit=="max") {
-   #          i <- which.max(nD$val)
-   #          if (nD$val[ul]<nD$val[i] - tol) {
-   #             iP$ext[nD$rowIdx[i]] <- TRUE
-   #             lr <- i
-   #          } else {
-   #             ul <- lr
-   #             lr<-length(idx)
-   #          }
-   #       }
-   #       if (crit=="min") {
-   #          i <- which.min(nD$val)
-   #          if (nD$val[ul]>nD$val[i] + tol) {
-   #             iP$ext[nD$rowIdx[i]] <- TRUE
-   #             lr <- i
-   #          } else {
-   #             ul <- lr
-   #             lr<-length(idx)
-   #          }
-   #       }
-   #    }
-   #    # classify nonextreme supported
-   #    idxExt <- which(iP$ext)
-   #    iP$nonExt <- FALSE
-   #    if (length(idxExt)>1) {
-   #       for (i in 2:length(idxExt)) {
-   #          slope <- (iP$z2[idxExt[i]]-iP$z2[idxExt[i-1]])/(iP$z1[idxExt[i]]-iP$z1[idxExt[i-1]])
-   #          nDCand <- iP[idxExt[i-1]:idxExt[i],]
-   #          nDCand <- nDCand[nDCand$nD & !duplicated(cbind(nDCand$z1,nDCand$z2), MARGIN = 1),]
-   #          nDCand <- nDCand[c(-1,-length(nDCand$nD)),]
-   #          if (length(nDCand$nD)==0) next   # no points inbetween
-   #          for (j in 1:length(nDCand$nD)) {
-   #             slopeCur = (nDCand$z2[j]-iP$z2[idxExt[i-1]])/(nDCand$z1[j]-iP$z1[idxExt[i-1]])
-   #             if (abs(slope - slopeCur) < tol) iP$nonExt[nDCand$rowIdx[j]==iP$rowIdx] <- TRUE
-   #          }
-   #       }
-   #    }
-   #    # classify duplicates
-   #    idx <- which(iP$nD)
-   #    if (!length(idx)<2) {
-   #       for (i in 2:length(idx)) {
-   #          if (iP$ext[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
-   #             iP$ext[i] = TRUE
-   #             next
-   #          }
-   #          if (iP$nonExt[i-1] & abs(iP$z2[i-1]-iP$z2[i])<tol & abs(iP$z1[i-1]-iP$z1[i])<tol) {
-   #             iP$nonExt[i] = TRUE
-   #          }
-   #       }
-   #    }
-   # }
-   # iP$rowIdx <- NULL
-   # iP$oldRowIdx <- NULL
-   # return(iP)
 }
 
 
@@ -568,11 +424,17 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' @param n Number of samples generated.
 #' @param range The range of the points in each dimension (a vector or matrix with `p` rows).
 #' @param random Random sampling.
+#' @param planes Generate points between two planes.
 #' @param sphere Generate points on a sphere.
 #' @param box Generate points in boxes.
 #' @param ... Further arguments passed on to the method for generating points. This must be done as
 #'   lists (see examples). Currently the following arguments are supported:
 #'
+#'   * `argsPlanes`: A list of arguments for generating points between planes and in the cube
+#'      defined by the range:
+#'      - `center`: A point between the planes (default `rowMeans(range)`).
+#'      - `planeU`: The upper plane (default `c(rep(1, p), -1.2*sum(center))`).
+#'      - `planeL`: The lower plane (default `c(rep(1, p), -0.8*sum(center))`).
 #'   * `argsSphere`: A list of arguments for generating points on a sphere:
 #'      - `radius`: The radius of the sphere.
 #'      - `center`: The center of the sphere.
@@ -628,6 +490,37 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' pts <- genSample(p, 1000, range = range, random = TRUE)
 #' head(pts)
 #' Rfast::colMinsMaxs(as.matrix(pts))
+#'
+#'
+#' ### Using planes
+#' ## p = 2
+#' range <- matrix(c(1,100, 50,100), ncol = 2, byrow = TRUE )
+#' center <- rowMeans(range)
+#' planeU <- c(rep(1, 2), -1.5*sum(rowMeans(range)))
+#' planeL <- c(rep(1, 2), -0.7*sum(rowMeans(range)))
+#' pts <- genSample(2, 1000, range = range, planes = TRUE,
+#'    argsPlanes = list(center = center, planeU = planeU, planeL = planeL))
+#' head(pts)
+#' Rfast::colMinsMaxs(as.matrix(pts))
+#' plot(pts)
+#'
+#' \donttest{
+#' ## p = 3
+#' range <- matrix(c(1,100, 50,100, 10, 50), ncol = 2, byrow = TRUE )
+#' center <- rowMeans(range)
+#' planeU <- c(rep(1, 3), -1.2*sum(rowMeans(range)))
+#' planeL <- c(rep(1, 3), -0.6*sum(rowMeans(range)))
+#' pts <- genSample(3, 1000, range = range, planes = TRUE,
+#'    argsPlanes = list(center = center, planeU = planeU, planeL = planeL))
+#' head(pts)
+#' Rfast::colMinsMaxs(as.matrix(pts))
+#' ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
+#' plotPoints3D(pts)
+#' rgl::planes3d(planeL[1], planeL[2], planeL[3], planeL[4], alpha = 0.5)
+#' rgl::planes3d(planeU[1], planeU[2], planeU[3], planeU[4], alpha = 0.5)
+#' finalize3D()
+#' }
+#'
 #'
 #' ### Using sphere
 #' ## p = 2
@@ -758,7 +651,7 @@ addNDSet2D<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE) {
 #' pts <- genSample(p, 1000, range = range, box = TRUE, argsBox = list(cor = "idxSplit"))
 #' head(pts)
 #' Rfast::colMinsMaxs(as.matrix(pts))
-genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box = FALSE, ...) {
+genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, planes = FALSE, box = FALSE, ...) {
    if (!is.matrix(range)) range <- matrix(range, ncol = 2)
    if (nrow(range) == 1) range <-  matrix(rep(range, each=p), nrow=p)
    args <- list(...)
@@ -767,6 +660,29 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
       sphere = FALSE
       argsRandom <- mergeLists(list(), args$argsRandom)
       set <- apply(range, 1, function(x) sample(x[1]:x[2], n, replace = TRUE) )
+   }
+
+   if (planes) {
+      sphere = FALSE
+      argsPlanes <- mergeLists(list(
+         center = rowMeans(range),
+         planeU = c(rep(1,p), -1.2*sum(rowMeans(range))),
+         planeL = c(rep(1,p), -0.8*sum(rowMeans(range)))
+      ), args$argsPlanes)
+
+      set <- apply(range, 1, function(x) sample(x[1]:x[2], n, replace = TRUE))
+      set <- set[
+         set %*% argsPlanes$planeL[1:p] >= -argsPlanes$planeL[p+1] &
+            set %*% argsPlanes$planeU[1:p] <= -argsPlanes$planeU[p+1],
+         ]
+      while (nrow(set) < n) {
+         set1 <- apply(range, 1, function(x) sample(x[1]:x[2], n, replace = TRUE))
+         set1 <- set1[
+            set1 %*% argsPlanes$planeL[1:p] >= -argsPlanes$planeL[p+1] &
+               set1 %*% argsPlanes$planeU[1:p] <= -argsPlanes$planeU[p+1], ]
+         set <- rbind(set,set1)
+      }
+      set <- set[1:n,]
    }
 
    if (sphere) {
@@ -864,6 +780,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
       lst <- lapply(1:length(ptsL),function(i) list(pts = rbind(high[[i]], ptsL[[i]], ptsH[[i]]) ))
       set <- t(sapply(lst, function(x) apply(x$pts,2, function(x) x[x[1]+2])))
    }
+
    if (nrow(set) != n) warning("Only ", nrow(set), " samples generated!")
    return(set)
 }
@@ -874,14 +791,16 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' Generate a sample of nondominated points.
 #'
 #' @param p Dimension of the points.
-#' @param n Number of samples generated (note only a subset of these will be non-dominated).
+#' @param n Number nondominated points generated.
 #' @param range The range of the points in each dimension (a vector or matrix with `p` rows).
 #' @param random Random sampling.
 #' @param sphere Generate points on a sphere.
 #' @param box Generate points in boxes.
-#' @param keep Keep dominated points also.
+#' @param keepDom Keep dominated points also.
 #' @param crit Criteria used (a vector of min/max).
 #' @param dubND Should duplicated non-dominated points be considered as non-dominated.
+#' @param classify Non-dominated points are classified into supported extreme (`se`), supported
+#'   non-extreme (`sne`) and unsupported (`us`)
 #' @param ... Further arguments passed on to [`genSample`].
 #'
 #' @return A data frame with `p+1` columns (last one indicate if dominated or not).
@@ -889,10 +808,10 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #'
 #' @examples
 #' \donttest{
-#' range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
-#' pts <- genNDSet(3, 50, range = range, random = TRUE, keep = TRUE)
+#' range <- matrix(c(1,100, 50,100, 10, 50), ncol = 2, byrow = TRUE )
+#' pts <- genNDSet(3, 5, range = range, random = TRUE, keepDom = TRUE)
 #' head(pts)
-#' Rfast::colMinsMaxs(as.matrix(pts))
+#' Rfast::colMinsMaxs(as.matrix(pts[, 1:3]))
 #' ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
 #'   ylim = c(min(pts[,2])-2,max(pts[,2])+10),
 #'   zlim = c(min(pts[,3])-2,max(pts[,3])+10)))
@@ -904,7 +823,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' ini3D()
 #' range <- c(1,100)
 #' cent <- rep(range[1] + (range[2]-range[1])/2, 3)
-#' pts <- genNDSet(3, 100, range = range, sphere = TRUE, keep = TRUE,
+#' pts <- genNDSet(3, 20, range = range, sphere = TRUE, keepDom = TRUE,
 #'        argsSphere = list(center = cent))
 #' rgl::spheres3d(cent, radius=49.5, color = "grey100", alpha=0.1)
 #' plotPoints3D(pts)
@@ -917,7 +836,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' r <- 75
 #' planeC <- c(cent+r/3)
 #' planeC <- c(planeC, -sum(planeC^2))
-#' pts <- genNDSet(3, 100, keep = TRUE,
+#' pts <- genNDSet(3, 20, keepDom = TRUE,
 #'   argsSphere = list(center = cent, radius = r, below = FALSE, plane = planeC, factor = 6))
 #' rgl::spheres3d(cent, radius=r, color = "grey100", alpha=0.1)
 #' plotPoints3D(pts)
@@ -925,6 +844,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, box
 #' rgl::planes3d(planeC[1],planeC[2],planeC[3],planeC[4], alpha = 0.5, col = "red")
 #' finalize3D()
 #' }
+#' @importFrom rlang .data
 genNDSet <-
    function(p,
             n,
@@ -932,28 +852,41 @@ genNDSet <-
             random = FALSE,
             sphere = TRUE,
             box = FALSE,
-            keep = FALSE,
+            keepDom = FALSE,
             crit = "min",
             dubND = TRUE,
+            classify = FALSE,
             ...) {
 
-   # if (p!=3) stop("Currently only works for p = 3!")
-   set <- genSample(p, n, range = range, random = random, sphere = sphere, box = box, ...)
-   set <- addNDSet(set, crit = crit, keepDom = keep, dubND = dubND, classify = FALSE)
-   # set <- set[order(set[,1],set[,2],set[,3]),]
-   # set <- as.data.frame(set)
-   # colnames(set) <- c("x","y","z")
-   # set$dom <- FALSE
-   # for (i in 1:(dim(set)[1]-1)) {
-   #    for (j in (i+1):dim(set)[1]) {
-   #       if (!set$dom[j]) {
-   #          if (set$x[i]<=set$x[j] && set$y[i]<=set$y[j] && set$z[i]<=set$z[j]) set$dom[j] <- TRUE
-   #       }
-   #    }
-   # }
-   # if (!keep) set <- set[!set$dom,1:3]
-   # row.names(set) <- NULL
-   return(set)
+   set <- genSample(p, 2 * n, range = range, random = random, sphere = sphere, box = box, ...)
+   nDSet <- addNDSet(set, crit = crit, keepDom = keepDom, dubND = dubND, classify = FALSE)
+   ctr <- 0
+   while (sum(nDSet$nd) < n) {
+      before <- sum(nDSet$nd)
+      set <- genSample(p, 2 * n, range = range, random = random, sphere = sphere, box = box, ...)
+      nDSet <- addNDSet(set, nDSet, crit = crit, keepDom = keepDom, dubND = dubND, classify = FALSE)
+      now <- sum(nDSet$nd)
+      if (before > now) ctr <- ctr + 1
+      if (ctr == 10) {
+         warning("Tried to generate ", n, " ND points. However did only find ", now, "!")
+         break
+      }
+   }
+   if (keepDom) {
+      datD <- nDSet %>%
+         filter(!.data$nd)
+      datND <- nDSet %>%
+         filter(.data$nd) %>%
+         slice_sample(n = n)
+      nDSet <- bind_rows(datD, datND) %>%
+         tibble::remove_rownames()
+   } else {
+      nDSet <- nDSet %>%
+         slice_sample(n = n) %>%
+         tibble::remove_rownames()
+   }
+   if (classify) nDSet <- addNDSet(nDSet, crit = crit, keepDom = keepDom, dubND = dubND, classify = classify)
+   return(nDSet)
 }
 
 
@@ -1009,7 +942,7 @@ genNDSet <-
 #'               byrow = TRUE)
 #' classifyNDSet(pts)
 #'
-#' pts <- genNDSet(3,50)[,1:3]
+#' pts <- genNDSet(3,25)[,1:3]
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
 #'   ylim = c(0,max(pts$z2)+2),
 #'   zlim = c(0,max(pts$z3)+2)))
