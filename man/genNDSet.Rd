@@ -10,6 +10,7 @@ genNDSet(
   range = c(1, 100),
   random = FALSE,
   sphere = TRUE,
+  planes = FALSE,
   box = FALSE,
   keepDom = FALSE,
   crit = "min",
@@ -28,6 +29,8 @@ genNDSet(
 \item{random}{Random sampling.}
 
 \item{sphere}{Generate points on a sphere.}
+
+\item{planes}{Generate points between two planes.}
 
 \item{box}{Generate points in boxes.}
 
