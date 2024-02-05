@@ -794,6 +794,7 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, pla
 #' @param n Number nondominated points generated.
 #' @param range The range of the points in each dimension (a vector or matrix with `p` rows).
 #' @param random Random sampling.
+#' @param planes Generate points between two planes.
 #' @param sphere Generate points on a sphere.
 #' @param box Generate points in boxes.
 #' @param keepDom Keep dominated points also.
@@ -851,6 +852,7 @@ genNDSet <-
             range = c(1, 100),
             random = FALSE,
             sphere = TRUE,
+            planes = FALSE,
             box = FALSE,
             keepDom = FALSE,
             crit = "min",
@@ -858,12 +860,12 @@ genNDSet <-
             classify = FALSE,
             ...) {
 
-   set <- genSample(p, 2 * n, range = range, random = random, sphere = sphere, box = box, ...)
+   set <- genSample(p, 2 * n, range = range, random = random, planes = planes, sphere = sphere, box = box, ...)
    nDSet <- addNDSet(set, crit = crit, keepDom = keepDom, dubND = dubND, classify = FALSE)
    ctr <- 0
    while (sum(nDSet$nd) < n) {
       before <- sum(nDSet$nd)
-      set <- genSample(p, 2 * n, range = range, random = random, sphere = sphere, box = box, ...)
+      set <- genSample(p, 2 * n, range = range, random = random, planes = planes, sphere = sphere, box = box, ...)
       nDSet <- addNDSet(set, nDSet, crit = crit, keepDom = keepDom, dubND = dubND, classify = FALSE)
       now <- sum(nDSet$nd)
       if (before > now) ctr <- ctr + 1
