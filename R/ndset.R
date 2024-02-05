@@ -823,6 +823,12 @@ genSample <- function(p, n, range = c(1,100), random = FALSE, sphere = TRUE, pla
 #'
 #'
 #' ## Between planes
+#' range <- matrix(c(1,10000, 1,10000), ncol = 2, byrow = TRUE)
+#' pts <- genNDSet(2, 50, range = range, planes = TRUE, classify = TRUE)
+#' head(pts)
+#' Rfast::colMinsMaxs(as.matrix(pts[, 1:2]))
+#' plot(pts[, 1:2])
+#'
 #' range <- matrix(c(1,100, 50,100, 10, 50), ncol = 2, byrow = TRUE)
 #' center <- rowMeans(range)
 #' planeU <- c(rep(1, 3), -1.2*sum(rowMeans(range)))
@@ -889,7 +895,7 @@ genNDSet <-
       set <- genSample(p, 2 * n, range = range, random = random, planes = planes, sphere = sphere, box = box, ...)
       nDSet <- addNDSet(set, nDSet, crit = crit, keepDom = keepDom, dubND = dubND, classify = FALSE)
       now <- sum(nDSet$nd)
-      if (before > now) ctr <- ctr + 1
+      if (before >= now) ctr <- ctr + 1
       if (ctr == 10) {
          warning("Tried to generate ", n, " ND points. However did only find ", now, "!")
          break
