@@ -48,32 +48,32 @@ We define the sets $\mathbb{R}_{>} = \{ z\in \mathbb{R} \mid z > 0\}$, $\mathbb{
 ```{r}
 rgl::mfrow3d(nr = 1, nc = 3, sharedMouse = TRUE)
 ## Set R^3_>=
-ini3D(argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
+ini3D(clear = FALSE, new = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
 plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
 title3d(main = "R_>=")
 finalize3D()
 next3d()
 ## Set R^3_>-
-ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
+ini3D(clear = FALSE, new = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
 plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.8))
 rgl::spheres3d(0,0,0, radius = 2, alpha = 0.8, col="gray80")
 title3d(main = "R_>-")
 finalize3D()
 next3d()
 ## Set R^3_>
-ini3D(clear = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
+ini3D(clear = FALSE, new = FALSE, argsPlot3d = list(xlim = c(-5, 100), ylim = c(-5, 100), zlim = c(-5, 100)))
 plotCones3D(c(0,0,0), drawPoint = F, argsPolygon3d = list(alpha=0.3, color = "red"))
 title3d(main = "R_>")
 finalize3D()
 rglwidget()
-close3d()
+# close3d()
 ```
 
 The non-dominated set (red points are non-dominated and black dominated): 
 
 ```{r nd points}
 library(gMOIP)
-pts <- genNDSet(3, 100, keep = TRUE, dubND = FALSE)
+pts <- genNDSet(3, 20, keep = TRUE, dubND = FALSE)
 ini3D()
 plotPoints3D(pts[!pts$nd,1:3])
 plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red"))
@@ -104,10 +104,10 @@ Note the area between the hull and the cones is the search area where further no
 Another example with more unsupported points:
 
 ```{r}
-pts1 <- genNDSet(3, 100, keep = T, argsSphere = list(below = F))
+pts1 <- genNDSet(3, 10, keep = T, argsSphere = list(below = F))
 lim1 <- as.data.frame(apply(pts1, 2, function(x) c(min(x)-5, max(x)+5)))
 ini3D(argsPlot3d = list(xlim = lim1$z1, ylim = lim1$z2, zlim = lim1$z3))
-plotPoints3D(pts1[!pts1$nd, 1:3])
+# plotPoints3D(pts1[!pts1$nd, 1:3])
 plotHull3D(
   pts1[pts1$nd, 1:3],
   addRays = T,
@@ -125,7 +125,7 @@ rglwidget()
 We may also plot reverse dominance cones:
 
 ```{r}
-pts2 <- genNDSet(3, 50, range = c(1,20), dubND = FALSE)
+pts2 <- genNDSet(3, 10, range = c(1,20), dubND = FALSE)
 lim2 <- as.data.frame(apply(pts2, 2, function(x) c(min(x)-5, max(x)+5)))
 ini3D(argsPlot3d = list(xlim = lim2$z1, ylim = lim2$z2, zlim = lim2$z3))
 plotCones3D(
