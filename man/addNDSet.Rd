@@ -47,8 +47,6 @@ addNDSet(pts, nDSet, crit = "min")
 addNDSet(c(2,2), nDSet, crit = "max")
 addNDSet(c(2,2), nDSet, crit = "min")
 
-addNDSet(c(2,2), crit = "min")
-
 \donttest{
 nDSet <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(1,7,0,6))
 pts <- data.frame(z1=c(12,14,16,18), z2=c(18,16,12,4), z3 = c(2,2,2,6))

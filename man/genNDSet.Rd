@@ -14,7 +14,7 @@ genNDSet(
   box = FALSE,
   keepDom = FALSE,
   crit = "min",
-  dubND = TRUE,
+  dubND = FALSE,
   classify = FALSE,
   ...
 )
@@ -53,7 +53,8 @@ Generate a sample of nondominated points.
 }
 \examples{
 \donttest{
-range <- matrix(c(1,100, 50,100, 10, 50), ncol = 2, byrow = TRUE )
+## Random
+range <- matrix(c(1,100, 50, 100, 10, 50), ncol = 2, byrow = TRUE)
 pts <- genNDSet(3, 5, range = range, random = TRUE, keepDom = TRUE)
 head(pts)
 Rfast::colMinsMaxs(as.matrix(pts[, 1:3]))
@@ -65,6 +66,34 @@ plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red", size = 10))
 plotCones3D(pts[pts$nd,1:3], argsPolygon3d = list(alpha = 1))
 finalize3D()
 
+
+## Between planes
+range <- matrix(c(1,10000, 1,10000), ncol = 2, byrow = TRUE)
+pts <- genNDSet(2, 50, range = range, planes = TRUE, classify = TRUE)
+head(pts)
+Rfast::colMinsMaxs(as.matrix(pts[, 1:2]))
+plot(pts[, 1:2])
+
+range <- matrix(c(1,100, 50,100, 10, 50), ncol = 2, byrow = TRUE)
+center <- rowMeans(range)
+planeU <- c(rep(1, 3), -1.2*sum(rowMeans(range)))
+planeL <- c(rep(1, 3), -0.8*sum(rowMeans(range)))
+pts <- genNDSet(3, 50, range = range, planes = TRUE, keepDom = TRUE, classify = TRUE,
+   argsPlanes = list(center = center, planeU = planeU, planeL = planeL))
+head(pts)
+Rfast::colMinsMaxs(as.matrix(pts[, 1:3]))
+ini3D(FALSE, argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+10),
+  ylim = c(min(pts[,2])-2,max(pts[,2])+10),
+  zlim = c(min(pts[,3])-2,max(pts[,3])+10),
+  box = TRUE, axes = TRUE))
+plotPoints3D(pts[,1:3])
+plotPoints3D(pts[pts$nd,1:3], argsPlot3d = list(col = "red", size = 10))
+rgl::planes3d(planeL[1], planeL[2], planeL[3], planeL[4], alpha = 0.5)
+rgl::planes3d(planeU[1], planeU[2], planeU[3], planeU[4], alpha = 0.5)
+finalize3D()
+
+
+## On a sphere
 ini3D()
 range <- c(1,100)
 cent <- rep(range[1] + (range[2]-range[1])/2, 3)

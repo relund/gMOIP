@@ -68,7 +68,7 @@ the low interval range.
 }}
 }
 \value{
-A data frame with \code{p} columns
+A matrix with \code{p} columns.
 }
 \description{
 Generate a sample of points in dimension $p$.
