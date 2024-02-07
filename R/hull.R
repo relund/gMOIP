@@ -102,6 +102,7 @@ dimFace<-function(pts, dim = NULL) {
 #' pt <- matrix(c(0,0, 1,1, 4,4), ncol = 2, byrow = TRUE)
 #' inHull(pt, vertices)
 #'
+#' \donttest{
 #' ## in 3D
 #' vertices <- matrix(c(2,2,2), ncol = 3, byrow = TRUE)
 #' pt <- matrix(c(1,1,1, 3,3,3, 2,2,2, 3,3,2), ncol = 3, byrow = TRUE)
@@ -131,6 +132,7 @@ dimFace<-function(pts, dim = NULL) {
 #' plotPoints3D(pt, addText = TRUE)
 #' finalize3D()
 #' inHull(pt, vertices)
+#' }
 #'
 #' ## In 5D
 #' vertices <- matrix(c(4,0,0,0,0, 0,4,0,0,0, 0,0,4,0,0, 0,0,0,4,0, 0,0,0,0,4, 0,0,0,0,0),
