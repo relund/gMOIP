@@ -1032,7 +1032,7 @@ plotNDSet2D <- function(points,
 
 #' Plot a rectangle defined by two corner points.
 #'
-#' The rectangle is defined by {x|a <= x <= b} where a is the minimum values and
+#' The rectangle is defined by \{x|a <= x <= b\} where a is the minimum values and
 #' b is the maximum values.
 #'
 #' @param a A vector of length 3.

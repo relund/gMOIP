@@ -24,7 +24,7 @@ lists (see examples). Currently the following arguments are supported:
 Object ids (invisible).
 }
 \description{
-The rectangle is defined by {x|a <= x <= b} where a is the minimum values and
+The rectangle is defined by \{x|a <= x <= b\} where a is the minimum values and
 b is the maximum values.
 }
 \examples{
