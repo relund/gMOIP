@@ -975,7 +975,7 @@ genNDSet <-
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
 #'   ylim = c(0,max(pts$z2)+2),
 #'   zlim = c(0,max(pts$z3)+2)))
-#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
+#' plotHull3D(pts[, 1:3], addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
 #' pts <- classifyNDSet(pts[,1:3])
 #' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
 #' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
@@ -986,19 +986,51 @@ genNDSet <-
 classifyNDSet <- function(pts, direction = 1) {
    pts <- .checkPts(pts, stopUnique = FALSE)
    p <- ncol(pts)
-   colnames(pts) <- paste0("z", 1:p)
-   idx <- duplicated(pts)
-   pts <- pts %>% dplyr::as_tibble() %>% dplyr::mutate(id = 1:nrow(pts)) #%>%  tibble::rownames_to_column(var = "rn")
+   colnames(pts)[1:3] <- paste0("z", 1:p)
    if (nrow(pts) == 1) {
       pts <- as.data.frame(pts)
-      return(cbind(select(pts,-id), se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
+      return(cbind(pts, se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
    }
-   if (length(direction) != p) direction = rep(direction[1],p)
-
+   if (length(direction) != p) direction <- rep(direction[1],p)
+   nadir <-
+      purrr::map_dbl(1:3, function(i)
+         if (sign(direction[i]) > 0)
+            max(pts[, i]) + 5
+         else
+            min(pts[, i]) - 5) # add a number so
+   ideal <- purrr::map_dbl(1:3, function(i) if (sign(direction[i]) < 0) max(pts[, i]) else min(pts[, i]))
+   # dubs1 <- janitor::get_dupes(pts %>% dplyr::as_tibble() %>% dplyr::mutate(id = 1:nrow(pts)), -id)
+   # find duplicates
+   nms <- rlang::syms(paste0("z", 1:p))
+   dubs <- pts %>%
+      dplyr::as_tibble() %>%
+      dplyr::mutate(id = 1:nrow(pts)) %>%
+      dplyr::add_count(!!!nms, name = "ct") %>%
+      dplyr::filter(ct > 1) %>%
+      select(-ct) %>%
+      dplyr::arrange(!!!nms, id)
+   idx <- duplicated(pts)
+   ptsDub <- pts[idx,, drop = F] %>% dplyr::as_tibble() %>% dplyr::mutate(id = which(idx))
+   ## project on box so pts are the first rows and rest projections including upper corner points
+   set <- pts[!idx, ]
+   n <- nrow(set)
+   set <- rep(1, p + 1) %x% set  # repeat p + 1 times
+   for (i in 1:p) {
+      set[(i * n + 1):((i + 1) * n), i] <- nadir[i]
+   }
+   # find upper corner points of box
+   cP <- matrix(rep(nadir, p), byrow = T, ncol = 3)   # repeat p + 1 times
+   diag(cP) <- ideal
+   cP <- rbind(cP, nadir)
+   # merge and tidy
+   set <- rbind(set, cP)
+   set <- set[!duplicated(set, MARGIN = 1), ]
+   # rownames(set) <- NULL
    # find hull of the unique points and classify
-   set <- convexHull(pts[!idx,1:p], addRays = TRUE, direction = direction)
-   hull <- set$hull
+   set <- convexHull(set, addRays = FALSE, direction = direction)
+   # hull <- set$hull
    set <- set$pts
+   set$pt[(n+1):length(set$pt)] <- 0
    d <- dimFace(set[,1:p])
    if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
    set <- dplyr::mutate(set, se = dplyr::if_else(.data$vtx,TRUE,FALSE))
@@ -1009,16 +1041,130 @@ classifyNDSet <- function(pts, direction = 1) {
       set$us[chk$id[which(val == 1)]] <- TRUE
       set$sne[chk$id[which(val == 0)]] <- TRUE
    }
+   colnames(set)[1:3] <- paste0("z", 1:p)
    set <- set %>% # tidy and add old id
       dplyr::filter(.data$pt == 1) %>%
       dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us"))) %>%
       dplyr::select(tidyselect::all_of(1:p), c("se", "sne", "us", "cls")) %>%
-      dplyr::mutate(id = which(!idx))
-   set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of duplicates
-   set1 <- set1 %>%
-      dplyr::filter(!is.na(.data$id.y)) %>%
-      dplyr::mutate(id.x = .data$id.y) %>% dplyr::select("z1":"id.x")
-   set <- dplyr::bind_rows(set, pts[idx,]) %>% dplyr::arrange(id) %>% dplyr::select(-id)
-   if (nrow(set1) > 0) for (i in 1:nrow(set1)) set[set1$id.x[i],] <- set1[i, 1:(p+4)]
+      dplyr::mutate(id = which(!idx)) %>%
+      bind_rows(ptsDub) %>%
+      arrange(id) %>%
+      select(-id)
+   # add duplicates
+   if (nrow(dubs) != 0) {
+      for (r in 1:nrow(dubs)) {
+         if (!is.na(set$cls[dubs$id[r]])) {
+            res <- set[dubs$id[r],]
+         } else {
+            set[dubs$id[r],] <- res
+         }
+      }
+   }
+   rownames(set) <- NULL
    return(set)
 }
+
+
+
+#' Classify a set of nondominated points
+#'
+#' The classification is supported (true/false), extreme (true/false), supported non-extreme
+#' (true/false)
+#'
+#' @param pts A set of non-dominated points. It is assumed that `ncol(pts)` equals the number of
+#'   objectives ($p$).
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of the `pts` minus a value greater than on equal zero (maximize objective $i$).
+#'
+#' @note It is assumed that `pts` are nondominated.
+#'
+#' @return The ND set with classification columns.
+#' @importFrom rlang .data
+#'
+#' @examples
+#' \donttest{
+#' pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
+#' ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+2),
+#'   ylim = c(min(pts[,2])-2,max(pts[,2])+2),
+#'   zlim = c(min(pts[,3])-2,max(pts[,3])+2)))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5), useRGLBBox = TRUE)
+#' pts <- classifyNDSet(pts[,1:3])
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' plotCones3D(pts[,1:3], rectangle = TRUE, argsPolygon3d = list(alpha = 1))
+#' finalize3D()
+#' pts
+#'
+#' pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.2,0.1,0.1, 0.1,0.45,0.45), ncol = 3, byrow = TRUE)
+#' di <- -1 # maximize
+#' ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-1,max(pts[,1])+1),
+#'   ylim = c(min(pts[,2])-1,max(pts[,2])+1),
+#'   zlim = c(min(pts[,3])-1,max(pts[,3])+1)))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5), direction = di,
+#'            addText = "coord")
+#' pts <- classifyNDSet(pts[,1:3], direction = di)
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' plotCones3D(pts[,1:3], rectangle = TRUE, argsPolygon3d = list(alpha = 1), direction = di)
+#' finalize3D()
+#' pts
+#'
+#' pts <- matrix(c(0,0,1, 0,0,1, 0,1,0, 0.5,0.2,0.5, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3,
+#'               byrow = TRUE)
+#' classifyNDSet(pts)
+#'
+#' pts <- genNDSet(3,25)[,1:3]
+#' ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
+#'   ylim = c(0,max(pts$z2)+2),
+#'   zlim = c(0,max(pts$z3)+2)))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
+#' pts <- classifyNDSet(pts[,1:3])
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' finalize3D()
+#' pts
+#' }
+# classifyNDSetOld <- function(pts, direction = 1) {
+#    pts <- .checkPts(pts, stopUnique = FALSE)
+#    p <- ncol(pts)
+#    colnames(pts) <- paste0("z", 1:p)
+#    idx <- duplicated(pts)
+#    pts <- pts %>% dplyr::as_tibble() %>% dplyr::mutate(id = 1:nrow(pts)) #%>%  tibble::rownames_to_column(var = "rn")
+#    if (nrow(pts) == 1) {
+#       pts <- as.data.frame(pts)
+#       return(cbind(select(pts,-id), se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
+#    }
+#    if (length(direction) != p) direction = rep(direction[1],p)
+#
+#    # find hull of the unique points and classify
+#    set <- convexHull(pts[!idx,1:p], addRays = TRUE, direction = direction)
+#    hull <- set$hull
+#    set <- set$pts
+#    d <- dimFace(set[,1:p])
+#    if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
+#    set <- dplyr::mutate(set, se = dplyr::if_else(.data$vtx,TRUE,FALSE))
+#    set <- dplyr::mutate(set, sne = FALSE, us = FALSE, id = 1:nrow(set))
+#    chk <- set %>% dplyr::filter(!.data$vtx)
+#    if (nrow(chk) != 0) {
+#       val <- inHull(chk[,1:p], set[set$vtx,1:p])
+#       set$us[chk$id[which(val == 1)]] <- TRUE
+#       set$sne[chk$id[which(val == 0)]] <- TRUE
+#    }
+#    set <- set %>% # tidy and add old id
+#       dplyr::filter(.data$pt == 1) %>%
+#       dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us"))) %>%
+#       dplyr::select(tidyselect::all_of(1:p), c("se", "sne", "us", "cls")) %>%
+#       dplyr::mutate(id = which(!idx))
+#    set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of duplicates
+#    set1 <- set1 %>%
+#       dplyr::filter(!is.na(.data$id.y)) %>%
+#       dplyr::mutate(id.x = .data$id.y) %>% dplyr::select("z1":"id.x")
+#    set <- dplyr::bind_rows(set, pts[idx,]) %>% dplyr::arrange(id) %>% dplyr::select(-id)
+#    if (nrow(set1) > 0) for (i in 1:nrow(set1)) set[set1$id.x[i],] <- set1[i, 1:(p+4)]
+#    return(set)
+# }
+

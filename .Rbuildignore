@@ -18,6 +18,7 @@
 ^\.github$
 ^_pkgdown\.yml$
 ^docs$
+^revdep$
 ^pkgdown$
 ^tmp$
 ^check\.R$
