@@ -999,19 +999,19 @@ genNDSet <-
 classifyNDSet <- function(pts, direction = 1) {
    pts <- .checkPts(pts, stopUnique = FALSE)
    p <- ncol(pts)
-   colnames(pts)[1:3] <- paste0("z", 1:p)
+   colnames(pts)[1:p] <- paste0("z", 1:p)
    if (nrow(pts) == 1) {
       pts <- as.data.frame(pts)
       return(cbind(pts, se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
    }
    if (length(direction) != p) direction <- rep(direction[1],p)
    nadir <-
-      purrr::map_dbl(1:3, function(i)
+      purrr::map_dbl(1:p, function(i)
          if (sign(direction[i]) > 0)
             max(pts[, i]) + 5
          else
             min(pts[, i]) - 5) # add a number so
-   ideal <- purrr::map_dbl(1:3, function(i) if (sign(direction[i]) < 0) max(pts[, i]) else min(pts[, i]))
+   ideal <- purrr::map_dbl(1:p, function(i) if (sign(direction[i]) < 0) max(pts[, i]) else min(pts[, i]))
    # dubs1 <- janitor::get_dupes(pts %>% dplyr::as_tibble() %>% dplyr::mutate(id = 1:nrow(pts)), -id)
    # find duplicates
    nms <- rlang::syms(paste0("z", 1:p))
@@ -1032,7 +1032,7 @@ classifyNDSet <- function(pts, direction = 1) {
       set[(i * n + 1):((i + 1) * n), i] <- nadir[i]
    }
    # find upper corner points of box
-   cP <- matrix(rep(nadir, p), byrow = T, ncol = 3)   # repeat p + 1 times
+   cP <- matrix(rep(nadir, p), byrow = T, ncol = p)   # repeat p + 1 times
    diag(cP) <- ideal
    cP <- rbind(cP, nadir)
    # merge and tidy
@@ -1048,13 +1048,18 @@ classifyNDSet <- function(pts, direction = 1) {
    if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
    set <- dplyr::mutate(set, se = dplyr::if_else(.data$vtx,TRUE,FALSE))
    set <- dplyr::mutate(set, sne = FALSE, us = FALSE, id = 1:nrow(set))
-   chk <- set %>% dplyr::filter(!.data$vtx)
+   chk <- set %>% dplyr::filter(!.data$vtx, .data$pt == 1)
    if (nrow(chk) != 0) {
-      val <- inHull(chk[,1:p], set[set$vtx,1:p])
-      set$us[chk$id[which(val == 1)]] <- TRUE
-      set$sne[chk$id[which(val == 0)]] <- TRUE
+      r <- 1
+      while (r <= nrow(chk)) { # check 1000 pts at a time
+         chk1 <- chk[r:min(nrow(chk), r + 999), ]
+         val <- inHull(chk1[, 1:p], set[set$vtx,1:p])
+         set$us[chk1$id[which(val == 1)]] <- TRUE
+         set$sne[chk1$id[which(val == 0)]] <- TRUE
+         r <- min(nrow(chk), r + 999) + 1
+      }
    }
-   colnames(set)[1:3] <- paste0("z", 1:p)
+   colnames(set)[1:p] <- paste0("z", 1:p)
    set <- set %>% # tidy and add old id
       dplyr::filter(.data$pt == 1) %>%
       dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us"))) %>%
@@ -1141,43 +1146,43 @@ classifyNDSet <- function(pts, direction = 1) {
 #' finalize3D()
 #' pts
 #' }
-# classifyNDSetOld <- function(pts, direction = 1) {
-#    pts <- .checkPts(pts, stopUnique = FALSE)
-#    p <- ncol(pts)
-#    colnames(pts) <- paste0("z", 1:p)
-#    idx <- duplicated(pts)
-#    pts <- pts %>% dplyr::as_tibble() %>% dplyr::mutate(id = 1:nrow(pts)) #%>%  tibble::rownames_to_column(var = "rn")
-#    if (nrow(pts) == 1) {
-#       pts <- as.data.frame(pts)
-#       return(cbind(select(pts,-id), se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
-#    }
-#    if (length(direction) != p) direction = rep(direction[1],p)
-#
-#    # find hull of the unique points and classify
-#    set <- convexHull(pts[!idx,1:p], addRays = TRUE, direction = direction)
-#    hull <- set$hull
-#    set <- set$pts
-#    d <- dimFace(set[,1:p])
-#    if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
-#    set <- dplyr::mutate(set, se = dplyr::if_else(.data$vtx,TRUE,FALSE))
-#    set <- dplyr::mutate(set, sne = FALSE, us = FALSE, id = 1:nrow(set))
-#    chk <- set %>% dplyr::filter(!.data$vtx)
-#    if (nrow(chk) != 0) {
-#       val <- inHull(chk[,1:p], set[set$vtx,1:p])
-#       set$us[chk$id[which(val == 1)]] <- TRUE
-#       set$sne[chk$id[which(val == 0)]] <- TRUE
-#    }
-#    set <- set %>% # tidy and add old id
-#       dplyr::filter(.data$pt == 1) %>%
-#       dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us"))) %>%
-#       dplyr::select(tidyselect::all_of(1:p), c("se", "sne", "us", "cls")) %>%
-#       dplyr::mutate(id = which(!idx))
-#    set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of duplicates
-#    set1 <- set1 %>%
-#       dplyr::filter(!is.na(.data$id.y)) %>%
-#       dplyr::mutate(id.x = .data$id.y) %>% dplyr::select("z1":"id.x")
-#    set <- dplyr::bind_rows(set, pts[idx,]) %>% dplyr::arrange(id) %>% dplyr::select(-id)
-#    if (nrow(set1) > 0) for (i in 1:nrow(set1)) set[set1$id.x[i],] <- set1[i, 1:(p+4)]
-#    return(set)
-# }
+classifyNDSetOld <- function(pts, direction = 1) {
+   pts <- .checkPts(pts, stopUnique = FALSE)
+   p <- ncol(pts)
+   colnames(pts) <- paste0("z", 1:p)
+   idx <- duplicated(pts)
+   pts <- pts %>% dplyr::as_tibble() %>% dplyr::mutate(id = 1:nrow(pts)) #%>%  tibble::rownames_to_column(var = "rn")
+   if (nrow(pts) == 1) {
+      pts <- as.data.frame(pts)
+      return(cbind(select(pts,-id), se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
+   }
+   if (length(direction) != p) direction = rep(direction[1],p)
+
+   # find hull of the unique points and classify
+   set <- convexHull(pts[!idx,1:p], addRays = TRUE, direction = direction)
+   hull <- set$hull
+   set <- set$pts
+   d <- dimFace(set[,1:p])
+   if (d != p) stop("The points including rays don't seem to define a hull of dimension ", p, "!")
+   set <- dplyr::mutate(set, se = dplyr::if_else(.data$vtx,TRUE,FALSE))
+   set <- dplyr::mutate(set, sne = FALSE, us = FALSE, id = 1:nrow(set))
+   chk <- set %>% dplyr::filter(!.data$vtx)
+   if (nrow(chk) != 0) {
+      val <- inHull(chk[,1:p], set[set$vtx,1:p])
+      set$us[chk$id[which(val == 1)]] <- TRUE
+      set$sne[chk$id[which(val == 0)]] <- TRUE
+   }
+   set <- set %>% # tidy and add old id
+      dplyr::filter(.data$pt == 1) %>%
+      dplyr::mutate(cls = dplyr::if_else(.data$se, "se", dplyr::if_else(.data$sne, "sne", "us"))) %>%
+      dplyr::select(tidyselect::all_of(1:p), c("se", "sne", "us", "cls")) %>%
+      dplyr::mutate(id = which(!idx))
+   set1 <- set %>% left_join(x = set, y = pts[idx,], by = paste0("z", 1:p)) # match id of duplicates
+   set1 <- set1 %>%
+      dplyr::filter(!is.na(.data$id.y)) %>%
+      dplyr::mutate(id.x = .data$id.y) %>% dplyr::select("z1":"id.x")
+   set <- dplyr::bind_rows(set, pts[idx,]) %>% dplyr::arrange(id) %>% dplyr::select(-id)
+   if (nrow(set1) > 0) for (i in 1:nrow(set1)) set[set1$id.x[i],] <- set1[i, 1:(p+4)]
+   return(set)
+}
 
