@@ -1,3 +1,7 @@
+# gMOIP 1.5.2
+
+* Updated classification algorithm for nondominated sets.
+
 # gMOIP 1.5.1
 
 * Updated filtering algorithm for nondominated sets.
