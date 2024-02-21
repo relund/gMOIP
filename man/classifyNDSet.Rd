@@ -70,7 +70,7 @@ plotPoints3D(pts[pts$us,1:3], argsPlot3d = list(col = "blue"))
 finalize3D()
 pts
 
-pts <- genNDSet(3, 15, keepDom = F, argsSphere = list(below = FALSE, factor = 10))[,1:3]
+pts <- genNDSet(3, 15, keepDom = FALSE, argsSphere = list(below = FALSE, factor = 10))[,1:3]
 ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
   ylim = c(0,max(pts$z2)+2),
   zlim = c(0,max(pts$z3)+2)))
