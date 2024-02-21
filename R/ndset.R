@@ -946,8 +946,8 @@ genNDSet <-
 #' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5), useRGLBBox = TRUE)
 #' pts <- classifyNDSet(pts[,1:3])
 #' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
-#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
-#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' plotPoints3D(pts[pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[pts$us,1:3], argsPlot3d = list(col = "blue"))
 #' plotCones3D(pts[,1:3], rectangle = TRUE, argsPolygon3d = list(alpha = 1))
 #' finalize3D()
 #' pts
@@ -961,8 +961,8 @@ genNDSet <-
 #'            addText = "coord")
 #' pts <- classifyNDSet(pts[,1:3], direction = di)
 #' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
-#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
-#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' plotPoints3D(pts[pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[pts$us,1:3], argsPlot3d = list(col = "blue"))
 #' plotCones3D(pts[,1:3], rectangle = TRUE, argsPolygon3d = list(alpha = 1), direction = di)
 #' finalize3D()
 #' pts
@@ -971,17 +971,30 @@ genNDSet <-
 #'               byrow = TRUE)
 #' classifyNDSet(pts)
 #'
-#' pts <- genNDSet(3,25)[,1:3]
+#' pts <- genNDSet(3,15)[,1:3]
 #' ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
 #'   ylim = c(0,max(pts$z2)+2),
 #'   zlim = c(0,max(pts$z3)+2)))
 #' plotHull3D(pts[, 1:3], addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
 #' pts <- classifyNDSet(pts[,1:3])
 #' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
-#' plotPoints3D(pts[!pts$sne,1:3], argsPlot3d = list(col = "black"))
-#' plotPoints3D(pts[!pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' plotPoints3D(pts[pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[pts$us,1:3], argsPlot3d = list(col = "blue"))
 #' finalize3D()
 #' pts
+#'
+#' pts <- genNDSet(3, 15, keepDom = F, argsSphere = list(below = FALSE, factor = 10))[,1:3]
+#' ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
+#'   ylim = c(0,max(pts$z2)+2),
+#'   zlim = c(0,max(pts$z3)+2)))
+#' plotHull3D(pts[, 1:3], addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
+#' pts <- classifyNDSet(pts[,1:3])
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[pts$sne,1:3], argsPlot3d = list(col = "black"))
+#' plotPoints3D(pts[pts$us,1:3], argsPlot3d = list(col = "blue"))
+#' finalize3D()
+#' pts
+
 #' }
 classifyNDSet <- function(pts, direction = 1) {
    pts <- .checkPts(pts, stopUnique = FALSE)
