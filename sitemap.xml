@@ -1,207 +1,72 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://relund.github.io/gMOIP/404.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/bi-objective_2x.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex1.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex2.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex3.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex4.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/intro.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/mo_costs.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/mo_shapes.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/polytope_2d.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex1.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex2.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex3.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex4.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/articles/tri-objective.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/index.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/news/index.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/addNDSet.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/addNDSet2D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/addRays.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/binaryPoints.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/classifyNDSet.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/convexHull.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/cornerPoints.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/cornerPointsCont.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/criterionPoints.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/df2String.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/dimFace.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/dot-checkPts.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/dot-getRanges.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/dot-mToDirection.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/dot-sizeM.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/finalize3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/gMOIP-package.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/gMOIPTheme.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/genNDSet.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/genSample.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/getTexture.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/hullSegment.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/inHull.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/ini3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/integerPoints.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/loadView.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/mergeLists.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotCones2D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotCones3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotCriterion2D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotHull2D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotHull3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotLines2D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotMTeX3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotNDSet2D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotPlane3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotPoints3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotPolygon3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotPolytope.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotPolytope2D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotPolytope3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotRectangle3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotTeX3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/plotTitleTeX3D.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/pngSize.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/saveView.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/slices.html</loc>
-  </url>
-  <url>
-    <loc>http://relund.github.io/gMOIP/reference/texToPng.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>http://relund.github.io/gMOIP/404.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/bi-objective_2x.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex1.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex2.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex3.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/bi-objective_3x_ex4.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/index.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/intro.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/mo_costs.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/mo_shapes.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/polytope_2d.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex1.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex2.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex3.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/polytope_3d_ex4.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/articles/tri-objective.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/authors.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/index.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/news/index.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/addNDSet.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/addNDSet2D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/addRays.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/binaryPoints.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/classifyNDSet.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/classifyNDSetExtreme.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/convexHull.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/cornerPoints.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/cornerPointsCont.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/criterionPoints.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/df2String.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/dimFace.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/dot-checkPts.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/dot-getRanges.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/dot-mToDirection.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/dot-sizeM.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/finalize3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/gMOIP-package.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/gMOIPTheme.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/genNDSet.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/genSample.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/getTexture.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/hullSegment.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/inHull.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/index.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/ini3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/integerPoints.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/loadView.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/mergeLists.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotCones2D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotCones3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotCriterion2D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotHull2D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotHull3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotLines2D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotMTeX3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotNDSet2D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotPlane3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotPoints3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotPolygon3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotPolytope.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotPolytope2D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotPolytope3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotRectangle3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotTeX3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/plotTitleTeX3D.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/pngSize.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/saveView.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/slices.html</loc></url>
+<url><loc>http://relund.github.io/gMOIP/reference/texToPng.html</loc></url>
 </urlset>
+
