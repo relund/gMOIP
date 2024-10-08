@@ -4,21 +4,18 @@
 * Windows (latest) on GitHub Actions, R (release)
 * Ubuntu (latest) on GitHub Actions, R (release, devel)
 * Win-builder (check_win_release)
-* Rhub (windows-x86_64-release)
+* Rhub on GitHub actions (windows)
 
 
 ## R CMD check results
-R CMD check results
+R CMD check results (local)
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 
 ## revdepcheck results
 
-We checked 1 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
-
- * We saw 0 new problems
- * We failed to check 0 packages
+NA
  
 
 ## Comments submission
