@@ -1,7 +1,7 @@
 Package: gMOIP
 Type: Package
 Title: Tools for 2D and 3D Plots of Single and Multi-Objective Linear/Integer Programming Models
-Version: 1.5.2
+Version: 1.5.3
 Authors@R: person("Lars", "Relund Nielsen", email = "lars@relund.dk", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-4802-3071"))
 URL: https://relund.github.io/gMOIP/, https://github.com/relund/gMOIP/

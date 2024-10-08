@@ -920,10 +920,130 @@ genNDSet <-
 
 
 
+
+#' Find extreme points of a nondominated set of points
+#'
+#' @param pts A set of non-dominated points. It is assumed that `ncol(pts)` equals the number of
+#'   objectives ($p$).
+#' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
+#'   plus a value greater than on equal zero (minimize objective $i$). If negative, consider the
+#'   i'th column of the `pts` minus a value greater than on equal zero (maximize objective $i$).
+#'
+#' @note It is assumed that `pts` are nondominated. This algorithm is faster than [classifyNDSet()],
+#'   since only check for extreme points.
+#'
+#' @return The ND set with classification columns `se` (true/false), `sne` (true/false), `us`
+#'   (true/false) and `cls` (se, sne or us).
+#' @seealso [classifyNDSet()]
+#' @importFrom rlang .data
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
+#' ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-2,max(pts[,1])+2),
+#'   ylim = c(min(pts[,2])-2,max(pts[,2])+2),
+#'   zlim = c(min(pts[,3])-2,max(pts[,3])+2)))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5), useRGLBBox = TRUE)
+#' pts <- classifyNDSetExtreme(pts[,1:3])
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))  # extreme
+#' plotPoints3D(pts[is.na(pts$cls),1:3], argsPlot3d = list(col = "yellow"))  # unclassified
+#' finalize3D()
+#' pts
+#'
+#' pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.2,0.1,0.1, 0.1,0.45,0.45), ncol = 3, byrow = TRUE)
+#' di <- -1 # maximize
+#' ini3D(argsPlot3d = list(xlim = c(min(pts[,1])-1,max(pts[,1])+1),
+#'   ylim = c(min(pts[,2])-1,max(pts[,2])+1),
+#'   zlim = c(min(pts[,3])-1,max(pts[,3])+1)))
+#' plotHull3D(pts, addRays = TRUE, argsPolygon3d = list(alpha = 0.5), direction = di,
+#'            addText = "coord")
+#' pts <- classifyNDSetExtreme(pts[,1:3], direction = di)
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[is.na(pts$cls),1:3], argsPlot3d = list(col = "yellow"))  # unclassified
+#' finalize3D()
+#' pts
+#'
+#' pts <- matrix(c(0,0,1, 0,0,1, 0,1,0, 0.5,0.2,0.5, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3,
+#'               byrow = TRUE)
+#' classifyNDSetExtreme(pts)
+#'
+#' pts <- genNDSet(3,15)[,1:3]
+#' ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
+#'   ylim = c(0,max(pts$z2)+2),
+#'   zlim = c(0,max(pts$z3)+2)))
+#' plotHull3D(pts[, 1:3], addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
+#' pts <- classifyNDSetExtreme(pts[,1:3])
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[is.na(pts$cls),1:3], argsPlot3d = list(col = "yellow"))  # unclassified
+#' finalize3D()
+#' pts
+#'
+#' pts <- genNDSet(3, 15, keepDom = FALSE, argsSphere = list(below = FALSE, factor = 10))[,1:3]
+#' ini3D(argsPlot3d = list(xlim = c(0,max(pts$z1)+2),
+#'   ylim = c(0,max(pts$z2)+2),
+#'   zlim = c(0,max(pts$z3)+2)))
+#' plotHull3D(pts[, 1:3], addRays = TRUE, argsPolygon3d = list(alpha = 0.5))
+#' pts <- classifyNDSetExtreme(pts[,1:3])
+#' plotPoints3D(pts[pts$se,1:3], argsPlot3d = list(col = "red"))
+#' plotPoints3D(pts[is.na(pts$cls),1:3], argsPlot3d = list(col = "yellow"))  # unclassified
+#' finalize3D()
+#' pts
+#' }
+classifyNDSetExtreme <- function(pts, direction = 1) {
+   pts <- .checkPts(pts, stopUnique = FALSE)
+   p <- ncol(pts)
+   colnames(pts)[1:p] <- paste0("z", 1:p)
+   if (nrow(pts) == 1) {
+      pts <- as.data.frame(pts)
+      return(cbind(pts, se = TRUE, sne = FALSE, us = FALSE, cls = "se"))
+   }
+   if (length(direction) != p) direction <- rep(direction[1],p)
+   nadir <-
+      purrr::map_dbl(1:p, function(i)
+         if (sign(direction[i]) > 0)
+            max(pts[, i]) + 5
+         else
+            min(pts[, i]) - 5) # add a number so
+   ideal <- purrr::map_dbl(1:p, function(i) if (sign(direction[i]) < 0) max(pts[, i]) else min(pts[, i]))
+   ## project on box so pts are the first rows and rest projections including upper corner points
+   set <- as.matrix(pts)
+   n <- nrow(set)
+   set <- rep(1, p + 1) %x% set  # repeat p + 1 times
+   for (i in 1:p) {
+      set[(i * n + 1):((i + 1) * n), i] <- nadir[i]
+   }
+   # find upper corner points of box
+   cP <- matrix(rep(nadir, p), byrow = T, ncol = p)   # repeat p + 1 times
+   diag(cP) <- ideal
+   cP <- rbind(cP, nadir)
+   # merge and tidy
+   set <- rbind(set, cP)
+   set <- set[!duplicated(set, MARGIN = 1), ]
+   # find hull of the unique points and classify
+   set <- convexHull(set, addRays = FALSE, direction = direction)
+   # hull <- set$hull
+   set <- set$pts
+   set$pt[(n+1):length(set$pt)] <- 0
+   colnames(set)[1:p] <- paste0("z", 1:p)
+   set <- set %>% # tidy and add old id
+      dplyr::filter(.data$pt == 1) %>%
+      dplyr::mutate(cls = dplyr::if_else(.data$vtx, "se", NA_character_),
+                    se = .data$vtx,
+                    sne = dplyr::if_else(.data$vtx, FALSE, NA),
+                    us = dplyr::if_else(.data$vtx, FALSE, NA)) |>
+      dplyr::select(tidyselect::all_of(1:p), c("se", "sne", "us", "cls"))
+   rownames(set) <- NULL
+   return(set)
+}
+
+
+
+
+
 #' Classify a set of nondominated points
 #'
-#' The classification is supported (true/false), extreme (true/false), supported non-extreme
-#' (true/false)
+#' The classification is extreme (se), supported non-extreme (sne) and unsupported `us`.
 #'
 #' @param pts A set of non-dominated points. It is assumed that `ncol(pts)` equals the number of
 #'   objectives ($p$).
@@ -933,7 +1053,9 @@ genNDSet <-
 #'
 #' @note It is assumed that `pts` are nondominated.
 #'
-#' @return The ND set with classification columns.
+#' @return The ND set with classification columns `se` (true/false), `sne` (true/false), `us`
+#'   (true/false) and `cls` (se, sne or us).
+#' @seealso [classifyNDSetExtreme()]
 #' @importFrom rlang .data
 #' @export
 #'
