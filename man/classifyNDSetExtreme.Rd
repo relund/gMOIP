@@ -15,14 +15,16 @@ plus a value greater than on equal zero (minimize objective $i$). If negative, c
 i'th column of the \code{pts} minus a value greater than on equal zero (maximize objective $i$).}
 }
 \value{
-The ND set with classification columns \code{se} (true/false), \code{sne} (true/false), \code{us}
-(true/false) and \code{cls} (se, sne or us).
+The classification is extreme (\code{se}), supported non-extreme (\code{sne}) and unsupported \code{us}
+nondominated points. Return the ND set with classification columns \code{se} (true/false), \code{sne}
+(true/false), \code{us} (true/false) and \code{cls} (\code{se}, \code{sne} or \code{us}).
 }
 \description{
 Find extreme points of a nondominated set of points
 }
 \note{
-It is assumed that \code{pts} are nondominated.
+It is assumed that \code{pts} are nondominated. This algorithm is faster than \code{\link[=classifyNDSet]{classifyNDSet()}},
+since only check for extreme points.
 }
 \examples{
 \donttest{

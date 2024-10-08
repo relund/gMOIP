@@ -932,8 +932,9 @@ genNDSet <-
 #' @note It is assumed that `pts` are nondominated. This algorithm is faster than [classifyNDSet()],
 #'   since only check for extreme points.
 #'
-#' @return The ND set with classification columns `se` (true/false), `sne` (true/false), `us`
-#'   (true/false) and `cls` (se, sne or us).
+#' @return The classification is extreme (`se`), supported non-extreme (`sne`) and unsupported `us`
+#'   nondominated points. Return the ND set with classification columns `se` (true/false), `sne`
+#'   (true/false), `us` (true/false) and `cls` (`se`, `sne` or `us`).
 #' @seealso [classifyNDSet()]
 #' @importFrom rlang .data
 #' @export
@@ -1043,8 +1044,6 @@ classifyNDSetExtreme <- function(pts, direction = 1) {
 
 #' Classify a set of nondominated points
 #'
-#' The classification is extreme (se), supported non-extreme (sne) and unsupported `us`.
-#'
 #' @param pts A set of non-dominated points. It is assumed that `ncol(pts)` equals the number of
 #'   objectives ($p$).
 #' @param direction Ray direction. If i'th entry is positive, consider the i'th column of the `pts`
@@ -1053,8 +1052,9 @@ classifyNDSetExtreme <- function(pts, direction = 1) {
 #'
 #' @note It is assumed that `pts` are nondominated.
 #'
-#' @return The ND set with classification columns `se` (true/false), `sne` (true/false), `us`
-#'   (true/false) and `cls` (se, sne or us).
+#' @return The classification is extreme (`se`), supported non-extreme (`sne`) and unsupported `us`
+#'   nondominated points. Return the ND set with classification columns `se` (true/false), `sne`
+#'   (true/false), `us` (true/false) and `cls` (`se`, `sne` or `us`).
 #' @seealso [classifyNDSetExtreme()]
 #' @importFrom rlang .data
 #' @export
@@ -1141,7 +1141,7 @@ classifyNDSet <- function(pts, direction = 1) {
       dplyr::mutate(id = 1:nrow(pts)) %>%
       dplyr::add_count(!!!nms, name = "ct") %>%
       dplyr::filter(.data$ct > 1) %>%
-      select(-.data$ct) %>%
+      select(-"ct") %>%
       dplyr::arrange(!!!nms, id)
    idx <- duplicated(pts)
    ptsDub <- pts[idx,, drop = F] %>% dplyr::as_tibble() %>% dplyr::mutate(id = which(idx))
