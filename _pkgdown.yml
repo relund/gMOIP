@@ -28,6 +28,7 @@ reference:
 - contents:
   - addNDSet
   - classifyNDSet
+  - classifyNDSetExtreme
   - genNDSet
   - genSample
   - addRays
