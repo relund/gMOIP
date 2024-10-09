@@ -1989,7 +1989,7 @@ pngSize <- function(png) {
 #' @param ylab The axis labels for the plot .
 #' @param zlab The axis labels for the plot .
 #' @param line The ``line'' of the plot margin to draw the label on.
-#' @param ... Additional parameters which are passed to \code{\link{plotMTeX3D}}.
+#' @param ... Additional parameters which are passed to [plotMTeX3D()].
 #'
 #' @details The rectangular prism holding the 3D plot has 12 edges.  They are identified
 #' using 3 character strings.  The first character (`x', `y', or `z') selects
@@ -1999,10 +1999,10 @@ pngSize <- function(png) {
 #' For example \code{edge = 'x+'} draws an x-axis at the high level of y and the
 #' low level of z.
 #'
-#' By default, \code{rgl::axes3d} uses the \code{\link{rgl::bbox3d}} function to draw the axes.
+#' By default, [rgl::axes3d()] uses the [rgl::bbox3d()] function to draw the axes.
 #' The labels will move so that they do not obscure the data.  Alternatively,
 #' a vector of arguments as described above may be used, in which case
-#' fixed axes are drawn using \code{rgl::axis3d}.
+#' fixed axes are drawn using [rgl::axis3d()].
 #'
 #' If \code{pos} is a numeric vector of length 3, \code{edge} determines
 #' the direction of the axis and the tick marks, and the values of the

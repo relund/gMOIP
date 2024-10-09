@@ -27,7 +27,7 @@ plotTitleTeX3D(
 
 \item{line}{The ``line'' of the plot margin to draw the label on.}
 
-\item{...}{Additional parameters which are passed to \code{\link{plotMTeX3D}}.}
+\item{...}{Additional parameters which are passed to \code{\link[=plotMTeX3D]{plotMTeX3D()}}.}
 }
 \value{
 The object IDs of objects added to the scene.
@@ -41,10 +41,10 @@ using 3 character strings.  The first character (\verb{x', }y', or \verb{z') sel
 For example \code{edge = 'x+'} draws an x-axis at the high level of y and the
 low level of z.
 
-By default, \code{axes3d} uses the \code{\link{bbox3d}} function to draw the axes.
+By default, \code{\link[rgl:axes3d]{rgl::axes3d()}} uses the \code{\link[rgl:bbox]{rgl::bbox3d()}} function to draw the axes.
 The labels will move so that they do not obscure the data.  Alternatively,
 a vector of arguments as described above may be used, in which case
-fixed axes are drawn using \code{axis3d}.
+fixed axes are drawn using \code{\link[rgl:axes3d]{rgl::axis3d()}}.
 
 If \code{pos} is a numeric vector of length 3, \code{edge} determines
 the direction of the axis and the tick marks, and the values of the
