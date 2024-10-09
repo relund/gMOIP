@@ -96,7 +96,7 @@
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional parameters which are passed to <code><a href="plotMTeX3D.html">plotMTeX3D</a></code>.</p></dd>
+<dd><p>Additional parameters which are passed to <code><a href="plotMTeX3D.html">plotMTeX3D()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -109,10 +109,10 @@
 using 3 character strings.  The first character (<code>x', </code>y', or <code>z') selects the direction of the axis.  The next two characters are each </code>-' or <code>+', selecting the lower or upper end of one of the other coordinates.  If only one or two characters are given, the remaining characters default to </code>-'.
 For example <code>edge = 'x+'</code> draws an x-axis at the high level of y and the
 low level of z.</p>
-<p>By default, <code>axes3d</code> uses the <code>bbox3d</code> function to draw the axes.
+<p>By default, <code><a href="https://dmurdoch.github.io/rgl/dev/reference/axes3d.html" class="external-link">rgl::axes3d()</a></code> uses the <code><a href="https://dmurdoch.github.io/rgl/dev/reference/bbox.html" class="external-link">rgl::bbox3d()</a></code> function to draw the axes.
 The labels will move so that they do not obscure the data.  Alternatively,
 a vector of arguments as described above may be used, in which case
-fixed axes are drawn using <code>axis3d</code>.</p>
+fixed axes are drawn using <code><a href="https://dmurdoch.github.io/rgl/dev/reference/axes3d.html" class="external-link">rgl::axis3d()</a></code>.</p>
 <p>If <code>pos</code> is a numeric vector of length 3, <code>edge</code> determines
 the direction of the axis and the tick marks, and the values of the
 other two coordinates in <code>pos</code> determine the position.  See the
