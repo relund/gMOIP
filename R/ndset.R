@@ -220,7 +220,7 @@ addNDSet<-function(pts, nDSet = NULL, crit = "max", keepDom = FALSE, dubND = FAL
       pts <- pts[-1,]
    }
    set <- bind_rows(nDSet, pts)
-   idx <- eaf::is_nondominated(set, maximise = (direction == -1), keep_weakly = dubND)
+   idx <- moocore::is_nondominated(set, maximise = (direction == -1), keep_weakly = dubND)
 
    # pf <- dplyr::if_else(direction == 1, "quo(", "quo(desc(")
    # sf <- dplyr::if_else(direction == 1, ")", "))")

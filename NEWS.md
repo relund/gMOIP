@@ -1,3 +1,7 @@
+# gMOIP 1.5.4
+
+* Removed obsolete package `eaf` and replaced it with `moocore`.
+
 # gMOIP 1.5.3
 
 * Add classification algorithm for extreme nondominated points.
