@@ -1,3 +1,7 @@
+# gMOIP 1.5.5
+
+* Fixed non-standard license specification.
+
 # gMOIP 1.5.4
 
 * Removed obsolete package `eaf` and replaced it with `moocore`.
