@@ -1,7 +1,7 @@
 Package: gMOIP
 Type: Package
 Title: Tools for 2D and 3D Plots of Single and Multi-Objective Linear/Integer Programming Models
-Version: 1.5.4
+Version: 1.5.5
 Authors@R: person("Lars", "Relund Nielsen", email = "lars@relund.dk", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-4802-3071"))
 URL: https://relund.github.io/gMOIP/, https://github.com/relund/gMOIP/
@@ -12,12 +12,12 @@ Description: Make 2D and 3D plots of linear programming (LP),
     For instance the non-dominated (Pareto) set for bi-objective LP/ILP/MILP programming models 
     (see vignettes for an overview). The package also contains an function for checking if a point
     is inside the convex hull.
-License: GPL (>= 3.3.2)
+License: GPL (>= 3)
 Language: en-US
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 Imports: 
     ggrepel,
     geometry,

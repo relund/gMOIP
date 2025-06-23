@@ -20,7 +20,7 @@ NA
 
 ## Comments submission
 
-* Added a new function.
+* Fixed non-standard license specification.
 
 
 ## Downstream dependencies
