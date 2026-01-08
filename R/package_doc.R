@@ -3,4 +3,7 @@
 #' @import dplyr
 "_PACKAGE"
 
+# Declare global variables used in dplyr/tidyverse code to avoid R CMD check NOTEs
+utils::globalVariables("id")
+
 
