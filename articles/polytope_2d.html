@@ -157,7 +157,7 @@ non-negative variables
 <span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"y"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Solution (max) with other axis labels"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">gridExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="polytope_2d_files/figure-html/LP1-1.png" width="99%" style="display: block; margin: auto;"></p>
+<p><img src="polytope_2d_files/figure-html/LP1-1.png" class="r-plt" alt="" width="99%" style="display: block; margin: auto;"></p>
 <p>You may also consider a LP model with no non-negativity
 constraints:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -177,7 +177,7 @@ constraints:</p>
 <span>   plotOptimum <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>   labels <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="polytope_2d_files/figure-html/LP2-1.png" width="99%" style="display: block; margin: auto;"></p>
+<p><img src="polytope_2d_files/figure-html/LP2-1.png" class="r-plt" alt="" width="99%" style="display: block; margin: auto;"></p>
 <p>Note The package don’t plot feasible regions that are unbounded e.g
 if we drop the second and third constraint we get the wrong plot:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -197,7 +197,7 @@ if we drop the second and third constraint we get the wrong plot:</p>
 <span>   plotOptimum <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>   labels <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="polytope_2d_files/figure-html/unbounded1-1.png" width="99%" style="display: block; margin: auto;"></p>
+<p><img src="polytope_2d_files/figure-html/unbounded1-1.png" class="r-plt" alt="" width="99%" style="display: block; margin: auto;"></p>
 <p>One solution is to add a bounding box and check if the bounding box
 is binding</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -215,7 +215,7 @@ is binding</p>
 <span>   plotOptimum <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>   labels <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="polytope_2d_files/figure-html/unbounded2-1.png" width="99%" style="display: block; margin: auto;"></p>
+<p><img src="polytope_2d_files/figure-html/unbounded2-1.png" class="r-plt" alt="" width="99%" style="display: block; margin: auto;"></p>
 <p>You may also use e.g <code>lpsolve</code> to check if the solution is
 unbounded.</p>
 </div>
@@ -283,7 +283,7 @@ you may view the feasible region different ways:</p>
 <span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Other objective (min)"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">gridExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="polytope_2d_files/figure-html/ILP-1.png" width="99%" style="display: block; margin: auto;"></p>
+<p><img src="polytope_2d_files/figure-html/ILP-1.png" class="r-plt" alt="" width="99%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="milp-model">MILP model<a class="anchor" aria-label="anchor" href="#milp-model"></a>
@@ -347,7 +347,7 @@ you may view the feasible region different ways:</p>
 <span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"First coordinate integer (MILP faces)"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">gridExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="polytope_2d_files/figure-html/MILP-1.png" width="99%" style="display: block; margin: auto;"></p>
+<p><img src="polytope_2d_files/figure-html/MILP-1.png" class="r-plt" alt="" width="99%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="saving-plots-to-latex">Saving plots to LaTeX<a class="anchor" aria-label="anchor" href="#saving-plots-to-latex"></a>
@@ -383,7 +383,7 @@ plot for LaTeX using</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

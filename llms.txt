@@ -1,0 +1,334 @@
+# Tools for 2D and 3D plots of single and multi-objective linear/integer programming models
+
+The `gMOIP` package can be used to make 2D and 3D plots of linear
+programming (LP), integer linear programming (ILP), or mixed integer
+linear programming (MILP) models with up to three objectives. This
+include the polytope, integer points, ranges and iso profit curve. Plots
+of both the solution and criterion space are possible. For instance the
+nondominated (Pareto) set for bi-objective LP/ILP/MILP programming
+models.
+
+The package also include an `inHull` function for checking if a set of
+points is inside/at/outside the convex hull of a set of vertices (for
+arbitrary dimension).
+
+Finally, the package also contains functions for generating
+(nondominated) points in ${\mathbb{R}}_{n}$ and classifying nondominated
+points as supported extreme, supported non-extreme and unsupported.
+
+## Usage
+
+Consider the model $\max\{ cx|Ax \leq b\}$ (could also be minimized)
+with 2 variables:
+
+``` r
+A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
+b <- c(3,27,90)
+coeff <- c(7.75, 10)  # coefficients c
+```
+
+The polytope of the LP model with non-negative continuous variables
+($x \geq 0$):
+
+``` r
+plotPolytope(
+   A,
+   b,
+   coeff,
+   type = rep("c", ncol(A)),
+   crit = "max",
+   faces = rep("c", ncol(A)),
+   plotFaces = TRUE,
+   plotFeasible = TRUE,
+   plotOptimum = TRUE,
+   labels = "coord"
+)
+```
+
+![](reference/figures/README-lp-1.png)
+
+The polytope of the ILP model with LP faces ($x \in {\mathbb{Z}}_{0}$):
+
+``` r
+plotPolytope(
+   A,
+   b,
+   coeff,
+   type = rep("i", ncol(A)),
+   crit = "max",
+   faces = rep("c", ncol(A)),
+   plotFaces = TRUE,
+   plotFeasible = TRUE,
+   plotOptimum = TRUE,
+   labels = "coord"
+)
+```
+
+![](reference/figures/README-ilp-1.png)
+
+The polytope of the MILP model (first variable integer) with LP faces:
+
+``` r
+plotPolytope(
+   A,
+   b,
+   coeff,
+   type = c("i", "c"),
+   crit = "max",
+   faces = c("c", "c"),
+   plotFaces = TRUE,
+   plotFeasible = TRUE,
+   plotOptimum = TRUE,
+   labels = "coord"
+)
+```
+
+![](reference/figures/README-milp-1.png)
+
+You can do the same with three variables:
+
+``` r
+A <- matrix( c(
+   3, 2, 5,
+   2, 1, 1,
+   1, 1, 3,
+   5, 2, 4
+), nc = 3, byrow = TRUE)
+b <- c(55, 26, 30, 57)
+coeff <- c(20, 10, 15)
+```
+
+``` r
+# LP model
+view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
+                  -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
+                  0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
+loadView(v = view)  # set view angle
+plotPolytope(A, b, plotOptimum = TRUE, obj = coeff, labels = "n")
+```
+
+![](reference/figures/README-3d.gif)
+
+Note: interactive 3d plots cannot be displayed in a GitHub `README`
+file, and static images or animated gifs are used here instead. Visit
+the [*pkgdown* online documentation](https://relund.github.io/gMOIP/) to
+view plots which can be manipulated in the browser.
+
+For more examples see `example("gMOIP-package")` or
+`browseVignettes('gMOIP')`.
+
+## LaTeX support
+
+You may create a TikZ file of the plot for LaTeX using
+
+``` r
+library(tikzDevice)
+tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
+plotPolytope(
+   A,
+   b,
+   coeff,
+   type = rep("i", ncol(A)),
+   crit = "max",
+   faces = rep("c", ncol(A)),
+   plotFaces = TRUE,
+   plotFeasible = TRUE,
+   plotOptimum = TRUE,
+   labels = "coord"
+)
+dev.off()
+```
+
+## Installation
+
+Install the latest stable release from CRAN:
+
+``` r
+install.packages("gMOIP")
+```
+
+Alternatively, install the latest development version from GitHub
+(recommended):
+
+``` r
+install.packages("remotes")
+remotes::install_github("relund/gMOIP")
+
+library(gMOIP)
+browseVignettes('gMOIP')
+example("gMOIP-package")
+```
+
+The package is highly dependent on the
+[rgl](https://github.com/dmurdoch/rgl) package for plotting 3D graphics.
+If your build of [rgl](https://github.com/dmurdoch/rgl) does not include
+OpenGL functions, use
+[`rgl::rglwidget()`](https://dmurdoch.github.io/rgl/dev/reference/rglwidget.html)
+to display results, e.g. via `options(rgl.printRglwidget = TRUE)`.
+
+# Package index
+
+## 2D graphics
+
+- [`gMOIPTheme()`](http://relund.github.io/gMOIP/reference/gMOIPTheme.md)
+  :
+
+  The `ggplot` theme for the package
+
+- [`plotCones2D()`](http://relund.github.io/gMOIP/reference/plotCones2D.md)
+  : Plot a cone defined by a point in 2D.
+
+- [`plotCriterion2D()`](http://relund.github.io/gMOIP/reference/plotCriterion2D.md)
+  : Create a plot of the criterion space of a bi-objective problem
+
+- [`plotHull2D()`](http://relund.github.io/gMOIP/reference/plotHull2D.md)
+  : Plot the convex hull of a set of points in 2D.
+
+- [`plotLines2D()`](http://relund.github.io/gMOIP/reference/plotLines2D.md)
+  : Plot the lines of a linear mathematical program (Ax = b)
+
+- [`plotNDSet2D()`](http://relund.github.io/gMOIP/reference/plotNDSet2D.md)
+  : Create a plot of a discrete non-dominated set.
+
+- [`plotPolytope2D()`](http://relund.github.io/gMOIP/reference/plotPolytope2D.md)
+  : Plot the polytope (bounded convex set) of a linear mathematical
+  program
+
+- [`plotPolytope()`](http://relund.github.io/gMOIP/reference/plotPolytope.md)
+  : Plot the polytope (bounded convex set) of a linear mathematical
+  program (Ax \<= b)
+
+## 3D graphics
+
+- [`finalize3D()`](http://relund.github.io/gMOIP/reference/finalize3D.md)
+  : Finalize the RGL window.
+- [`ini3D()`](http://relund.github.io/gMOIP/reference/ini3D.md) :
+  Initialize the RGL window.
+- [`loadView()`](http://relund.github.io/gMOIP/reference/loadView.md) :
+  Help function to load the view angle for the RGL 3D plot from a file
+  or matrix
+- [`plotCones3D()`](http://relund.github.io/gMOIP/reference/plotCones3D.md)
+  : Plot a cone defined by a point in 3D.
+- [`plotHull3D()`](http://relund.github.io/gMOIP/reference/plotHull3D.md)
+  : Plot the convex hull of a set of points in 3D.
+- [`plotMTeX3D()`](http://relund.github.io/gMOIP/reference/plotMTeX3D.md)
+  : Plot TeX in the margin
+- [`plotPlane3D()`](http://relund.github.io/gMOIP/reference/plotPlane3D.md)
+  : Plot a plane in 3D.
+- [`plotPoints3D()`](http://relund.github.io/gMOIP/reference/plotPoints3D.md)
+  : Plot points in 3D.
+- [`plotPolygon3D()`](http://relund.github.io/gMOIP/reference/plotPolygon3D.md)
+  : Plot a polygon.
+- [`plotPolytope3D()`](http://relund.github.io/gMOIP/reference/plotPolytope3D.md)
+  : Plot the polytope (bounded convex set) of a linear mathematical
+  program
+- [`plotRectangle3D()`](http://relund.github.io/gMOIP/reference/plotRectangle3D.md)
+  : Plot a rectangle defined by two corner points.
+- [`plotTeX3D()`](http://relund.github.io/gMOIP/reference/plotTeX3D.md)
+  : Plot TeX at a position.
+- [`plotTitleTeX3D()`](http://relund.github.io/gMOIP/reference/plotTitleTeX3D.md)
+  : Draw boxes, axes and other text outside the data using TeX strings.
+- [`saveView()`](http://relund.github.io/gMOIP/reference/saveView.md) :
+  Help function to save the view angle for the RGL 3D plot
+- [`plotPolytope()`](http://relund.github.io/gMOIP/reference/plotPolytope.md)
+  : Plot the polytope (bounded convex set) of a linear mathematical
+  program (Ax \<= b)
+- [`getTexture()`](http://relund.github.io/gMOIP/reference/getTexture.md)
+  : Save a point symbol as a temporary file.
+
+## Convex hull
+
+- [`convexHull()`](http://relund.github.io/gMOIP/reference/convexHull.md)
+  : Find the convex hull of a set of points.
+- [`hullSegment()`](http://relund.github.io/gMOIP/reference/hullSegment.md)
+  : Find segments (lines) of a face.
+- [`inHull()`](http://relund.github.io/gMOIP/reference/inHull.md) :
+  Efficient test for points inside a convex hull in p dimensions.
+- [`plotHull2D()`](http://relund.github.io/gMOIP/reference/plotHull2D.md)
+  : Plot the convex hull of a set of points in 2D.
+- [`plotHull3D()`](http://relund.github.io/gMOIP/reference/plotHull3D.md)
+  : Plot the convex hull of a set of points in 3D.
+- [`dimFace()`](http://relund.github.io/gMOIP/reference/dimFace.md) :
+  Return the dimension of the convex hull of a set of points.
+
+## Matematical programming
+
+- [`plotPolytope()`](http://relund.github.io/gMOIP/reference/plotPolytope.md)
+  : Plot the polytope (bounded convex set) of a linear mathematical
+  program (Ax \<= b)
+- [`cornerPoints()`](http://relund.github.io/gMOIP/reference/cornerPoints.md)
+  : Calculate the corner points for the polytope Ax\<=b.
+- [`cornerPointsCont()`](http://relund.github.io/gMOIP/reference/cornerPointsCont.md)
+  : Calculate the corner points for the polytope Ax\<=b assuming all
+  variables are continuous.
+- [`binaryPoints()`](http://relund.github.io/gMOIP/reference/binaryPoints.md)
+  : Binary (0-1) points in the feasible region (Ax\<=b).
+- [`criterionPoints()`](http://relund.github.io/gMOIP/reference/criterionPoints.md)
+  : Calculate the criterion points of a set of points and ranges to find
+  the set of non-dominated points (Pareto points) and classify them into
+  extreme supported, non-extreme supported, non-supported.
+- [`integerPoints()`](http://relund.github.io/gMOIP/reference/integerPoints.md)
+  : Integer points in the feasible region (Ax\<=b).
+- [`slices()`](http://relund.github.io/gMOIP/reference/slices.md) : Find
+  all corner points in the slices define for each fixed integer
+  combination.
+
+## Multi-objective programming
+
+- [`addNDSet()`](http://relund.github.io/gMOIP/reference/addNDSet.md) :
+  Add discrete points to a non-dominated set and classify them into
+  extreme supported, non-extreme supported, non-supported.
+- [`classifyNDSet()`](http://relund.github.io/gMOIP/reference/classifyNDSet.md)
+  : Classify a set of nondominated points
+- [`classifyNDSetExtreme()`](http://relund.github.io/gMOIP/reference/classifyNDSetExtreme.md)
+  : Find extreme points of a nondominated set of points
+- [`genNDSet()`](http://relund.github.io/gMOIP/reference/genNDSet.md) :
+  Generate a sample of nondominated points.
+- [`genSample()`](http://relund.github.io/gMOIP/reference/genSample.md)
+  : Generate a sample of points in dimension \$p\$.
+- [`addRays()`](http://relund.github.io/gMOIP/reference/addRays.md) :
+  Add all points on the bounding box hit by the rays.
+
+## Other
+
+- [`texToPng()`](http://relund.github.io/gMOIP/reference/texToPng.md) :
+  Convert LaTeX to a png file
+- [`pngSize()`](http://relund.github.io/gMOIP/reference/pngSize.md) : To
+  size of the png file.
+- [`df2String()`](http://relund.github.io/gMOIP/reference/df2String.md)
+  : Convert each row to a string.
+- [`mergeLists()`](http://relund.github.io/gMOIP/reference/mergeLists.md)
+  : Merge two lists to one
+
+# Articles
+
+### All vignettes
+
+- [Plotting bi-objective models with two
+  variables](http://relund.github.io/gMOIP/articles/bi-objective_2x.md):
+- [Plotting bi-objective models with three variables - Example
+  1](http://relund.github.io/gMOIP/articles/bi-objective_3x_ex1.md):
+- [Plotting bi-objective models with three variables - Example
+  2](http://relund.github.io/gMOIP/articles/bi-objective_3x_ex2.md):
+- [Plotting bi-objective models with three variables - Example
+  3](http://relund.github.io/gMOIP/articles/bi-objective_3x_ex3.md):
+- [Plotting bi-objective models with three variables - Example
+  4](http://relund.github.io/gMOIP/articles/bi-objective_3x_ex4.md):
+- [Introduction to
+  gMOIP](http://relund.github.io/gMOIP/articles/intro.md):
+- [Generating costs in multi-objective
+  programming](http://relund.github.io/gMOIP/articles/mo_costs.md):
+- [Shapes in multi-objective
+  programming](http://relund.github.io/gMOIP/articles/mo_shapes.md):
+- [Plotting polytopes in
+  2D](http://relund.github.io/gMOIP/articles/polytope_2d.md):
+- [Plotting polytopes in 3D - Example
+  1](http://relund.github.io/gMOIP/articles/polytope_3d_ex1.md):
+- [Plotting polytopes in 3D - Example
+  2](http://relund.github.io/gMOIP/articles/polytope_3d_ex2.md):
+- [Plotting polytopes in 3D - Example
+  3](http://relund.github.io/gMOIP/articles/polytope_3d_ex3.md):
+- [Plotting polytopes in 3D - Example
+  4](http://relund.github.io/gMOIP/articles/polytope_3d_ex4.md):
+- [Plotting tri-objective
+  models](http://relund.github.io/gMOIP/articles/tri-objective.md):
