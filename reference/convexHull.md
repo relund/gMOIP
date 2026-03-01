@@ -254,7 +254,7 @@ convexHull(pts)
 #> [3,]    4    3    1
 #> [4,]    4    3    2
 #> attr(,"convhulln")
-#> <pointer: 0x5653bef204a0>
+#> <pointer: 0x5566a7ce7e70>
 #> 
 #> $pts
 #>   p1 p2 p3 pt  vtx
@@ -276,7 +276,7 @@ convexHull(pts)
 #> [3,]    4    3    1
 #> [4,]    4    3    2
 #> attr(,"convhulln")
-#> <pointer: 0x5653bfe5f950>
+#> <pointer: 0x5566a9527260>
 #> 
 #> $pts
 #>   p1 p2 p3 pt  vtx
