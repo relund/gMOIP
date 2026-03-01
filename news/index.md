@@ -1,5 +1,10 @@
 # Changelog
 
+## gMOIP 1.5.6
+
+- Fix ‘no visible binding for global variable ‘id’’ by adding id to the
+  global variables list in the package code.
+
 ## gMOIP 1.5.5
 
 - Fixed non-standard license specification.
