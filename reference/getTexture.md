@@ -45,6 +45,6 @@ generateRPointShapes()
 
 
 getTexture()
-#> [1] "/tmp/Rtmpiz48iS/file294473f5648f.png"
+#> [1] "/tmp/RtmpIKdw3A/file27cf7fd3637c.png"
 # }
 ```
