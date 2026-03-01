@@ -20,7 +20,7 @@ NA
 
 ## Comments submission
 
-* Fixed non-standard license specification.
+* Fixed 'no visible binding for global variable ‘id’' by adding id to the global variables list in the package code.
 
 
 ## Downstream dependencies
