@@ -8,6 +8,7 @@ on how to make plots of both the solution and criterion space.
 First we load the package:
 
 ``` r
+
 library(gMOIP)
 ```
 
@@ -15,6 +16,7 @@ We define a function for grouping plots of the solution and criterion
 space:
 
 ``` r
+
 plotBiObj2D <- function(A, b, obj,
    type = rep("c", ncol(A)),
    crit = "max",
@@ -39,6 +41,7 @@ plotBiObj2D <- function(A, b, obj,
 Let us define the constraints:
 
 ``` r
+
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 ```
@@ -46,6 +49,7 @@ b <- c(3,27,90)
 First let us have a look at a LP model:
 
 ``` r
+
 obj <- matrix(
    c(7, -10, # first criterion
      -10, -10), # second criterion
@@ -62,6 +66,7 @@ between them.
 ILP models with different criteria (maximize):
 
 ``` r
+
 obj <- matrix(c(7, -10, -10, -10), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ```
@@ -69,6 +74,7 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ![](bi-objective_2x_files/figure-html/2DILPMax-1.png)
 
 ``` r
+
 obj <- matrix(c(3, -1, -2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ```
@@ -76,6 +82,7 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ![](bi-objective_2x_files/figure-html/2DILPMax-2.png)
 
 ``` r
+
 obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ```
@@ -83,6 +90,7 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ![](bi-objective_2x_files/figure-html/2DILPMax-3.png)
 
 ``` r
+
 obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ```
@@ -99,6 +107,7 @@ identified in the criterion space using the same number.
 ILP models with different criteria (minimize):
 
 ``` r
+
 obj <- matrix(c(7, -10, -10, -10), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 ```
@@ -106,6 +115,7 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 ![](bi-objective_2x_files/figure-html/2DILPMin-1.png)
 
 ``` r
+
 obj <- matrix(c(3, -1, -2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 ```
@@ -113,6 +123,7 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 ![](bi-objective_2x_files/figure-html/2DILPMin-2.png)
 
 ``` r
+
 obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 ```
@@ -120,15 +131,17 @@ plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 ![](bi-objective_2x_files/figure-html/2DILPMin-3.png)
 
 ``` r
+
 obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)), crit = "min")
 ```
 
 ![](bi-objective_2x_files/figure-html/2DILPMin-4.png)
 
-MILP model ($x_{1}$ integer) with different criteria (maximize):
+MILP model ($`x_1`$ integer) with different criteria (maximize):
 
 ``` r
+
 obj <- matrix(c(7, -10, -10, -10), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("i", "c"))
 ```
@@ -136,6 +149,7 @@ plotBiObj2D(A, b, obj, type = c("i", "c"))
 ![](bi-objective_2x_files/figure-html/2DMILPMax-1.png)
 
 ``` r
+
 obj <- matrix(c(3, -1, -2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("i", "c"))
 ```
@@ -143,6 +157,7 @@ plotBiObj2D(A, b, obj, type = c("i", "c"))
 ![](bi-objective_2x_files/figure-html/2DMILPMax-2.png)
 
 ``` r
+
 obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("i", "c"))
 ```
@@ -150,6 +165,7 @@ plotBiObj2D(A, b, obj, type = c("i", "c"))
 ![](bi-objective_2x_files/figure-html/2DMILPMax-3.png)
 
 ``` r
+
 obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("i", "c"))
 ```
@@ -161,9 +177,10 @@ non-dominated set may consist of points and segments (open and closed).
 Note these segments are not highlighted in the current version of
 `gMOIP`.
 
-MILP model ($x_{2}$ integer) with different criteria (minimize):
+MILP model ($`x_2`$ integer) with different criteria (minimize):
 
 ``` r
+
 ## 
 obj <- matrix(c(7, -10, -10, -10), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
@@ -172,6 +189,7 @@ plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 ![](bi-objective_2x_files/figure-html/2DMILPMin-1.png)
 
 ``` r
+
 obj <- matrix(c(3, -1, -2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 ```
@@ -179,6 +197,7 @@ plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 ![](bi-objective_2x_files/figure-html/2DMILPMin-2.png)
 
 ``` r
+
 obj <- matrix(c(-7, -1, -5, 5), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 ```
@@ -186,6 +205,7 @@ plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 ![](bi-objective_2x_files/figure-html/2DMILPMin-3.png)
 
 ``` r
+
 obj <- matrix(c(-1, -1, 2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 ```
@@ -198,6 +218,7 @@ If you write a paper using LaTeX, you may create a TikZ file of the plot
 for LaTeX using
 
 ``` r
+
 library(tikzDevice)
 tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
 plotPolytope(

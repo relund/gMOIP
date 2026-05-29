@@ -8,6 +8,7 @@ on how to make plots of the criterion space.
 First we load the package:
 
 ``` r
+
 library(gMOIP)
 ```
 
@@ -15,6 +16,7 @@ The criterion space can be plotted for tri-objective models. An example
 with many unsupported:
 
 ``` r
+
 view <- matrix( c(0.333316594362259, 0.938472270965576, -0.0903875231742859, 0, 0.83994072675705, -0.339126199483871, -0.423665106296539, 0, -0.428250730037689, 0.0652943551540375, -0.901297807693481, 0, 0, 0, 0, 1), nc = 4)
 loadView(v = view)
 set.seed(1234)
@@ -42,6 +44,7 @@ finalize3D(argsAxes3d = list(edges = "bbox"))
 Example with many supported:
 
 ``` r
+
 loadView(v = view)
 pts <- genNDSet(3, 10, argsSphere = list(below = TRUE), dubND = FALSE)
 pts <- classifyNDSet(pts[,1:3])
@@ -61,6 +64,7 @@ finalize3D(argsAxes3d = list(edges = "bbox"))
 Non-dominated points can be classified using `classifyNDSet`:
 
 ``` r
+
 pts <- matrix(c(0,0,1, 0,1,0, 1,0,0, 0.5,0.2,0.5, 0.25,0.5,0.25), ncol = 3, byrow = TRUE)
 open3d()
 #> null 
@@ -86,6 +90,7 @@ rglwidget(reuse = F)
 ```
 
 ``` r
+
 pts <- genNDSet(3,20, dubND = FALSE)[,1:3]
 open3d()
 #> null 

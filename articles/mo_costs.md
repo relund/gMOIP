@@ -2,17 +2,18 @@
 
 When generating instances for testing in multi-objective programming the
 cost structure of the objective coefficients may have a huge impact on
-the difficulty of the instance. Points in ${\mathbb{R}}_{n}$ can be
+the difficulty of the instance. Points in $`\mathbb{R}_n`$ can be
 generated using function `genSample`. Different methods can be used for
 generation:
 
 **Random**
 
 The coefficient are generated randomly with a uniform distribution in
-the range $\lbrack a,b\rbrack$. For three objectives, random generated
-coefficients looks as follows.
+the range $`[a,b]`$. For three objectives, random generated coefficients
+looks as follows.
 
 ``` r
+
 library(gMOIP)
 range <- matrix(c(1,100, 50,100, 10,50), ncol = 2, byrow = TRUE )
 pts <- genSample(3, 1000, range = range, random = TRUE)
@@ -24,10 +25,10 @@ rglwidget()
 
 **Between planes**
 
-The coefficient are generated between two planes in the range
-$\lbrack a,b\rbrack$.
+The coefficient are generated between two planes in the range $`[a,b]`$.
 
 ``` r
+
 range <- matrix(c(1,100, 1, 100, 1, 100), ncol = 2, byrow = TRUE )
 center <- rowMeans(range)
 planeU <- c(rep(1, 3), -1.2*sum(rowMeans(range)))
@@ -46,10 +47,11 @@ rglwidget(reuse = F)
 
 The coefficients are generated on the lower part of a sphere (see next
 picture). Note that the sphere is adjusted such that the coefficients
-are in the range $\lbrack a,b\rbrack$, i.e. the sphere is not
-necessarily included in $\lbrack a,b\rbrack^{p}$.
+are in the range $`[a,b]`$, i.e. the sphere is not necessarily included
+in $`[a,b]^p`$.
 
 ``` r
+
 cent <- c(1000,1000,1000)
 r <- 750
 planeC <- c(cent-r/3)
@@ -67,10 +69,11 @@ rglwidget(reuse = F)
 
 The coefficients are generated on the lower part of a sphere (see next
 picture). Note that the sphere is adjusted such that the coefficients
-are in the range $\lbrack a,b\rbrack$, i.e. the sphere is not
-necessarily included in $\lbrack a,b\rbrack^{p}$.
+are in the range $`[a,b]`$, i.e. the sphere is not necessarily included
+in $`[a,b]^p`$.
 
 ``` r
+
 cent <- c(1000,1000,1000)
 r <- 750
 planeC <- c(cent-r/3)
@@ -89,10 +92,11 @@ rglwidget(reuse = F)
 
 The coefficients are generated on the upper part of a sphere (see next
 picture). Note that the sphere is adjusted such that the coefficients
-are in the range $\lbrack a,b\rbrack$, i.e. the sphere is not
-necessarily included in $\lbrack a,b\rbrack^{p}$.
+are in the range $`[a,b]`$, i.e. the sphere is not necessarily included
+in $`[a,b]^p`$.
 
 ``` r
+
 cent <- c(1000,1000,1000)
 r <- 750
 planeC <- c(cent+r/3)
@@ -110,9 +114,10 @@ rglwidget(reuse = F)
 **2box**
 
 The coefficients are generated randomly but in two specific parts of
-$\lbrack a,b\rbrack^{p}$ (see next picture).
+$`[a,b]^p`$ (see next picture).
 
 ``` r
+
 range <- matrix(c(1,1000, 1,1000, 1,1000), ncol = 2, byrow = TRUE )
 ini3D(argsPlot3d = list(box = TRUE, axes = TRUE))
 pts <- genSample(3, 300, range = range, box = TRUE)

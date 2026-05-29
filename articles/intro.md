@@ -13,15 +13,15 @@ points is inside/at/outside the convex hull of a set of vertices (for
 arbitrary dimension).
 
 Finally, the package also contains functions for generating
-(non-dominated) points in ${\mathbb{R}}_{n}$ and classifying
-non-dominated points as supported extreme, supported non-extreme and
-unsupported.
+(non-dominated) points in $`\mathbb{R}_n`$ and classifying non-dominated
+points as supported extreme, supported non-extreme and unsupported.
 
 ## Installation
 
 Install the latest stable release from CRAN:
 
 ``` r
+
 install.packages("gMOIP")
 ```
 
@@ -29,6 +29,7 @@ Alternatively, install the latest development version from GitHub
 (recommended):
 
 ``` r
+
 install.packages("devtools")
 devtools::install_github("relund/gMOIP")
 library(gMOIP)
@@ -36,19 +37,21 @@ library(gMOIP)
 
 ## Single criterion models
 
-We define the model $\max\{ cx|Ax \leq b\}$ (could also be minimized)
+We define the model $`\max\{cx | Ax \leq b\}`$ (could also be minimized)
 using matrix `A` and vectors `b` and `obj`:
 
 ``` r
+
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 obj <- c(7.75, 10)  # coefficients c
 ```
 
 The polytope of the LP model with non-negative continuous variables
-($x \geq 0$):
+($`x \geq 0`$):
 
 ``` r
+
 plotPolytope(
    A,
    b,
@@ -65,9 +68,10 @@ plotPolytope(
 
 ![](intro_files/figure-html/unnamed-chunk-3-1.png)
 
-The polytope of the ILP model with LP faces ($x \in {\mathbb{Z}}_{0}$):
+The polytope of the ILP model with LP faces ($`x\in \mathbb{Z}_0`$):
 
 ``` r
+
 plotPolytope(
    A,
    b,
@@ -87,6 +91,7 @@ plotPolytope(
 The polytope of the MILP model (first variable integer) with LP faces:
 
 ``` r
+
 plotPolytope(
    A,
    b,
@@ -108,6 +113,7 @@ plotPolytope(
 You can do the same with three variables:
 
 ``` r
+
 A <- matrix( c(
    3, 2, 5,
    2, 1, 1,
@@ -121,6 +127,7 @@ obj <- c(20, 10, 15)
 LP model:
 
 ``` r
+
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
@@ -135,6 +142,7 @@ plotPolytope(A,
 ILP model (here with ILP faces):
 
 ``` r
+
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
@@ -150,6 +158,7 @@ plotPolytope(A,
 MILP model (here with continuous faces):
 
 ``` r
+
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
                   0.231208890676498, 0, 0, 0, 0, 1), nc = 4)   
@@ -175,6 +184,7 @@ define a function for grouping plots of the solution and criterion
 space:
 
 ``` r
+
 plotBiObj2D <- function(A, b, obj,
    type = rep("c", ncol(A)),
    crit = "max",
@@ -199,6 +209,7 @@ plotBiObj2D <- function(A, b, obj,
 Let us define the constraints:
 
 ``` r
+
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 ```
@@ -206,6 +217,7 @@ b <- c(3,27,90)
 First let us have a look at a LP model (maximize):
 
 ``` r
+
 obj <- matrix(
    c(7, -10, # first criterion
      -10, -10), # second criterion
@@ -222,6 +234,7 @@ between them.
 ILP model (maximize):
 
 ``` r
+
 obj <- matrix(c(3, -1, -2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = rep("i", ncol(A)))
 ```
@@ -235,9 +248,10 @@ extreme non-dominated points illustrate areas where unsupported
 non-dominated points may be found. A point in the solution space is
 identified in the criterion space using the same number.
 
-MILP model ($x_{2}$ integer) (minimize):
+MILP model ($`x_2`$ integer) (minimize):
 
 ``` r
+
 obj <- matrix(c(3, -1, -2, 2), nrow = 2)
 plotBiObj2D(A, b, obj, type = c("c", "i"), crit = "min")
 ```
@@ -254,6 +268,7 @@ Note these segments are not highlighted in the current version of
 We define functions for plotting the solution and criterion space:
 
 ``` r
+
 plotSol <- function(A, b, type = rep("c", ncol(A)),
                         faces = rep("c", ncol(A)),
                         plotFaces = TRUE, labels = "numb")
@@ -277,10 +292,11 @@ interactive to illustrate the functionality.
 
 ### Example 1
 
-We define the model $\max\{ cx|Ax \leq b\}$ (could also be minimized)
-with three variables:
+We define the model $`\max \{cx | Ax \leq b\}`$ (could also be
+minimized) with three variables:
 
 ``` r
+
 Ab <- matrix( c(
    1, 1, 2, 5,
    2, -1, 0, 3,
@@ -295,6 +311,7 @@ obj <- matrix(c(1, -6, 3, -4, 1, 6), nrow = 2)
 We load the preferred view angle for the RGL window:
 
 ``` r
+
 view <- matrix( c(-0.452365815639496, -0.446501553058624, 0.77201122045517, 0, 0.886364221572876,
                   -0.320795893669128, 0.333835482597351, 0, 0.0986008867621422, 0.835299551486969,
                   0.540881276130676, 0, 0, 0, 0, 1), nc = 4)
@@ -304,12 +321,14 @@ loadView(v = view)
 LP model (solution space):
 
 ``` r
+
 plotSol(A, b)
 ```
 
 LP model (criterion space):
 
 ``` r
+
 plotCrit(A, b, obj, addTriangles = FALSE) 
 ```
 
@@ -318,12 +337,14 @@ plotCrit(A, b, obj, addTriangles = FALSE)
 ILP model (solution space):
 
 ``` r
+
 plotSol(A, b, type = c("i","i","i"))
 ```
 
 ILP model (criterion space):
 
 ``` r
+
 plotCrit(A, b, obj, type = c("i","i","i"))
 ```
 
@@ -334,6 +355,7 @@ plotCrit(A, b, obj, type = c("i","i","i"))
 You may create a TikZ file of the 2D plots for LaTeX using
 
 ``` r
+
 library(tikzDevice)
 tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
 plotPolytope(
@@ -358,6 +380,7 @@ For further examples see the
 [articles](https://relund.github.io/gMOIP/).
 
 ``` r
+
 library(gMOIP)
 browseVignettes('gMOIP')
 example("gMOIP-package")

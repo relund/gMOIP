@@ -9,13 +9,15 @@ with two variables.
 First we load the package:
 
 ``` r
+
 library(gMOIP)
 ```
 
-We define the model $\max\{ cx|Ax \leq b\}$ (could also be minimized)
-with 2 variables:
+We define the model $`\max \{cx | Ax \leq b\}`$ (could also be
+minimized) with 2 variables:
 
 ``` r
+
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 obj <- c(7.75, 10)  # coefficients c
@@ -27,9 +29,11 @@ Plots are created using function `plotPolytope` which outputs a
 ## LP model
 
 Let us consider different plots of the polytope of the LP model with
-non-negative variables ($x \in {\mathbb{R}}_{0},x \geq 0$):
+non-negative variables ($`x
+\in \mathbb{R}_0, x \geq 0`$):
 
 ``` r
+
 # The polytope with the corner points
 p1 <- plotPolytope(
    A,
@@ -91,6 +95,7 @@ gridExtra::grid.arrange(p1, p2, p3, p4, nrow = 2)
 You may also consider a LP model with no non-negativity constraints:
 
 ``` r
+
 A <- matrix(c(-3, 2, 2, 4, 9, 10, 1, -2), ncol = 2, byrow = TRUE)
 b <- c(3, 27, 90, 2)
 obj <- c(7.75, 10)
@@ -115,6 +120,7 @@ Note The package don’t plot feasible regions that are unbounded e.g if
 we drop the second and third constraint we get the wrong plot:
 
 ``` r
+
 A <- matrix(c(-3,2), ncol = 2, byrow = TRUE)
 b <- c(3)
 obj <- c(7.75, 10)
@@ -139,6 +145,7 @@ One solution is to add a bounding box and check if the bounding box is
 binding
 
 ``` r
+
 A <- rbind(A, c(1,0), c(0,1))
 b <- c(b, 10, 10)
 plotPolytope(
@@ -161,10 +168,11 @@ You may also use e.g `lpsolve` to check if the solution is unbounded.
 
 ## ILP model
 
-If we add integer constraints to the model ($x \in {\mathbb{Z}}$) you
-may view the feasible region different ways:
+If we add integer constraints to the model ($`x\in\mathbb{Z}`$) you may
+view the feasible region different ways:
 
 ``` r
+
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 obj <- c(7.75, 10)
@@ -231,6 +239,7 @@ gridExtra::grid.arrange(p1, p2, p3, p4, nrow = 2)
 Finally, let us have a look at a MILP model:
 
 ``` r
+
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 obj <- c(7.75, 10)
@@ -298,6 +307,7 @@ If you write a paper using LaTeX, you may create a TikZ file of the plot
 for LaTeX using
 
 ``` r
+
 library(tikzDevice)
 tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
 plotPolytope(

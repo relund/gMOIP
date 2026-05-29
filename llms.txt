@@ -13,24 +13,26 @@ points is inside/at/outside the convex hull of a set of vertices (for
 arbitrary dimension).
 
 Finally, the package also contains functions for generating
-(nondominated) points in ${\mathbb{R}}_{n}$ and classifying nondominated
+(nondominated) points in $`\mathbb{R}_n`$ and classifying nondominated
 points as supported extreme, supported non-extreme and unsupported.
 
 ## Usage
 
-Consider the model $\max\{ cx|Ax \leq b\}$ (could also be minimized)
+Consider the model $`\max\{cx | Ax \leq b\}`$ (could also be minimized)
 with 2 variables:
 
 ``` r
+
 A <- matrix(c(-3,2,2,4,9,10), ncol = 2, byrow = TRUE)
 b <- c(3,27,90)
 coeff <- c(7.75, 10)  # coefficients c
 ```
 
 The polytope of the LP model with non-negative continuous variables
-($x \geq 0$):
+($`x \geq 0`$):
 
 ``` r
+
 plotPolytope(
    A,
    b,
@@ -47,9 +49,10 @@ plotPolytope(
 
 ![](reference/figures/README-lp-1.png)
 
-The polytope of the ILP model with LP faces ($x \in {\mathbb{Z}}_{0}$):
+The polytope of the ILP model with LP faces ($`x\in \mathbb{Z}_0`$):
 
 ``` r
+
 plotPolytope(
    A,
    b,
@@ -69,6 +72,7 @@ plotPolytope(
 The polytope of the MILP model (first variable integer) with LP faces:
 
 ``` r
+
 plotPolytope(
    A,
    b,
@@ -88,6 +92,7 @@ plotPolytope(
 You can do the same with three variables:
 
 ``` r
+
 A <- matrix( c(
    3, 2, 5,
    2, 1, 1,
@@ -99,6 +104,7 @@ coeff <- c(20, 10, 15)
 ```
 
 ``` r
+
 # LP model
 view <- matrix( c(-0.412063330411911, -0.228006735444069, 0.882166087627411, 0, 0.910147845745087,
                   -0.0574885793030262, 0.410274744033813, 0, -0.042830865830183, 0.97196090221405,
@@ -122,6 +128,7 @@ For more examples see `example("gMOIP-package")` or
 You may create a TikZ file of the plot for LaTeX using
 
 ``` r
+
 library(tikzDevice)
 tikz(file = "plot_polytope.tex", standAlone=F, width = 7, height = 6)
 plotPolytope(
@@ -144,6 +151,7 @@ dev.off()
 Install the latest stable release from CRAN:
 
 ``` r
+
 install.packages("gMOIP")
 ```
 
@@ -151,6 +159,7 @@ Alternatively, install the latest development version from GitHub
 (recommended):
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github("relund/gMOIP")
 

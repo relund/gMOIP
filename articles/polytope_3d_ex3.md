@@ -9,12 +9,14 @@ with three variables.
 First we load the package:
 
 ``` r
+
 library(gMOIP)
 ```
 
 We define the model:
 
 ``` r
+
 A <- matrix( c(
    -1, 1, 0,
    1, 4, 0,
@@ -29,6 +31,7 @@ obj <- c(5, 45, 15)
 We load the preferred view angle for the RGL window:
 
 ``` r
+
 view <- matrix( c(0.976349174976349, -0.202332556247711, 0.0761845782399178, 0, 0.0903248339891434,
                   0.701892614364624, 0.706531345844269, 0, -0.196427255868912, -0.682940244674683,
                   0.703568696975708, 0, 0, 0, 0, 1), nc = 4)
@@ -37,6 +40,7 @@ view <- matrix( c(0.976349174976349, -0.202332556247711, 0.0761845782399178, 0, 
 The LP polytope:
 
 ``` r
+
 loadView(v = view, close = F, zoom = 0.75)
 plotPolytope(A, b, plotOptimum = TRUE, obj = obj, labels = "coord")
 ```
@@ -47,6 +51,7 @@ The ILP model (note since the vertices are integer the LP and ILP faces
 are equal):
 
 ``` r
+
 loadView(v = view, close = F, zoom = 0.75)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","i"), plotOptimum = TRUE, obj = obj, 
              argsTitle3d = list(main = "With LP faces"), argsPlot3d = list(box = F, axes = T) )
@@ -56,6 +61,7 @@ Let us have a look at some MILP models (we use static images). MILP
 model with variable 1 and 3 integer:
 
 ``` r
+
 loadView(v = view, close = T, zoom = 0.75)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = TRUE, obj = obj)
 ```
@@ -63,6 +69,7 @@ plotPolytope(A, b, faces = c("c","c","c"), type = c("i","c","i"), plotOptimum = 
 MILP model with variable 2 and 3 integer:
 
 ``` r
+
 loadView(v = view, zoom = 0.75)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = TRUE, obj = obj)
 ```
@@ -70,6 +77,7 @@ plotPolytope(A, b, faces = c("c","c","c"), type = c("c","i","i"), plotOptimum = 
 MILP model with variable 1 and 2 integer:
 
 ``` r
+
 loadView(v = view, zoom = 0.75)
 plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = TRUE, obj = obj)
 ```
@@ -77,6 +85,7 @@ plotPolytope(A, b, faces = c("c","c","c"), type = c("i","i","c"), plotOptimum = 
 MILP model with variable 1 integer:
 
 ``` r
+
 loadView(v = view, zoom = 0.75)
 plotPolytope(A, b, type = c("i","c","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 ```
@@ -84,6 +93,7 @@ plotPolytope(A, b, type = c("i","c","c"), plotOptimum = TRUE, obj = obj, plotFac
 MILP model with variable 2 integer:
 
 ``` r
+
 loadView(v = view, zoom = 0.75)
 plotPolytope(A, b, type = c("c","i","c"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 ```
@@ -91,6 +101,7 @@ plotPolytope(A, b, type = c("c","i","c"), plotOptimum = TRUE, obj = obj, plotFac
 MILP model with variable 3 integer:
 
 ``` r
+
 loadView(v = view, zoom = 0.75)
 plotPolytope(A, b, type = c("c","c","i"), plotOptimum = TRUE, obj = obj, plotFaces = FALSE)
 ```
