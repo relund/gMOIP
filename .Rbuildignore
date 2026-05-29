@@ -31,3 +31,5 @@
 ^vignettes/polytope_3d_ex3.Rmd$
 ^vignettes/polytope_3d_ex4.Rmd$
 ^CRAN-SUBMISSION$
+^\.positai$
+^\.claude$
